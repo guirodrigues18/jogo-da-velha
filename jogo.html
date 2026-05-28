@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo da Velha Neon</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #060816;
+      --card: rgba(18, 24, 52, 0.72);
+      --border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --muted: #8f98c7;
+      --cyan: #00e5ff;
+      --pink: #ff4fd8;
+      --shadow-cyan: 0 0 30px rgba(0,229,255,.35);
+      --shadow-pink: 0 0 30px rgba(255,79,216,.28);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background:
+        radial-gradient(circle at top left, rgba(93, 76, 255, 0.25), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(0, 229, 255, 0.12), transparent 28%),
+        linear-gradient(145deg, #040612 0%, #081122 45%, #02040d 100%);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 20px;
+      color: var(--text);
+    }
+
+    .blur {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .25;
+      z-index: 0;
+    }
+
+    .blur.one {
+      top: -80px;
+      left: -80px;
+      background: #7b5cff;
+    }
+
+    .blur.two {
+      right: -100px;
+      bottom: -100px;
+      background: #00d9ff;
+    }
+
+    .game-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 540px;
+      background: rgba(8, 13, 30, 0.75);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(18px);
+      border-radius: 32px;
+      padding: 28px;
+      box-shadow:
+        0 15px 60px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    .top {
+      margin-bottom: 28px;
+    }
+
+    .title {
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+      word-break: break-word;
+    }
+
+    .title span {
+      background: linear-gradient(90deg, var(--cyan), #4dc3ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.5;
+    }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .score-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: .25s ease;
+      min-width: 0;
+    }
+
+    .score-card.active {
+      border-color: rgba(255,255,255,.22);
+      transform: translateY(-2px);
+    }
+
+    .score-card.active.x {
+      box-shadow: var(--shadow-cyan);
+    }
+
+    .score-card.active.o {
+      box-shadow: var(--shadow-pink);
+    }
+
+    .score-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .85rem;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .score-value {
+      font-size: clamp(1.8rem, 5vw, 2.2rem);
+      font-weight: 800;
+    }
+
+    .score-x {
+      color: var(--cyan);
+    }
+
+    .score-o {
+      color: var(--pink);
+    }
+
+    .board-container {
+      background: rgba(13, 19, 41, .72);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 30px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+
+    .cell {
+      aspect-ratio: 1;
+      width: 100%;
+      background: linear-gradient(180deg, rgba(20,27,57,.95), rgba(13,20,43,.95));
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: .22s ease;
+    }
+
+    .cell:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.15);
+      background: linear-gradient(180deg, rgba(24,32,66,.98), rgba(16,24,52,.98));
+    }
+
+    .cell.x::before,
+    .cell.x::after {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--cyan);
+      box-shadow: 0 0 20px rgba(0,229,255,.7);
+    }
+
+    .cell.x::before {
+      transform: rotate(45deg);
+    }
+
+    .cell.x::after {
+      transform: rotate(-45deg);
+    }
+
+    .cell.circle::before {
+      content: '';
+      width: 52%;
+      height: 52%;
+      border-radius: 50%;
+      border: 8px solid var(--pink);
+      box-shadow: 0 0 24px rgba(255,79,216,.55);
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .turn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: #f4f6ff;
+    }
+
+    .turn-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .turn-dot.x {
+      background: var(--cyan);
+      box-shadow: 0 0 16px rgba(0,229,255,.9);
+    }
+
+    .turn-dot.o {
+      background: var(--pink);
+      box-shadow: 0 0 16px rgba(255,79,216,.9);
+    }
+
+    .reset-btn {
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.04);
+      color: white;
+      padding: 14px 22px;
+      border-radius: 18px;
+      cursor: pointer;
+      font-size: .95rem;
+      font-weight: 700;
+      transition: .22s ease;
+    }
+
+    .reset-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.2);
+      background: rgba(255,255,255,.08);
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: .25s ease;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 400px;
+      background: linear-gradient(180deg, #111936, #0a1024);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 30px;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 20px 80px rgba(0,0,0,.5);
+    }
+
+    .modal-title {
+      font-size: clamp(1.8rem, 5vw, 2.2rem);
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .modal-subtitle {
+      color: var(--muted);
+      margin-bottom: 26px;
+      line-height: 1.5;
+    }
+
+    .play-again {
+      width: 100%;
+      border: none;
+      padding: 16px;
+      border-radius: 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      background: linear-gradient(90deg, #8b5cf6, #00d9ff);
+      transition: .22s ease;
+    }
+
+    .play-again:hover {
+      transform: scale(1.02);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+        align-items: flex-start;
+      }
+
+      .game-wrapper {
+        padding: 18px;
+        border-radius: 24px;
+      }
+
+      .scoreboard {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .score-card {
+        padding: 12px;
+        border-radius: 16px;
+      }
+
+      .score-label {
+        font-size: .72rem;
+      }
+
+      .board-container {
+        padding: 10px;
+        border-radius: 22px;
+      }
+
+      .board {
+        gap: 8px;
+      }
+
+      .cell {
+        border-radius: 14px;
+      }
+
+      .footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .turn {
+        justify-content: center;
+      }
+
+      .reset-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .title {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: .85rem;
+      }
+
+      .score-label {
+        font-size: .65rem;
+      }
+
+      .score-value {
+        font-size: 1.5rem;
+      }
+
+      .cell.circle::before {
+        border-width: 6px;
+      }
+
+      .cell.x::before,
+      .cell.x::after {
+        height: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="blur one"></div>
+  <div class="blur two"></div>
+
+  <main class="game-wrapper">
+    <div class="top">
+      <h1 class="title">Jogo da <span>Velha</span></h1>
+      <p class="subtitle">Clássico reimaginado com visual futurista e interações modernas.</p>
+
+      <div class="scoreboard">
+        <div class="score-card x active" id="playerXCard">
+          <div class="score-label">✕ Jogador X</div>
+          <div class="score-value score-x" id="xScore">0</div>
+        </div>
+
+        <div class="score-card">
+          <div class="score-label">⚖ Empates</div>
+          <div class="score-value" id="drawScore">0</div>
+        </div>
+
+        <div class="score-card o" id="playerOCard">
+          <div class="score-label">◯ Jogador O</div>
+          <div class="score-value score-o" id="oScore">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="board-container">
+      <div class="board" id="board">
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+        <div class="cell" data-cell></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="turn">
+        <span class="turn-dot x" id="turnDot"></span>
+        <span id="turnText">Vez do Jogador X</span>
+      </div>
+
+      <button class="reset-btn" id="resetScoresBtn">
+        ↻ Zerar placar
+      </button>
+    </div>
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <h2 class="modal-title" id="resultText">Jogador X venceu!</h2>
+      <p class="modal-subtitle">O jogo será reiniciado automaticamente.</p>
+      <button class="play-again" id="restartBtn">Jogar novamente</button>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('modal');
+    const resultText = document.getElementById('resultText');
+    const restartBtn = document.getElementById('restartBtn');
+    const turnText = document.getElementById('turnText');
+    const turnDot = document.getElementById('turnDot');
+
+    const xScoreEl = document.getElementById('xScore');
+    const oScoreEl = document.getElementById('oScore');
+    const drawScoreEl = document.getElementById('drawScore');
+
+    const playerXCard = document.getElementById('playerXCard');
+    const playerOCard = document.getElementById('playerOCard');
+
+    const resetScoresBtn = document.getElementById('resetScoresBtn');
+
+    let isCircleTurn = false;
+    let xScore = 0;
+    let oScore = 0;
+    let drawScore = 0;
+
+    const winningCombinations = [
+      [0,1,2],
+      [3,4,5],
+      [6,7,8],
+      [0,3,6],
+      [1,4,7],
+      [2,5,8],
+      [0,4,8],
+      [2,4,6]
+    ];
+
+    function getCells() {
+      return document.querySelectorAll('[data-cell]');
+    }
+
+    function startGame() {
+      isCircleTurn = false;
+
+      const cells = getCells();
+
+      cells.forEach(cell => {
+        cell.className = 'cell';
+        cell.replaceWith(cell.cloneNode(true));
+      });
+
+      const freshCells = getCells();
+
+      freshCells.forEach(cell => {
+        cell.addEventListener('click', handleClick, { once: true });
+      });
+
+      updateTurnUI();
+      modal.classList.remove('show');
+    }
+
+    function handleClick(e) {
+      const cell = e.target;
+      const currentClass = isCircleTurn ? 'circle' : 'x';
+
+      cell.classList.add(currentClass);
+
+      if (checkWin(currentClass)) {
+        finishGame(false);
+        return;
+      }
+
+      if (checkDraw()) {
+        finishGame(true);
+        return;
+      }
+
+      isCircleTurn = !isCircleTurn;
+      updateTurnUI();
+    }
+
+    function checkWin(currentClass) {
+      const cells = getCells();
+
+      return winningCombinations.some(combination => {
+        return combination.every(index => {
+          return cells[index].classList.contains(currentClass);
+        });
+      });
+    }
+
+    function checkDraw() {
+      const cells = getCells();
+
+      return [...cells].every(cell => {
+        return cell.classList.contains('x') || cell.classList.contains('circle');
+      });
+    }
+
+    function finishGame(draw) {
+      if (draw) {
+        drawScore++;
+        drawScoreEl.textContent = drawScore;
+        resultText.textContent = '⚖ Empate!';
+      } else {
+        if (isCircleTurn) {
+          oScore++;
+          oScoreEl.textContent = oScore;
+          resultText.textContent = '◯ Jogador O venceu!';
+        } else {
+          xScore++;
+          xScoreEl.textContent = xScore;
+          resultText.textContent = '✕ Jogador X venceu!';
+        }
+      }
+
+      modal.classList.add('show');
+
+      setTimeout(() => {
+        startGame();
+      }, 1800);
+    }
+
+    function updateTurnUI() {
+      if (isCircleTurn) {
+        turnText.textContent = 'Vez do Jogador O';
+        turnDot.classList.remove('x');
+        turnDot.classList.add('o');
+
+        playerXCard.classList.remove('active');
+        playerOCard.classList.add('active');
+      } else {
+        turnText.textContent = 'Vez do Jogador X';
+        turnDot.classList.remove('o');
+        turnDot.classList.add('x');
+
+        playerOCard.classList.remove('active');
+        playerXCard.classList.add('active');
+      }
+    }
+
+    restartBtn.addEventListener('click', startGame);
+
+    resetScoresBtn.addEventListener('click', () => {
+      xScore = 0;
+      oScore = 0;
+      drawScore = 0;
+
+      xScoreEl.textContent = 0;
+      oScoreEl.textContent = 0;
+      drawScoreEl.textContent = 0;
+
+      startGame();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'r') {
+        startGame();
+      }
+    });
+
+    startGame();
+  </script>
+</body>
+</html>
