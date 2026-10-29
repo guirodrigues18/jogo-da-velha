@@ -6,10 +6,11 @@ import { shareImage } from '../share/shareImage';
 interface Props {
   boards: MiniBoard[];
   winner: Player;
+  winnerName?: string;
   onShare: () => void;
 }
 
-export default function ShareVictoryButton({ boards, winner, onShare }: Props) {
+export default function ShareVictoryButton({ boards, winner, winnerName, onShare }: Props) {
 
   const [image, setImage] = useState<Blob | null>(null);
 
@@ -19,7 +20,7 @@ export default function ShareVictoryButton({ boards, winner, onShare }: Props) {
 
     let cancelled = false;
 
-    renderVictoryImage(boards, winner).then(blob => {
+    renderVictoryImage(boards, winner, winnerName).then(blob => {
       if (!cancelled) setImage(blob);
     });
 
@@ -27,7 +28,7 @@ export default function ShareVictoryButton({ boards, winner, onShare }: Props) {
       cancelled = true;
     };
 
-  }, [boards, winner]);
+  }, [boards, winner, winnerName]);
 
   const handleClick = () => {
 

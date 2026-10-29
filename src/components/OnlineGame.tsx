@@ -1,8 +1,7 @@
-import type { Player, Result } from '../game/logic';
-import { useOnlineGame, type OnlineError } from '../hooks/useOnlineGame';
-import GameView from './GameView';
-import OnlinePanel from './OnlinePanel';
-import OnlineMessage from './OnlineMessage';
+import { useState } from 'react';
+import { hasJoined, loadNickname, saveNickname } from '../online/nickname';
+import NicknameForm from './NicknameForm';
+import OnlineRoom from './OnlineRoom';
 
 interface Props {
   /** null = criar uma sala nova */
@@ -11,77 +10,27 @@ interface Props {
   onLeave: () => void;
 }
 
-const ERRORS: Record<OnlineError, { title: string; text: string }> = {
-  'not-found': {
-    title: 'Sala não encontrada',
-    text: 'O link pode estar errado ou a sala não existe mais.'
-  },
-  full: {
-    title: 'Sala cheia',
-    text: 'Essa partida já tem dois jogadores.'
-  },
-  unavailable: {
-    title: 'Não foi possível conectar',
-    text: 'Verifique sua internet e tente novamente.'
-  }
-};
-
+/** Pede o apelido e depois entra na sala (ou cria uma) */
 export default function OnlineGame({ roomId, onRoomCreated, onLeave }: Props) {
 
-  const online = useOnlineGame(roomId, onRoomCreated);
-  const { game, role } = online;
-
-  if (online.status === 'error' && online.error) {
-    return <OnlineMessage {...ERRORS[online.error]} actionLabel="Jogar no modo local" onAction={onLeave} />;
-  }
-
-  if (online.status === 'connecting' || !role || !roomId) {
-    return <OnlineMessage title={roomId ? 'Entrando na sala…' : 'Criando sala…'} />;
-  }
-
-  return (
-    <GameView
-      game={game}
-      secondsLeft={online.secondsLeft}
-      timerActive={online.timerActive}
-      nudge={online.nudge}
-      notice={online.notice}
-      turnLabel={turnLabel(role, game.currentPlayer, online.opponentJoined)}
-      onCellClick={online.play}
-      panel={(
-        <OnlinePanel
-          roomId={roomId}
-          role={role}
-          opponentJoined={online.opponentJoined}
-          opponentOnline={online.opponentOnline}
-          onLeave={onLeave}
-        />
-      )}
-      modal={{
-        title: resultTitle(role, game.winner),
-        autoRestart: false,
-        restartLabel: 'Revanche',
-        showShare: game.winner === role,
-        onShare: () => {},
-        onRestart: online.rematch
-      }}
-    />
+  // Ao recarregar a página de uma sala em que já entrou, não pergunta de novo
+  const [nickname, setNickname] = useState<string | null>(() =>
+    roomId && hasJoined(roomId) ? loadNickname() || null : null
   );
 
-}
+  if (!nickname) {
+    return (
+      <NicknameForm
+        roomId={roomId}
+        onCancel={onLeave}
+        onSubmit={name => {
+          saveNickname(name);
+          setNickname(name);
+        }}
+      />
+    );
+  }
 
-function turnLabel(role: Player, current: Player, opponentJoined: boolean): string {
-
-  if (!opponentJoined) return 'Aguardando adversário…';
-
-  return role === current ? `Sua vez (${current.toUpperCase()})` : `Vez do adversário (${current.toUpperCase()})`;
-
-}
-
-function resultTitle(role: Player, winner: Result): string | undefined {
-
-  if (!winner || winner === 'draw') return undefined;
-
-  return winner === role ? '🏆 Você venceu!' : '😢 Você perdeu';
+  return <OnlineRoom roomId={roomId} nickname={nickname} onRoomCreated={onRoomCreated} onLeave={onLeave} />;
 
 }

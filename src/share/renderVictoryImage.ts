@@ -37,7 +37,11 @@ type Ctx = CanvasRenderingContext2D;
    Geração da imagem
    =========================== */
 
-export async function renderVictoryImage(boards: MiniBoard[], winner: Player): Promise<Blob> {
+export async function renderVictoryImage(
+  boards: MiniBoard[],
+  winner: Player,
+  winnerName = `Jogador ${winner.toUpperCase()}`
+): Promise<Blob> {
 
   // Garante que a fonte Inter está carregada antes de desenhar textos
   await Promise.all(['500', '700', '800'].map(weight => document.fonts.load(`${weight} 48px Inter`)));
@@ -49,7 +53,7 @@ export async function renderVictoryImage(boards: MiniBoard[], winner: Player): P
   const ctx = canvas.getContext('2d')!;
 
   drawBackground(ctx);
-  drawHeader(ctx, boards, winner);
+  drawHeader(ctx, boards, winner, winnerName);
   drawBoardCard(ctx, boards, winner);
   drawCallToAction(ctx);
 
@@ -108,7 +112,7 @@ function drawBackground(ctx: Ctx) {
    Cabeçalho: logo, selo e vencedor
    =========================== */
 
-function drawHeader(ctx: Ctx, boards: MiniBoard[], winner: Player) {
+function drawHeader(ctx: Ctx, boards: MiniBoard[], winner: Player, winnerName: string) {
 
   drawLogo(ctx, 170);
   drawBadge(ctx, '🏆  VITÓRIA', 250, winner);
@@ -116,9 +120,10 @@ function drawHeader(ctx: Ctx, boards: MiniBoard[], winner: Player) {
   ctx.textAlign = 'center';
 
   withGlow(ctx, COLORS[winner], 45, () => {
-    ctx.font = '800 150px Inter';
+    // Apelidos longos diminuem a fonte para caber na largura
+    ctx.font = `800 ${fitFontSize(ctx, winnerName, 800, 150, WIDTH - 140)}px Inter`;
     ctx.fillStyle = COLORS[winner];
-    ctx.fillText(`Jogador ${winner.toUpperCase()}`, CENTER, 440);
+    ctx.fillText(winnerName, CENTER, 440);
   });
 
   ctx.font = '700 58px Inter';
@@ -400,6 +405,21 @@ function drawGlow(ctx: Ctx, x: number, y: number, radius: number, color: string)
 
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+}
+
+function fitFontSize(ctx: Ctx, text: string, weight: number, maxSize: number, maxWidth: number): number {
+
+  let size = maxSize;
+
+  ctx.font = `${weight} ${size}px Inter`;
+
+  while (size > 48 && ctx.measureText(text).width > maxWidth) {
+    size -= 4;
+    ctx.font = `${weight} ${size}px Inter`;
+  }
+
+  return size;
 
 }
 

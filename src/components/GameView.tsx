@@ -19,6 +19,8 @@ interface Props {
   onCellClick: (boardIndex: number, cellIndex: number) => void;
   modal: {
     title?: string;
+    /** Nome exibido na imagem de compartilhamento (padrão: "Jogador X") */
+    winnerName?: string;
     autoRestart: boolean;
     restartLabel?: string;
     showShare: boolean;

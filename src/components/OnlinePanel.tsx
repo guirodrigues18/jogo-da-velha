@@ -5,19 +5,22 @@ import { copyText, shareLink } from '../share/shareLink';
 interface Props {
   roomId: string;
   role: Player;
+  nameOf: (player: Player) => string;
   opponentJoined: boolean;
   opponentOnline: boolean;
   onLeave: () => void;
 }
 
-const INVITE_TEXT = 'Duvido você me vencer no Jogo da Velha 2.0 😏';
 const COPIED_FEEDBACK_MS = 2000;
+const SYMBOLS = { x: '✕', o: '◯' };
 
-export default function OnlinePanel({ roomId, role, opponentJoined, opponentOnline, onLeave }: Props) {
+export default function OnlinePanel({ roomId, role, nameOf, opponentJoined, opponentOnline, onLeave }: Props) {
 
   const [copied, setCopied] = useState(false);
 
+  const opponent: Player = role === 'x' ? 'o' : 'x';
   const inviteUrl = `${window.location.origin}/?sala=${roomId}`;
+  const inviteText = `${nameOf(role)} te desafiou no Jogo da Velha 2.0 😏 Duvido você ganhar!`;
 
   const showCopied = () => {
     setCopied(true);
@@ -25,7 +28,7 @@ export default function OnlinePanel({ roomId, role, opponentJoined, opponentOnli
   };
 
   const invite = async () => {
-    if (await shareLink(inviteUrl, INVITE_TEXT) === 'copied') showCopied();
+    if (await shareLink(inviteUrl, inviteText) === 'copied') showCopied();
   };
 
   const copy = async () => {
@@ -52,10 +55,21 @@ export default function OnlinePanel({ roomId, role, opponentJoined, opponentOnli
 
   return (
     <div className="online-panel online-status">
-      <span className={`role-chip ${role}`}>Você é {role.toUpperCase()}</span>
+      <div className="players">
+        <span className={`role-chip ${role}`}>
+          {SYMBOLS[role]} <span className="player-name">{nameOf(role)}</span> <small>(você)</small>
+        </span>
+        <span className="versus">vs</span>
+        <span
+          className={`role-chip ${opponent}`}
+          title={opponentOnline ? 'Online' : 'Desconectado'}
+        >
+          <span className={opponentOnline ? 'status-dot online' : 'status-dot'} />
+          {SYMBOLS[opponent]} <span className="player-name">{nameOf(opponent)}</span>
+        </span>
+      </div>
       <span className="opponent-status">
-        <span className={opponentOnline ? 'status-dot online' : 'status-dot'} />
-        Adversário {opponentOnline ? 'online' : 'desconectado'}
+        {opponentOnline ? 'Adversário online' : 'Adversário desconectado'}
       </span>
       <button className="link-button" onClick={onLeave}>Sair</button>
     </div>

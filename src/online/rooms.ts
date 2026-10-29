@@ -21,16 +21,20 @@ interface Players {
   o?: string;
 }
 
+type PerPlayer<T> = Partial<Record<Player, T>>;
+
 interface StoredRoom {
   players: Players;
   state: StoredState;
-  online?: Partial<Record<Player, boolean>>;
+  online?: PerPlayer<boolean>;
+  names?: PerPlayer<string>;
 }
 
 export interface Room {
   players: Players;
   state: GameState;
-  online: Partial<Record<Player, boolean>>;
+  online: PerPlayer<boolean>;
+  names: PerPlayer<string>;
 }
 
 export type JoinError = 'not-found' | 'full';
@@ -105,10 +109,26 @@ export function subscribeRoom(roomId: string, onChange: (room: Room | null) => v
     onChange(data && {
       players: data.players,
       state: decodeState(data.state),
-      online: data.online ?? {}
+      online: data.online ?? {},
+      names: data.names ?? {}
     });
 
   });
+
+}
+
+export function saveName(roomId: string, role: Player, name: string): Promise<void> {
+
+  return set(roomRef(roomId, `names/${role}`), name);
+
+}
+
+/** Apelido de quem criou a sala, para o convite dizer "Fulano te desafiou" (requer login) */
+export async function getHostName(roomId: string): Promise<string | null> {
+
+  const snapshot = await get(roomRef(roomId, 'names/x'));
+
+  return snapshot.val() as string | null;
 
 }
 

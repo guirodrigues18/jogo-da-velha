@@ -4,12 +4,14 @@ import { signIn } from '../online/firebase';
 import {
   createRoom,
   joinRoom,
+  saveName,
   saveState,
   subscribeRoom,
   trackPresence,
   type JoinError,
   type Room
 } from '../online/rooms';
+import { markJoined } from '../online/nickname';
 import { playSound } from '../audio/sounds';
 import { TURN_SECONDS, useTurnTimer } from './useTurnTimer';
 import { useGameFeedback } from './useGameFeedback';
@@ -37,7 +39,7 @@ const INITIAL_GAME = createGame();
 /**
  * Partida online. Com `roomId` null, cria uma sala nova e avisa por `onRoomCreated`.
  */
-export function useOnlineGame(roomId: string | null, onRoomCreated: (roomId: string) => void) {
+export function useOnlineGame(roomId: string | null, nickname: string, onRoomCreated: (roomId: string) => void) {
 
   const [role, setRole] = useState<Player | null>(null);
   const [room, setRoom] = useState<Room | null>(null);
@@ -83,6 +85,10 @@ export function useOnlineGame(roomId: string | null, onRoomCreated: (roomId: str
         }
 
         setRole(result);
+        markJoined(roomId);
+
+        // Falhar ao salvar o apelido não impede a partida: aparece "Jogador X/O"
+        saveName(roomId, result, nickname).catch(() => {});
 
         const unsubscribe = subscribeRoom(roomId, data => {
           if (data) setRoom(data);
@@ -106,6 +112,7 @@ export function useOnlineGame(roomId: string | null, onRoomCreated: (roomId: str
       disconnect();
     };
 
+    // O apelido é definido antes de entrar e não muda durante a partida
   }, [roomId]);
 
   const game = room?.state ?? INITIAL_GAME;
@@ -113,6 +120,8 @@ export function useOnlineGame(roomId: string | null, onRoomCreated: (roomId: str
   const opponentJoined = Boolean(room?.players.o);
   const opponentOnline = Boolean(room?.online[opponent]);
   const myTurn = role === game.currentPlayer;
+
+  const nameOf = (player: Player) => room?.names[player] ?? `Jogador ${player.toUpperCase()}`;
 
   // O cronômetro só começa depois da primeira jogada
   const timerActive = opponentJoined && game.turn > 0 && !game.winner;
@@ -147,7 +156,9 @@ export function useOnlineGame(roomId: string | null, onRoomCreated: (roomId: str
     // Depende só do turno (não do objeto `game`), para mudanças de presença não reiniciarem a espera
   }, [game.turn, timerActive, myTurn]);
 
-  const { notice, nudge, reject } = useGameFeedback(game, secondsLeft, timerActive);
+  const { notice, nudge, reject } = useGameFeedback(game, secondsLeft, timerActive, player =>
+    player === role ? 'Sua vez' : `Vez de ${nameOf(player)}`
+  );
 
   const play = (boardIndex: number, cellIndex: number) => {
 
@@ -178,6 +189,7 @@ export function useOnlineGame(roomId: string | null, onRoomCreated: (roomId: str
     error,
     role,
     game,
+    nameOf,
     opponentJoined,
     opponentOnline,
     myTurn,

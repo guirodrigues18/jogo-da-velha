@@ -495,9 +495,10 @@ body::after {
 
 .online-status {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px 12px;
   padding: 12px 16px;
 }
 
@@ -505,11 +506,72 @@ body::after {
   margin-top: 0;
 }
 
+.players {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.versus {
+  color: var(--muted);
+  font-size: .8rem;
+  font-weight: 700;
+}
+
 .role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
   padding: 6px 12px;
   border-radius: 999px;
   font-weight: 800;
   font-size: .9rem;
+}
+
+.role-chip small {
+  font-weight: 500;
+  opacity: .75;
+}
+
+.player-name {
+  max-width: 7.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nickname-input {
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(139, 92, 246, .45);
+  background: rgba(255, 255, 255, .05);
+  color: var(--text);
+  font: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: .2s ease;
+}
+
+.nickname-input::placeholder {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.nickname-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, .2);
+}
+
+.online-message form .link-button {
+  margin-top: 14px;
 }
 
 .role-chip.x {
@@ -531,6 +593,7 @@ body::after {
 }
 
 .status-dot {
+  flex-shrink: 0;
   width: 9px;
   height: 9px;
   border-radius: 50%;

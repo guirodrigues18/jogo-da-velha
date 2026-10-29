@@ -59,6 +59,13 @@
           }
         },
 
+        "names": {
+          "$role": {
+            ".write": "auth != null && data.parent().parent().child('players').child($role).val() === auth.uid",
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16"
+          }
+        },
+
         "$other": {
           ".validate": false
         }

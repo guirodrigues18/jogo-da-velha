@@ -6,6 +6,8 @@ interface Props {
   boards: MiniBoard[];
   /** Substitui o título padrão (ex.: "Você venceu!" no modo online) */
   title?: string;
+  /** Nome exibido na imagem de compartilhamento (padrão: "Jogador X") */
+  winnerName?: string;
   autoRestart: boolean;
   restartLabel?: string;
   showShare: boolean;
@@ -23,6 +25,7 @@ export default function GameOverModal({
   winner,
   boards,
   title,
+  winnerName,
   autoRestart,
   restartLabel = 'Jogar novamente',
   showShare,
@@ -40,7 +43,7 @@ export default function GameOverModal({
           </div>
         )}
         {showShare && (winner === 'x' || winner === 'o') && (
-          <ShareVictoryButton boards={boards} winner={winner} onShare={onShare} />
+          <ShareVictoryButton boards={boards} winner={winner} winnerName={winnerName} onShare={onShare} />
         )}
         <button className="btn" onClick={onRestart}>
           {restartLabel}

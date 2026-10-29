@@ -4,7 +4,7 @@ Ganhe mini-tabuleiros para dominar o tabuleiro principal. Cada jogada define ond
 
 Cada jogador tem 20 segundos por turno; se o tempo acabar, a vez passa para o adversário, que joga no mesmo tabuleiro obrigatório.
 
-Dá para jogar no mesmo aparelho ou **online**, convidando um amigo por link.
+Dá para jogar no mesmo aparelho ou **online**, convidando um amigo por link. No online, cada jogador escolhe um apelido provisório.
 
 Feito com React, TypeScript e Vite. Modo online com Firebase Realtime Database.
 
@@ -56,6 +56,7 @@ src/
 ├── online/
 │   ├── config.ts            # Configuração do Firebase (lida do .env)
 │   ├── firebase.ts          # Inicialização e login anônimo
+│   ├── nickname.ts          # Apelido provisório (lembrado no navegador)
 │   ├── rooms.ts             # Criar, entrar e sincronizar salas
 │   └── serialization.ts     # Estado do jogo ⇄ formato do banco
 ├── audio/
@@ -64,7 +65,9 @@ src/
 │   ├── GameView.tsx         # Tela do jogo, compartilhada pelos dois modos
 │   ├── LocalGame.tsx
 │   ├── OnlineGame.tsx       # Carregado sob demanda (só baixa o Firebase no modo online)
-│   ├── OnlinePanel.tsx      # Convite e status do adversário
+│   ├── NicknameForm.tsx     # Escolha do apelido antes de criar/entrar na sala
+│   ├── OnlineRoom.tsx       # Partida online
+│   ├── OnlinePanel.tsx      # Convite, apelidos e status do adversário
 │   ├── OnlineMessage.tsx    # Carregamento e erros do modo online
 │   ├── InfoBar.tsx          # Turno atual, cronômetro e próximo tabuleiro
 │   ├── MiniBoard.tsx        # Mini-tabuleiro com células e overlay de resultado

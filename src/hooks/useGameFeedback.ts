@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { GameState } from '../game/logic';
+import type { GameState, Player } from '../game/logic';
 import { playSound, type SoundName } from '../audio/sounds';
 import { WARNING_SECONDS } from './useTurnTimer';
 
@@ -16,11 +16,20 @@ export interface Notice {
   id: number;
 }
 
+const defaultTurnText = (player: Player) => `Vez do Jogador ${player.toUpperCase()}`;
+
 /**
  * Sons, avisos e tremidas a partir das mudanças de estado. Funciona igual para
  * jogadas locais e para jogadas do adversário que chegam pela internet.
+ *
+ * `turnText` descreve de quem é a vez no aviso de tempo esgotado (ex.: "Vez de Ana").
  */
-export function useGameFeedback(game: GameState, secondsLeft: number, timerActive: boolean) {
+export function useGameFeedback(
+  game: GameState,
+  secondsLeft: number,
+  timerActive: boolean,
+  turnText: (player: Player) => string = defaultTurnText
+) {
 
   const [notice, setNotice] = useState<Notice | null>(null);
   const [nudge, setNudge] = useState<Nudge | null>(null);
@@ -38,7 +47,7 @@ export function useGameFeedback(game: GameState, secondsLeft: number, timerActiv
     const boardIndex = findChangedBoard(prev, game);
 
     if (boardIndex === null) {
-      setNotice({ text: `⏱ Tempo esgotado! Vez do Jogador ${game.currentPlayer.toUpperCase()}`, id: Date.now() });
+      setNotice({ text: `⏱ Tempo esgotado! ${turnText(game.currentPlayer)}`, id: Date.now() });
       playSound('timeout');
       return;
     }
