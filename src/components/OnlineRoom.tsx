@@ -5,6 +5,8 @@ import GameView from './GameView';
 import OnlinePanel from './OnlinePanel';
 import OnlineMessage from './OnlineMessage';
 import SpectatorPanel from './SpectatorPanel';
+import ReactionBar from './ReactionBar';
+import ReactionLayer from './ReactionLayer';
 
 interface Props {
   /** null = criar uma sala nova */
@@ -72,6 +74,14 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
   const current = game.currentPlayer;
   const symbol = current.toUpperCase();
 
+  // Placar e reações só fazem sentido com os dois jogadores na sala
+  const score = online.opponentJoined
+    ? { names: { x: nameOf('x'), o: nameOf('o') }, values: online.score }
+    : undefined;
+
+  const reactionBar = online.opponentJoined && !online.opponentLeft && <ReactionBar onReact={online.react} />;
+  const overlay = <ReactionLayer reactions={online.floatingReactions} onDone={online.dismissReaction} />;
+
   // Espectador: só assiste (sem jogar, sem revanche)
   if (!role) {
 
@@ -84,9 +94,17 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
         timerActive={online.timerActive}
         nudge={null}
         notice={online.notice}
+        shake={online.shake}
+        score={score}
+        overlay={overlay}
         turnLabel={leftPlayer ? 'Partida encerrada' : `Vez de ${nameOf(current)} (${symbol})`}
         onCellClick={noop}
-        panel={<SpectatorPanel nameOf={nameOf} spectatorCount={online.spectatorNames.length} onLeave={leave} />}
+        panel={(
+          <>
+            <SpectatorPanel nameOf={nameOf} spectatorCount={online.spectatorNames.length} onLeave={leave} />
+            {reactionBar}
+          </>
+        )}
         modal={spectatorModal(game.winner, leftPlayer, nameOf, leave)}
       />
     );
@@ -105,19 +123,25 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
       timerActive={online.timerActive}
       nudge={online.nudge}
       notice={online.notice}
+      shake={online.shake}
+      score={score}
+      overlay={overlay}
       turnLabel={turnLabel}
       onCellClick={online.play}
       panel={(
-        <OnlinePanel
-          roomId={roomId}
-          role={role}
-          nameOf={nameOf}
-          opponentJoined={online.opponentJoined}
-          opponentOnline={online.opponentOnline}
-          opponentLeft={online.opponentLeft}
-          spectatorNames={online.spectatorNames}
-          onLeave={leave}
-        />
+        <>
+          <OnlinePanel
+            roomId={roomId}
+            role={role}
+            nameOf={nameOf}
+            opponentJoined={online.opponentJoined}
+            opponentOnline={online.opponentOnline}
+            opponentLeft={online.opponentLeft}
+            spectatorNames={online.spectatorNames}
+            onLeave={leave}
+          />
+          {reactionBar}
+        </>
       )}
       modal={playerModal(online, role, leave)}
     />

@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { isOnlineConfigured, ROOM_PARAM, roomIdFromUrl } from './online/config';
 import LocalGame from './components/LocalGame';
 import OnlineMessage from './components/OnlineMessage';
+import AchievementToaster from './components/AchievementToaster';
 
 // O SDK do Firebase só é baixado por quem entra no modo online
 const OnlineGame = lazy(() => import('./components/OnlineGame'));
@@ -51,8 +52,8 @@ export default function App() {
     setMode({ kind: 'local' });
   };
 
-  if (mode.kind === 'online') {
-    return (
+  const screen = mode.kind === 'online'
+    ? (
       <Suspense fallback={<OnlineMessage title="Conectando…" />}>
         <OnlineGame
           roomId={mode.roomId}
@@ -61,11 +62,14 @@ export default function App() {
           onLeave={leaveOnline}
         />
       </Suspense>
-    );
-  }
+    )
+    : <LocalGame onPlayOnline={isOnlineConfigured ? () => setMode({ kind: 'online', roomId: null }) : undefined} />;
 
   return (
-    <LocalGame onPlayOnline={isOnlineConfigured ? () => setMode({ kind: 'online', roomId: null }) : undefined} />
+    <>
+      {screen}
+      <AchievementToaster />
+    </>
   );
 
 }

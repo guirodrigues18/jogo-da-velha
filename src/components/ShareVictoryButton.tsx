@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { MiniBoard, Player } from '../game/logic';
 import { renderVictoryImage } from '../share/renderVictoryImage';
 import { shareImage } from '../share/shareImage';
+import { unlockAchievement } from '../stats/achievements';
 
 interface Props {
   boards: MiniBoard[];
@@ -35,6 +36,7 @@ export default function ShareVictoryButton({ boards, winner, winnerName, onShare
     if (!image) return;
 
     onShare();
+    unlockAchievement('sharer');
     shareImage(image, 'jogo-da-velha-vitoria.png');
 
   };

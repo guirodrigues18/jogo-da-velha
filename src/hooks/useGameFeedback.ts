@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { GameState, Player } from '../game/logic';
 import { playSound, type SoundName } from '../audio/sounds';
+import { vibrate, VIBRATION } from '../audio/haptics';
+import { celebrate } from '../effects/confetti';
 import { WARNING_SECONDS } from './useTurnTimer';
 
 const NOTICE_DURATION_MS = 2400;
@@ -19,29 +21,32 @@ export interface Notice {
 interface Options {
   /** Descreve de quem é a vez no aviso de tempo esgotado (ex.: "Vez de Ana") */
   turnText?: (player: Player) => string;
-  /**
-   * Se as ações deste jogador tocam som neste aparelho. No modo local, todas;
-   * no online, só as do próprio jogador (as do adversário tocam no aparelho dele).
-   */
-  isMine?: (player: Player) => boolean;
+  /** Se as jogadas deste jogador tocam som neste aparelho (online: só as próprias) */
+  soundFor?: (player: Player) => boolean;
+  /** Se este jogador é "você" neste aparelho: vibração e confete na vitória */
+  celebrateFor?: (player: Player) => boolean;
+  /** Chamado uma vez quando uma partida termina com uma jogada feita agora */
+  onGameEnd?: (game: GameState) => void;
 }
 
 const defaultTurnText = (player: Player) => `Vez do Jogador ${player.toUpperCase()}`;
 const everyone = () => true;
 
 /**
- * Sons, avisos e tremidas a partir das mudanças de estado. Funciona igual para
- * jogadas locais e para jogadas do adversário que chegam pela internet.
+ * Sons, vibração, confete, avisos e tremidas a partir das mudanças de estado.
+ * Funciona igual para jogadas locais, do computador e do adversário online.
  */
 export function useGameFeedback(
   game: GameState,
   secondsLeft: number,
   timerActive: boolean,
-  { turnText = defaultTurnText, isMine = everyone }: Options = {}
+  { turnText = defaultTurnText, soundFor = everyone, celebrateFor = everyone, onGameEnd }: Options = {}
 ) {
 
   const [notice, setNotice] = useState<Notice | null>(null);
   const [nudge, setNudge] = useState<Nudge | null>(null);
+  /** Muda a cada mini-tabuleiro conquistado: o tabuleiro principal treme */
+  const [shake, setShake] = useState(0);
   const previous = useRef(game);
 
   useEffect(() => {
@@ -59,18 +64,32 @@ export function useGameFeedback(
 
     if (boardIndex === null) {
       setNotice({ text: `⏱ Tempo esgotado! ${turnText(game.currentPlayer)}`, id: Date.now() });
-      if (isMine(actor)) playSound('timeout');
+      if (soundFor(actor)) playSound('timeout');
       return;
     }
 
-    if (isMine(actor)) playSound(moveSound(game, boardIndex, actor));
+    const conquered = Boolean(game.boards[boardIndex].winner && !prev.boards[boardIndex].winner);
+
+    if (conquered) setShake(n => n + 1);
+
+    if (soundFor(actor)) playSound(moveSound(game, boardIndex, actor));
+
+    if (celebrateFor(actor)) {
+      if (game.winner === actor) vibrate(VIBRATION.win);
+      else vibrate(conquered ? VIBRATION.board : VIBRATION.move);
+    }
+
+    if (game.winner) {
+      if (game.winner !== 'draw' && celebrateFor(game.winner)) celebrate();
+      onGameEnd?.(game);
+    }
 
   }, [game]);
 
   // Tique nos últimos segundos, só para quem está com a vez
   useEffect(() => {
 
-    if (!timerActive || !isMine(game.currentPlayer)) return;
+    if (!timerActive || !soundFor(game.currentPlayer)) return;
 
     if (secondsLeft > 0 && secondsLeft <= WARNING_SECONDS) playSound('tick');
 
@@ -86,10 +105,11 @@ export function useGameFeedback(
 
   }, [notice]);
 
-  /** Jogada inválida: som de erro e o tabuleiro obrigatório treme */
+  /** Jogada inválida: som de erro, vibração e o tabuleiro obrigatório treme */
   const reject = () => {
 
     playSound('invalid');
+    vibrate(VIBRATION.invalid);
 
     const { activeBoard } = game;
 
@@ -97,7 +117,7 @@ export function useGameFeedback(
 
   };
 
-  return { notice, nudge, reject };
+  return { notice, nudge, shake, reject };
 
 }
 

@@ -87,6 +87,32 @@
           }
         },
 
+        "score": {
+          "$role": {
+            ".write": "auth != null && (data.parent().parent().child('players/x').val() === auth.uid || data.parent().parent().child('players/o').val() === auth.uid) && data.parent().parent().child('state/winner').val() === $role && newData.parent().parent().child('state/turn').val() === 0",
+            ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === 1) || newData.val() === data.val() + 1)"
+          }
+        },
+
+        "reactions": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && (data.parent().parent().child('players/x').val() === auth.uid || data.parent().parent().child('players/o').val() === auth.uid || data.parent().parent().child('spectators').child(auth.uid).exists()) && (!data.exists() || now > data.child('t').val() + 500)",
+            ".validate": "newData.hasChildren(['e', 'n', 't'])",
+            "e": {
+              ".validate": "newData.val() === '😂' || newData.val() === '🔥' || newData.val() === '😱' || newData.val() === '👏' || newData.val() === '😎' || newData.val() === '😭'"
+            },
+            "n": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16"
+            },
+            "t": {
+              ".validate": "newData.val() === now"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+
         "$other": {
           ".validate": false
         }

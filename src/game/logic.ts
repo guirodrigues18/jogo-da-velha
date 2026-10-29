@@ -25,7 +25,10 @@ export interface GameState {
    Estado inicial
    =========================== */
 
-const WINNING = [
+/** Jogada: [índice do mini-tabuleiro, índice da célula] */
+export type Move = [board: number, cell: number];
+
+export const WINNING_LINES = [
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -63,7 +66,7 @@ function opponent(player: Player): Player {
 
 function findLine(cells: Cell[]): number[] | null {
 
-  const line = WINNING.find(([a, b, c]) =>
+  const line = WINNING_LINES.find(([a, b, c]) =>
     cells[a] &&
     cells[a] === cells[b] &&
     cells[a] === cells[c]
@@ -121,6 +124,25 @@ export function isBoardPlayable(state: GameState, boardIndex: number): boolean {
   if (state.winner || state.boards[boardIndex].winner) return false;
 
   return state.activeBoard === null || state.activeBoard === boardIndex;
+
+}
+
+/** Todas as jogadas permitidas para o jogador da vez */
+export function getValidMoves(state: GameState): Move[] {
+
+  const moves: Move[] = [];
+
+  state.boards.forEach((board, b) => {
+
+    if (!isBoardPlayable(state, b)) return;
+
+    board.cells.forEach((cell, c) => {
+      if (!cell) moves.push([b, c]);
+    });
+
+  });
+
+  return moves;
 
 }
 

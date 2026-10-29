@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { signIn } from '../online/firebase';
 import { getRoomPreview, type RoomPreview } from '../online/rooms';
 import { loadNickname, normalizeNickname, NICKNAME_MAX_LENGTH } from '../online/nickname';
+import HelpDialog from './HelpDialog';
 
 interface Props {
   /** null = vai criar uma sala; com id = foi convidado para ela */
@@ -14,6 +15,7 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
 
   const [value, setValue] = useState(loadNickname);
   const [preview, setPreview] = useState<RoomPreview | null>(null);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   // Convidado: mostra quem fez o desafio, ou quem está jogando (se não der, fica o título genérico)
   useEffect(() => {
@@ -78,10 +80,17 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
         <button className="btn" type="submit" disabled={!nickname}>
           {action}
         </button>
-        <button className="link-button" type="button" onClick={onCancel}>
-          Voltar
-        </button>
+        <div className="form-links">
+          <button className="link-button" type="button" onClick={() => setHelpOpen(true)}>
+            ❔ Como jogar?
+          </button>
+          <button className="link-button" type="button" onClick={onCancel}>
+            Voltar
+          </button>
+        </div>
       </form>
+
+      {helpOpen && <HelpDialog onClose={() => setHelpOpen(false)} />}
     </div>
   );
 

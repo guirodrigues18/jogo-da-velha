@@ -1,10 +1,11 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { isBoardPlayable, type GameState } from '../game/logic';
 import type { Notice, Nudge } from '../hooks/useGameFeedback';
 import InfoBar from './InfoBar';
 import MiniBoard from './MiniBoard';
 import GameOverModal from './GameOverModal';
-import SoundToggle from './SoundToggle';
+import TopActions from './TopActions';
+import Scoreboard, { type ScoreInfo } from './Scoreboard';
 
 interface Props {
   game: GameState;
@@ -12,10 +13,18 @@ interface Props {
   timerActive: boolean;
   nudge: Nudge | null;
   notice: Notice | null;
+  /** Muda a cada mini-tabuleiro conquistado: o tabuleiro principal treme */
+  shake?: number;
   /** Substitui "Jogador X/O" no card de turno (ex.: "Sua vez") */
   turnLabel?: string;
-  /** Conteúdo extra abaixo das informações (botão de jogar online, convite...) */
+  /** Acima das informações (ex.: escolha do modo de jogo) */
+  controls?: ReactNode;
+  /** Placar da série; ausente antes de existir uma série */
+  score?: ScoreInfo;
+  /** Abaixo das informações (convite, status online...) */
   panel?: ReactNode;
+  /** Elementos flutuantes por cima do jogo (reações) */
+  overlay?: ReactNode;
   onCellClick: (boardIndex: number, cellIndex: number) => void;
   modal: {
     /** Força o modal aberto mesmo sem vencedor (ex.: adversário saiu da sala) */
@@ -35,18 +44,42 @@ interface Props {
   };
 }
 
-/** Tela do jogo, compartilhada pelos modos local e online */
+const SHAKE: Keyframe[] = [
+  { transform: 'translate(0, 0)' },
+  { transform: 'translate(-4px, 2px)' },
+  { transform: 'translate(4px, -2px)' },
+  { transform: 'translate(-3px, -1px)' },
+  { transform: 'translate(2px, 1px)' },
+  { transform: 'translate(0, 0)' }
+];
+
+/** Tela do jogo, compartilhada pelos modos local, contra o computador e online */
 export default function GameView({
   game,
   secondsLeft,
   timerActive,
   nudge,
   notice,
+  shake = 0,
   turnLabel,
+  controls,
+  score,
   panel,
+  overlay,
   onCellClick,
   modal
 }: Props) {
+
+  const boardRef = useRef<HTMLDivElement>(null);
+
+  // Tremida ao conquistar um mini-tabuleiro
+  useEffect(() => {
+
+    if (!shake || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    boardRef.current?.animate(SHAKE, { duration: 350, easing: 'ease-out' });
+
+  }, [shake]);
 
   return (
     <>
@@ -55,13 +88,15 @@ export default function GameView({
         <div className="top">
           <div className="top-row">
             <h1 className="title">Jogo da Velha<span> 2.0</span></h1>
-            <SoundToggle />
+            <TopActions />
           </div>
 
           <p className="subtitle">
             Ganhe mini-tabuleiros para dominar o tabuleiro principal.
             Cada jogada define onde o próximo jogador deverá jogar.
           </p>
+
+          {controls}
 
           <InfoBar
             currentPlayer={game.currentPlayer}
@@ -72,10 +107,12 @@ export default function GameView({
             timerActive={timerActive}
           />
 
+          {score && <Scoreboard {...score} />}
+
           {panel}
         </div>
 
-        <div className="main-board">
+        <div className="main-board" ref={boardRef}>
           {game.boards.map((board, i) => (
             <MiniBoard
               key={i}
@@ -103,6 +140,8 @@ export default function GameView({
       )}
 
       <GameOverModal winner={game.winner} boards={game.boards} {...modal} />
+
+      {overlay}
     </>
   );
 

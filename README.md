@@ -4,12 +4,19 @@ Ganhe mini-tabuleiros para dominar o tabuleiro principal. Cada jogada define ond
 
 Cada jogador tem 20 segundos por turno; se o tempo acabar, a vez passa para o adversário, que joga no mesmo tabuleiro obrigatório.
 
-Dá para jogar no mesmo aparelho ou **online**, convidando um amigo por link. No online:
+Modos de jogo:
 
-- cada jogador escolhe um apelido provisório;
-- revanche só começa quando os dois aceitam;
-- sair da sala conta como desistência (o adversário vence);
-- quem abrir o link de uma sala cheia entra como espectador (até 10 por sala).
+- **2 jogadores** no mesmo aparelho;
+- **contra o computador**, em três níveis (Fácil, Médio e Difícil — este usa busca de Monte Carlo);
+- **online**, convidando um amigo por link:
+  - cada jogador escolhe um apelido provisório;
+  - revanche só começa quando os dois aceitam, e o placar da série fica salvo na sala;
+  - sair da sala conta como desistência (o adversário vence);
+  - quem abrir o link de uma sala cheia entra como espectador (até 10 por sala);
+  - reações rápidas com emoji aparecem para todos da sala.
+
+Também tem placar da série, estatísticas e 13 conquistas (salvas no navegador),
+confete na vitória, vibração no Android e uma explicação das regras no botão "Como jogar".
 
 Feito com React, TypeScript e Vite. Modo online com Firebase Realtime Database.
 
@@ -53,11 +60,16 @@ só começa com o aceite dos dois. Ao mudar as regras, cole-as de novo no consol
 src/
 ├── game/
 │   ├── logic.ts             # Regras do jogo (funções puras, sem React)
-│   └── logic.test.ts
+│   ├── ai.ts                # Computador: aleatório, heurística e Monte Carlo
+│   └── *.test.ts
+├── stats/
+│   └── achievements.ts      # Estatísticas e conquistas (localStorage)
+├── effects/
+│   └── confetti.ts          # Confete da vitória (carregado sob demanda)
 ├── hooks/
-│   ├── useLocalGame.ts      # Partida no mesmo aparelho
+│   ├── useLocalGame.ts      # Partida no mesmo aparelho (2 jogadores ou computador)
 │   ├── useOnlineGame.ts     # Partida online: sala, sincronização e presença
-│   ├── useGameFeedback.ts   # Sons, avisos e tremidas a partir das mudanças de estado
+│   ├── useGameFeedback.ts   # Sons, vibração, confete e avisos a partir das mudanças de estado
 │   └── useTurnTimer.ts      # Cronômetro de 20 segundos por turno
 ├── online/
 │   ├── config.ts            # Configuração do Firebase (lida do .env)
@@ -66,10 +78,18 @@ src/
 │   ├── rooms.ts             # Criar, entrar e sincronizar salas
 │   └── serialization.ts     # Estado do jogo ⇄ formato do banco
 ├── audio/
-│   └── sounds.ts            # Efeitos sonoros sintetizados (Web Audio) e preferência de mudo
+│   ├── sounds.ts            # Efeitos sonoros sintetizados (Web Audio) e preferência de mudo
+│   └── haptics.ts           # Vibração (Android)
 ├── components/
-│   ├── GameView.tsx         # Tela do jogo, compartilhada pelos dois modos
-│   ├── LocalGame.tsx
+│   ├── GameView.tsx         # Tela do jogo, compartilhada por todos os modos
+│   ├── LocalGame.tsx        # 2 jogadores e contra o computador
+│   ├── ModeSwitch.tsx       # Escolha do modo e do nível
+│   ├── Scoreboard.tsx       # Placar da série
+│   ├── TopActions.tsx       # Botões de conquistas, como jogar e som
+│   ├── Dialog.tsx           # Janela base (HelpDialog, StatsDialog)
+│   ├── AchievementToaster.tsx
+│   ├── ReactionBar.tsx      # Reações com emoji (online)
+│   ├── ReactionLayer.tsx    # Emojis flutuando na tela
 │   ├── OnlineGame.tsx       # Carregado sob demanda (só baixa o Firebase no modo online)
 │   ├── NicknameForm.tsx     # Escolha do apelido antes de criar/entrar na sala
 │   ├── OnlineRoom.tsx       # Partida online

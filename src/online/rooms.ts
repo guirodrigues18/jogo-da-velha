@@ -6,7 +6,8 @@ import {
   remove,
   runTransaction,
   serverTimestamp,
-  set
+  set,
+  update
 } from 'firebase/database';
 import { createGame, type GameState, type Player } from '../game/logic';
 import { db } from './firebase';
@@ -34,6 +35,19 @@ interface StoredRoom {
   rematch?: PerPlayer<boolean>;
   /** Espectadores conectados: uid → apelido */
   spectators?: Record<string, string>;
+  /** Vitórias de cada um nas partidas anteriores desta sala */
+  score?: PerPlayer<number>;
+  /** Última reação de cada pessoa: uid → emoji, apelido e horário */
+  reactions?: Record<string, Reaction>;
+}
+
+export interface Reaction {
+  /** Emoji */
+  e: string;
+  /** Apelido de quem reagiu */
+  n: string;
+  /** Horário (servidor) */
+  t: number;
 }
 
 export interface Room {
@@ -44,7 +58,12 @@ export interface Room {
   left: PerPlayer<boolean>;
   rematch: PerPlayer<boolean>;
   spectators: Record<string, string>;
+  score: PerPlayer<number>;
+  reactions: Record<string, Reaction>;
 }
+
+/** Precisa ser igual à lista nas regras do banco (database.rules.json) */
+export const REACTION_EMOJIS = ['😂', '🔥', '😱', '👏', '😎', '😭'];
 
 /** Lugar de quem entrou: jogador (X, O) ou espectador */
 export type Seat = Player | 'spectator';
@@ -143,7 +162,9 @@ export function subscribeRoom(roomId: string, onChange: (room: Room | null) => v
       names: data.names ?? {},
       left: data.left ?? {},
       rematch: data.rematch ?? {},
-      spectators: data.spectators ?? {}
+      spectators: data.spectators ?? {},
+      score: data.score ?? {},
+      reactions: data.reactions ?? {}
     });
 
   });
@@ -176,6 +197,27 @@ export function requestRematch(roomId: string, role: Player): Promise<void> {
 export function clearRematch(roomId: string, role: Player): Promise<void> {
 
   return remove(roomRef(roomId, `rematch/${role}`));
+
+}
+
+/**
+ * Começa a nova partida e, na mesma gravação, soma a vitória da partida que terminou
+ * ao placar (as regras só aceitam o placar junto com o reinício).
+ */
+export function startRematch(roomId: string, finished: GameState, score: PerPlayer<number>): Promise<void> {
+
+  const winner = finished.winner;
+  const changes: Record<string, unknown> = { state: toStored(createGame()) };
+
+  if (winner === 'x' || winner === 'o') changes[`score/${winner}`] = (score[winner] ?? 0) + 1;
+
+  return update(roomRef(roomId), changes);
+
+}
+
+export function sendReaction(roomId: string, uid: string, emoji: string, nickname: string): Promise<void> {
+
+  return set(roomRef(roomId, `reactions/${uid}`), { e: emoji, n: nickname, t: serverTimestamp() });
 
 }
 

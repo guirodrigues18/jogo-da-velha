@@ -10,13 +10,10 @@ export default function SoundToggle() {
     setMutedState(!muted);
   };
 
+  const label = muted ? 'Ativar sons e vibração' : 'Desativar sons e vibração';
+
   return (
-    <button
-      className="sound-toggle"
-      onClick={toggle}
-      aria-label={muted ? 'Ativar sons' : 'Desativar sons'}
-      title={muted ? 'Ativar sons' : 'Desativar sons'}
-    >
+    <button className="icon-button" onClick={toggle} aria-label={label} title={label}>
       {muted ? '🔇' : '🔊'}
     </button>
   );

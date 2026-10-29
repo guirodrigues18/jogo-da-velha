@@ -9,6 +9,8 @@ import {
   requestRematch,
   saveName,
   saveState,
+  sendReaction,
+  startRematch,
   subscribeRoom,
   trackPresence,
   watchAsSpectator,
@@ -18,6 +20,8 @@ import {
 } from '../online/rooms';
 import { markJoined } from '../online/nickname';
 import { playSound } from '../audio/sounds';
+import { recordFromGame, recordGame, unlockAchievement } from '../stats/achievements';
+import type { FloatingReaction } from '../components/ReactionLayer';
 import { TURN_SECONDS, useTurnTimer } from './useTurnTimer';
 import { useGameFeedback } from './useGameFeedback';
 
@@ -26,6 +30,9 @@ const OPPONENT_GRACE_MS = 3000;
 
 /** Sem resposta do Firebase nesse tempo, mostra erro em vez de carregar para sempre */
 const CONNECT_TIMEOUT_MS = 20000;
+
+/** Intervalo mínimo entre reações da mesma pessoa (as regras do banco exigem 500 ms) */
+const REACTION_COOLDOWN_MS = 700;
 
 function withTimeout<T>(promise: Promise<T>): Promise<T> {
 
@@ -46,9 +53,11 @@ const INITIAL_GAME = createGame();
  */
 export function useOnlineGame(roomId: string | null, nickname: string, onRoomCreated: (roomId: string) => void) {
 
+  const [uid, setUid] = useState<string | null>(null);
   const [seat, setSeat] = useState<Seat | null>(null);
   const [room, setRoom] = useState<Room | null>(null);
   const [error, setError] = useState<OnlineError | null>(null);
+  const [floatingReactions, setFloatingReactions] = useState<FloatingReaction[]>([]);
 
   const onRoomCreatedRef = useRef(onRoomCreated);
 
@@ -89,11 +98,13 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
           return;
         }
 
+        setUid(uid);
         setSeat(result);
         markJoined(roomId);
 
         // Falhar ao salvar o apelido não impede a partida: aparece "Jogador X/O"
         if (result !== 'spectator') saveName(roomId, result, nickname).catch(() => {});
+        else unlockAchievement('spectator');
 
         const unsubscribe = subscribeRoom(roomId, data => {
           if (data) setRoom(data);
@@ -174,9 +185,16 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     // Depende só do turno (não do objeto `game`), para mudanças de presença não reiniciarem a espera
   }, [game.turn, timerActive, myTurn, role]);
 
-  const { notice, nudge, reject } = useGameFeedback(game, secondsLeft, timerActive, {
-    turnText: player => (player === role ? 'Sua vez' : `Vez de ${nameOf(player)}`),
-    isMine: player => player === role
+  // Cada aparelho só toca, vibra e comemora as próprias ações (espectador: nenhuma)
+  const isMe = (player: Player) => player === role;
+
+  const { notice, nudge, shake, reject } = useGameFeedback(game, secondsLeft, timerActive, {
+    turnText: player => (isMe(player) ? 'Sua vez' : `Vez de ${nameOf(player)}`),
+    soundFor: isMe,
+    celebrateFor: isMe,
+    onGameEnd: finished => {
+      if (role) recordGame(recordFromGame(finished, role, 'online'));
+    }
   });
 
   const play = (boardIndex: number, cellIndex: number) => {
@@ -210,12 +228,64 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     if (roomId && role && game.winner && !opponentLeft) requestRematch(roomId, role).catch(() => {});
   };
 
+  const storedScore = room?.score ?? {};
+
   // Os dois aceitaram: qualquer jogador grava a nova partida (as regras aceitam só a primeira gravação)
   useEffect(() => {
 
-    if (role && game.winner && bothWantRematch && !opponentLeft) save(createGame());
+    if (roomId && role && game.winner && bothWantRematch && !opponentLeft) {
+      startRematch(roomId, game, storedScore).catch(() => {});
+    }
 
   }, [role, game.winner, bothWantRematch, opponentLeft]);
+
+  // O placar salvo conta as partidas anteriores; a vitória da partida atual entra na hora
+  const score = {
+    x: (storedScore.x ?? 0) + (game.winner === 'x' ? 1 : 0),
+    o: (storedScore.o ?? 0) + (game.winner === 'o' ? 1 : 0)
+  };
+
+  /* ---------- Reações ---------- */
+
+  const lastReactionAt = useRef(0);
+  const seenReactions = useRef<Record<string, number> | null>(null);
+
+  const react = (emoji: string) => {
+
+    const now = Date.now();
+
+    if (!roomId || !uid || now - lastReactionAt.current < REACTION_COOLDOWN_MS) return;
+
+    lastReactionAt.current = now;
+    sendReaction(roomId, uid, emoji, nickname).catch(() => {});
+
+    // A própria reação aparece na hora (o eco que volta do banco é ignorado abaixo)
+    setFloatingReactions(current => [...current, { id: `me-${now}`, emoji, name: 'Você' }]);
+
+  };
+
+  // Mostra as reações novas dos outros (as que já existiam ao entrar na sala são ignoradas)
+  const reactions = room?.reactions;
+
+  useEffect(() => {
+
+    if (!reactions) return;
+
+    const seen = seenReactions.current;
+
+    seenReactions.current = Object.fromEntries(Object.entries(reactions).map(([id, r]) => [id, r.t]));
+
+    if (!seen) return;
+
+    const fresh = Object.entries(reactions)
+      .filter(([id, r]) => id !== uid && seen[id] !== r.t)
+      .map(([id, r]) => ({ id: `${id}-${r.t}`, emoji: r.e, name: r.n }));
+
+    if (fresh.length) setFloatingReactions(current => [...current, ...fresh]);
+
+  }, [reactions, uid]);
+
+  const dismissReaction = (id: string) => setFloatingReactions(current => current.filter(r => r.id !== id));
 
   // Nova partida em andamento: limpa o próprio pedido para não valer na próxima
   useEffect(() => {
@@ -246,13 +316,18 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     rematchRequested,
     opponentWantsRematch,
     myTurn,
+    score,
     secondsLeft,
     timerActive,
     notice,
     nudge,
+    shake,
+    floatingReactions,
     play,
     rematch,
-    leave
+    leave,
+    react,
+    dismissReaction
   } as const;
 
 }
