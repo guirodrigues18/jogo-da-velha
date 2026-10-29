@@ -16,19 +16,28 @@ export interface Notice {
   id: number;
 }
 
+interface Options {
+  /** Descreve de quem é a vez no aviso de tempo esgotado (ex.: "Vez de Ana") */
+  turnText?: (player: Player) => string;
+  /**
+   * Se as ações deste jogador tocam som neste aparelho. No modo local, todas;
+   * no online, só as do próprio jogador (as do adversário tocam no aparelho dele).
+   */
+  isMine?: (player: Player) => boolean;
+}
+
 const defaultTurnText = (player: Player) => `Vez do Jogador ${player.toUpperCase()}`;
+const everyone = () => true;
 
 /**
  * Sons, avisos e tremidas a partir das mudanças de estado. Funciona igual para
  * jogadas locais e para jogadas do adversário que chegam pela internet.
- *
- * `turnText` descreve de quem é a vez no aviso de tempo esgotado (ex.: "Vez de Ana").
  */
 export function useGameFeedback(
   game: GameState,
   secondsLeft: number,
   timerActive: boolean,
-  turnText: (player: Player) => string = defaultTurnText
+  { turnText = defaultTurnText, isMine = everyone }: Options = {}
 ) {
 
   const [notice, setNotice] = useState<Notice | null>(null);
@@ -44,22 +53,26 @@ export function useGameFeedback(
     // Só reage a um turno por vez (ignora carga inicial e reinício de partida)
     if (game.turn !== prev.turn + 1) return;
 
+    // Quem jogou (ou deixou o tempo acabar) é quem estava com a vez
+    const actor = prev.currentPlayer;
     const boardIndex = findChangedBoard(prev, game);
 
     if (boardIndex === null) {
       setNotice({ text: `⏱ Tempo esgotado! ${turnText(game.currentPlayer)}`, id: Date.now() });
-      playSound('timeout');
+      if (isMine(actor)) playSound('timeout');
       return;
     }
 
-    playSound(moveSound(prev, game, boardIndex));
+    if (isMine(actor)) playSound(moveSound(game, boardIndex, actor));
 
   }, [game]);
 
-  // Tique nos últimos segundos do turno
+  // Tique nos últimos segundos, só para quem está com a vez
   useEffect(() => {
 
-    if (timerActive && secondsLeft > 0 && secondsLeft <= WARNING_SECONDS) playSound('tick');
+    if (!timerActive || !isMine(game.currentPlayer)) return;
+
+    if (secondsLeft > 0 && secondsLeft <= WARNING_SECONDS) playSound('tick');
 
   }, [secondsLeft, timerActive]);
 
@@ -98,12 +111,12 @@ function findChangedBoard(prev: GameState, next: GameState): number | null {
 
 }
 
-function moveSound(prev: GameState, next: GameState, boardIndex: number): SoundName {
+function moveSound(next: GameState, boardIndex: number, actor: Player): SoundName {
 
   if (next.winner) return next.winner === 'draw' ? 'draw' : 'win';
 
   if (next.boards[boardIndex].winner) return 'board';
 
-  return prev.currentPlayer;
+  return actor;
 
 }

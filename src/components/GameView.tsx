@@ -18,14 +18,20 @@ interface Props {
   panel?: ReactNode;
   onCellClick: (boardIndex: number, cellIndex: number) => void;
   modal: {
+    /** Força o modal aberto mesmo sem vencedor (ex.: adversário saiu da sala) */
+    open?: boolean;
     title?: string;
+    subtitle?: string;
     /** Nome exibido na imagem de compartilhamento (padrão: "Jogador X") */
     winnerName?: string;
     autoRestart: boolean;
     restartLabel?: string;
+    restartDisabled?: boolean;
     showShare: boolean;
     onShare: () => void;
     onRestart: () => void;
+    secondaryLabel?: string;
+    onSecondary?: () => void;
   };
 }
 

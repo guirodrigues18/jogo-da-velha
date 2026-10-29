@@ -2,14 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import { applyMove, createGame, passTurn, type GameState, type Player } from '../game/logic';
 import { signIn } from '../online/firebase';
 import {
+  clearRematch,
   createRoom,
   joinRoom,
+  leaveRoom,
+  requestRematch,
   saveName,
   saveState,
   subscribeRoom,
   trackPresence,
+  watchAsSpectator,
   type JoinError,
-  type Room
+  type Room,
+  type Seat
 } from '../online/rooms';
 import { markJoined } from '../online/nickname';
 import { playSound } from '../audio/sounds';
@@ -41,7 +46,7 @@ const INITIAL_GAME = createGame();
  */
 export function useOnlineGame(roomId: string | null, nickname: string, onRoomCreated: (roomId: string) => void) {
 
-  const [role, setRole] = useState<Player | null>(null);
+  const [seat, setSeat] = useState<Seat | null>(null);
   const [room, setRoom] = useState<Room | null>(null);
   const [error, setError] = useState<OnlineError | null>(null);
 
@@ -57,7 +62,7 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     let cancelled = false;
     let disconnect = () => {};
 
-    setRole(null);
+    setSeat(null);
     setRoom(null);
     setError(null);
 
@@ -79,22 +84,24 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
 
         if (cancelled) return;
 
-        if (result !== 'x' && result !== 'o') {
+        if (result !== 'x' && result !== 'o' && result !== 'spectator') {
           setError(result);
           return;
         }
 
-        setRole(result);
+        setSeat(result);
         markJoined(roomId);
 
         // Falhar ao salvar o apelido não impede a partida: aparece "Jogador X/O"
-        saveName(roomId, result, nickname).catch(() => {});
+        if (result !== 'spectator') saveName(roomId, result, nickname).catch(() => {});
 
         const unsubscribe = subscribeRoom(roomId, data => {
           if (data) setRoom(data);
           else setError('not-found');
         });
-        const stopPresence = trackPresence(roomId, result);
+        const stopPresence = result === 'spectator'
+          ? watchAsSpectator(roomId, uid, nickname)
+          : trackPresence(roomId, result);
 
         disconnect = () => {
           unsubscribe();
@@ -116,15 +123,26 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
   }, [roomId]);
 
   const game = room?.state ?? INITIAL_GAME;
+
+  // Jogador (X/O) ou null para espectador
+  const role: Player | null = seat === 'spectator' ? null : seat;
+  const spectator = seat === 'spectator';
+
   const opponent: Player = role === 'x' ? 'o' : 'x';
   const opponentJoined = Boolean(room?.players.o);
   const opponentOnline = Boolean(room?.online[opponent]);
+  const left = room?.left ?? {};
+  const opponentLeft = Boolean(role ? left[opponent] : left.x || left.o);
   const myTurn = role === game.currentPlayer;
+  const spectatorNames = Object.values(room?.spectators ?? {});
+
+  // Partida em andamento: dois jogadores presentes e ninguém venceu
+  const inProgress = opponentJoined && !left.x && !left.o && !game.winner;
 
   const nameOf = (player: Player) => room?.names[player] ?? `Jogador ${player.toUpperCase()}`;
 
   // O cronômetro só começa depois da primeira jogada
-  const timerActive = opponentJoined && game.turn > 0 && !game.winner;
+  const timerActive = inProgress && game.turn > 0;
 
   // As regras do banco recusam jogadas inválidas; nesse caso o estado do servidor prevalece
   const save = (next: GameState) => {
@@ -144,7 +162,7 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
   // Jogador da vez desconectado: o adversário reivindica a vez após o tempo + tolerância
   useEffect(() => {
 
-    if (!timerActive || myTurn) return;
+    if (!timerActive || myTurn || !role) return;
 
     const timer = setTimeout(
       () => save(passTurn(latestGame.current)),
@@ -154,15 +172,16 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     return () => clearTimeout(timer);
 
     // Depende só do turno (não do objeto `game`), para mudanças de presença não reiniciarem a espera
-  }, [game.turn, timerActive, myTurn]);
+  }, [game.turn, timerActive, myTurn, role]);
 
-  const { notice, nudge, reject } = useGameFeedback(game, secondsLeft, timerActive, player =>
-    player === role ? 'Sua vez' : `Vez de ${nameOf(player)}`
-  );
+  const { notice, nudge, reject } = useGameFeedback(game, secondsLeft, timerActive, {
+    turnText: player => (player === role ? 'Sua vez' : `Vez de ${nameOf(player)}`),
+    isMine: player => player === role
+  });
 
   const play = (boardIndex: number, cellIndex: number) => {
 
-    if (!opponentJoined || game.winner) return;
+    if (!inProgress || spectator) return;
 
     if (!myTurn) {
       playSound('invalid');
@@ -180,25 +199,60 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
 
   };
 
-  const rematch = () => save(createGame());
+  /* ---------- Revanche: só começa quando os dois pedem ---------- */
 
-  const status = error ? 'error' : room && role ? 'ready' : 'connecting';
+  const rematchRequests = room?.rematch ?? {};
+  const rematchRequested = Boolean(role && rematchRequests[role]);
+  const opponentWantsRematch = Boolean(rematchRequests[opponent]);
+  const bothWantRematch = Boolean(rematchRequests.x && rematchRequests.o);
+
+  const rematch = () => {
+    if (roomId && role && game.winner && !opponentLeft) requestRematch(roomId, role).catch(() => {});
+  };
+
+  // Os dois aceitaram: qualquer jogador grava a nova partida (as regras aceitam só a primeira gravação)
+  useEffect(() => {
+
+    if (role && game.winner && bothWantRematch && !opponentLeft) save(createGame());
+
+  }, [role, game.winner, bothWantRematch, opponentLeft]);
+
+  // Nova partida em andamento: limpa o próprio pedido para não valer na próxima
+  useEffect(() => {
+
+    if (!game.winner && rematchRequested && roomId && role) clearRematch(roomId, role).catch(() => {});
+
+  }, [game.winner, rematchRequested, roomId, role]);
+
+  /** Desistência: o adversário é avisado de que você saiu */
+  const leave = () => {
+    if (roomId && role) leaveRoom(roomId, role).catch(() => {});
+  };
+
+  const status = error ? 'error' : room && seat ? 'ready' : 'connecting';
 
   return {
     status,
     error,
     role,
+    spectator,
+    spectatorNames,
+    left,
     game,
     nameOf,
     opponentJoined,
     opponentOnline,
+    opponentLeft,
+    rematchRequested,
+    opponentWantsRematch,
     myTurn,
     secondsLeft,
     timerActive,
     notice,
     nudge,
     play,
-    rematch
+    rematch,
+    leave
   } as const;
 
 }

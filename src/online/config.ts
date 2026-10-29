@@ -11,3 +11,12 @@ export const firebaseConfig = {
 
 /** O modo online só aparece quando o Firebase está configurado no .env */
 export const isOnlineConfigured = Object.values(firebaseConfig).every(Boolean);
+
+/** Parâmetro da URL com o código da sala: /?sala=abc123 */
+export const ROOM_PARAM = 'sala';
+
+export function roomIdFromUrl(): string | null {
+
+  return new URLSearchParams(window.location.search).get(ROOM_PARAM);
+
+}

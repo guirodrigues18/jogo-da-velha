@@ -431,8 +431,8 @@ body::after {
    =========================== */
 
 .btn-online {
-  margin-top: 16px;
-  padding: 14px;
+  margin-top: 12px;
+  padding: 12px;
   background: rgba(13, 19, 41, .7);
   border: 1px solid rgba(139, 92, 246, .55);
   box-shadow: 0 0 20px rgba(139, 92, 246, .18);
@@ -515,6 +515,11 @@ body::after {
   min-width: 0;
 }
 
+.spectators {
+  color: var(--muted);
+  font-size: .85rem;
+}
+
 .versus {
   color: var(--muted);
   font-size: .8rem;
@@ -570,7 +575,9 @@ body::after {
   box-shadow: 0 0 0 4px rgba(139, 92, 246, .2);
 }
 
-.online-message form .link-button {
+.online-message form .link-button,
+.modal-secondary {
+  display: inline-block;
   margin-top: 14px;
 }
 

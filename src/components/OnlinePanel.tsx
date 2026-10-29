@@ -8,13 +8,24 @@ interface Props {
   nameOf: (player: Player) => string;
   opponentJoined: boolean;
   opponentOnline: boolean;
+  opponentLeft: boolean;
+  spectatorNames: string[];
   onLeave: () => void;
 }
 
 const COPIED_FEEDBACK_MS = 2000;
 const SYMBOLS = { x: '✕', o: '◯' };
 
-export default function OnlinePanel({ roomId, role, nameOf, opponentJoined, opponentOnline, onLeave }: Props) {
+export default function OnlinePanel({
+  roomId,
+  role,
+  nameOf,
+  opponentJoined,
+  opponentOnline,
+  opponentLeft,
+  spectatorNames,
+  onLeave
+}: Props) {
 
   const [copied, setCopied] = useState(false);
 
@@ -35,6 +46,10 @@ export default function OnlinePanel({ roomId, role, nameOf, opponentJoined, oppo
     await copyText(inviteUrl);
     showCopied();
   };
+
+  let opponentStatus = opponentOnline ? 'Adversário online' : 'Adversário desconectado';
+
+  if (opponentLeft) opponentStatus = 'Adversário saiu da partida';
 
   if (!opponentJoined) {
     return (
@@ -60,17 +75,17 @@ export default function OnlinePanel({ roomId, role, nameOf, opponentJoined, oppo
           {SYMBOLS[role]} <span className="player-name">{nameOf(role)}</span> <small>(você)</small>
         </span>
         <span className="versus">vs</span>
-        <span
-          className={`role-chip ${opponent}`}
-          title={opponentOnline ? 'Online' : 'Desconectado'}
-        >
-          <span className={opponentOnline ? 'status-dot online' : 'status-dot'} />
+        <span className={`role-chip ${opponent}`} title={opponentStatus}>
+          <span className={opponentOnline && !opponentLeft ? 'status-dot online' : 'status-dot'} />
           {SYMBOLS[opponent]} <span className="player-name">{nameOf(opponent)}</span>
         </span>
       </div>
-      <span className="opponent-status">
-        {opponentOnline ? 'Adversário online' : 'Adversário desconectado'}
-      </span>
+      <span className="opponent-status">{opponentStatus}</span>
+      {spectatorNames.length > 0 && (
+        <span className="spectators" title={spectatorNames.join(', ')}>
+          👀 {spectatorNames.length} assistindo
+        </span>
+      )}
       <button className="link-button" onClick={onLeave}>Sair</button>
     </div>
   );

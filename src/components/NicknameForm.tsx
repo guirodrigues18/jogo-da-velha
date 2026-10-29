@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { signIn } from '../online/firebase';
-import { getHostName } from '../online/rooms';
+import { getRoomPreview, type RoomPreview } from '../online/rooms';
 import { loadNickname, normalizeNickname, NICKNAME_MAX_LENGTH } from '../online/nickname';
 
 interface Props {
@@ -13,9 +13,9 @@ interface Props {
 export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
 
   const [value, setValue] = useState(loadNickname);
-  const [hostName, setHostName] = useState<string | null>(null);
+  const [preview, setPreview] = useState<RoomPreview | null>(null);
 
-  // Convidado: mostra quem fez o desafio (se não der, fica o título genérico)
+  // Convidado: mostra quem fez o desafio, ou quem está jogando (se não der, fica o título genérico)
   useEffect(() => {
 
     if (!roomId) return;
@@ -23,9 +23,9 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
     let cancelled = false;
 
     signIn()
-      .then(() => getHostName(roomId))
-      .then(name => {
-        if (!cancelled) setHostName(name);
+      .then(() => getRoomPreview(roomId))
+      .then(result => {
+        if (!cancelled) setPreview(result);
       })
       .catch(() => {});
 
@@ -42,15 +42,28 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
     if (nickname) onSubmit(nickname);
   };
 
-  let title = 'Jogar online';
+  const watching = Boolean(preview?.full);
+  const host = preview?.hostName ?? 'Jogador X';
+  const guest = preview?.guestName ?? 'Jogador O';
 
-  if (roomId) title = hostName ? `${hostName} te desafiou! 🎮` : 'Você foi convidado! 🎮';
+  let title = 'Jogar online';
+  let subtitle = 'Como você quer ser chamado na partida?';
+  let action = 'Criar sala';
+
+  if (roomId && watching) {
+    title = `${host} vs ${guest} 👀`;
+    subtitle = 'A partida já tem dois jogadores, mas você pode assistir. Como quer ser chamado?';
+    action = 'Assistir partida';
+  } else if (roomId) {
+    title = preview?.hostName ? `${preview.hostName} te desafiou! 🎮` : 'Você foi convidado! 🎮';
+    action = 'Entrar na partida';
+  }
 
   return (
     <div className="container online-message">
       <form className="modal-card" onSubmit={submit}>
         <div className="modal-title">{title}</div>
-        <div className="modal-subtitle">Como você quer ser chamado na partida?</div>
+        <div className="modal-subtitle">{subtitle}</div>
         <input
           className="nickname-input"
           value={value}
@@ -63,7 +76,7 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
           autoFocus
         />
         <button className="btn" type="submit" disabled={!nickname}>
-          {roomId ? 'Entrar na partida' : 'Criar sala'}
+          {action}
         </button>
         <button className="link-button" type="button" onClick={onCancel}>
           Voltar
