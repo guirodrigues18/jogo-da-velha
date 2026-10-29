@@ -4,13 +4,15 @@ import { TURN_SECONDS, WARNING_SECONDS } from '../hooks/useTurnTimer';
 
 interface Props {
   currentPlayer: Player;
+  /** Substitui "Jogador X/O" (ex.: "Sua vez" no modo online) */
+  turnLabel?: string;
   activeBoard: number | null;
   turn: number;
   secondsLeft: number;
   timerActive: boolean;
 }
 
-export default function InfoBar({ currentPlayer, activeBoard, turn, secondsLeft, timerActive }: Props) {
+export default function InfoBar({ currentPlayer, turnLabel, activeBoard, turn, secondsLeft, timerActive }: Props) {
 
   const warning = timerActive && secondsLeft <= WARNING_SECONDS;
 
@@ -33,7 +35,7 @@ export default function InfoBar({ currentPlayer, activeBoard, turn, secondsLeft,
         </div>
         {/* A key reinicia a animação de entrada a cada turno */}
         <div className="info-value pop-in" key={turn}>
-          {currentPlayer === 'x' ? 'Jogador X' : 'Jogador O'}
+          {turnLabel ?? (currentPlayer === 'x' ? 'Jogador X' : 'Jogador O')}
         </div>
         <div className="timer">
           <div

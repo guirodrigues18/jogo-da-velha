@@ -1,83 +1,60 @@
-import { isBoardPlayable } from './game/logic';
-import { useGame } from './hooks/useGame';
-import InfoBar from './components/InfoBar';
-import MiniBoard from './components/MiniBoard';
-import GameOverModal from './components/GameOverModal';
-import SoundToggle from './components/SoundToggle';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { isOnlineConfigured } from './online/config';
+import LocalGame from './components/LocalGame';
+import OnlineMessage from './components/OnlineMessage';
+
+// O SDK do Firebase só é baixado por quem entra no modo online
+const OnlineGame = lazy(() => import('./components/OnlineGame'));
+
+type Mode =
+  | { kind: 'local' }
+  | { kind: 'online'; roomId: string | null };
+
+const ROOM_PARAM = 'sala';
+
+function modeFromUrl(): Mode {
+
+  const roomId = new URLSearchParams(window.location.search).get(ROOM_PARAM);
+
+  return roomId && isOnlineConfigured ? { kind: 'online', roomId } : { kind: 'local' };
+
+}
 
 export default function App() {
 
-  const {
-    game,
-    autoRestart,
-    secondsLeft,
-    timerActive,
-    nudge,
-    notice,
-    play,
-    restart,
-    cancelAutoRestart
-  } = useGame();
+  const [mode, setMode] = useState<Mode>(modeFromUrl);
+
+  // Botões voltar/avançar do navegador
+  useEffect(() => {
+
+    const onPopState = () => setMode(modeFromUrl());
+
+    window.addEventListener('popstate', onPopState);
+
+    return () => window.removeEventListener('popstate', onPopState);
+
+  }, []);
+
+  const handleRoomCreated = (roomId: string) => {
+    window.history.pushState(null, '', `?${ROOM_PARAM}=${roomId}`);
+    setMode({ kind: 'online', roomId });
+  };
+
+  const leaveOnline = () => {
+    window.history.pushState(null, '', window.location.pathname);
+    setMode({ kind: 'local' });
+  };
+
+  if (mode.kind === 'online') {
+    return (
+      <Suspense fallback={<OnlineMessage title="Conectando…" />}>
+        <OnlineGame roomId={mode.roomId} onRoomCreated={handleRoomCreated} onLeave={leaveOnline} />
+      </Suspense>
+    );
+  }
 
   return (
-    <>
-      <div className="container">
-
-        <div className="top">
-          <div className="top-row">
-            <h1 className="title">Jogo da Velha<span> 2.0</span></h1>
-            <SoundToggle />
-          </div>
-
-          <p className="subtitle">
-            Ganhe mini-tabuleiros para dominar o tabuleiro principal.
-            Cada jogada define onde o próximo jogador deverá jogar.
-          </p>
-
-          <InfoBar
-            currentPlayer={game.currentPlayer}
-            activeBoard={game.activeBoard}
-            turn={game.turn}
-            secondsLeft={secondsLeft}
-            timerActive={timerActive}
-          />
-        </div>
-
-        <div className="main-board">
-          {game.boards.map((board, i) => (
-            <MiniBoard
-              key={i}
-              board={board}
-              playable={isBoardPlayable(game, i)}
-              free={game.activeBoard === null}
-              currentPlayer={game.currentPlayer}
-              nudgeId={nudge?.board === i ? nudge.id : undefined}
-              onCellClick={cell => play(i, cell)}
-            />
-          ))}
-        </div>
-
-        <div className="legend">
-          {/* 🔥 A posição clicada define o próximo mini-tabuleiro do adversário.<br /> */}
-          {/* ⚡ Se o tabuleiro estiver fechado, o próximo jogador pode jogar em qualquer um aberto. */}
-        </div>
-
-      </div>
-
-      {notice && (
-        <div className="toast" key={notice.id} role="status">
-          {notice.text}
-        </div>
-      )}
-
-      <GameOverModal
-        winner={game.winner}
-        boards={game.boards}
-        autoRestart={autoRestart}
-        onShare={cancelAutoRestart}
-        onRestart={restart}
-      />
-    </>
+    <LocalGame onPlayOnline={isOnlineConfigured ? () => setMode({ kind: 'online', roomId: null }) : undefined} />
   );
 
 }

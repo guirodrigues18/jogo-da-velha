@@ -427,6 +427,136 @@ body::after {
 }
 
 /* ===========================
+   Modo online
+   =========================== */
+
+.btn-online {
+  margin-top: 16px;
+  padding: 14px;
+  background: rgba(13, 19, 41, .7);
+  border: 1px solid rgba(139, 92, 246, .55);
+  box-shadow: 0 0 20px rgba(139, 92, 246, .18);
+  backdrop-filter: blur(10px);
+  transition: .2s ease;
+}
+
+.btn-online:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 28px rgba(139, 92, 246, .35);
+}
+
+.btn-ghost {
+  margin-top: 10px;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid var(--border);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: .9rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.online-panel {
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: 18px;
+  background: rgba(13, 19, 41, .7);
+  border: 1px solid rgba(139, 92, 246, .45);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  animation: fade-up .3s ease both;
+}
+
+.online-panel .link-button {
+  margin-top: 14px;
+}
+
+.online-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.online-text {
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.online-text .o {
+  color: var(--pink);
+}
+
+.online-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+.online-status .link-button {
+  margin-top: 0;
+}
+
+.role-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: .9rem;
+}
+
+.role-chip.x {
+  color: var(--cyan);
+  background: rgba(0, 229, 255, .12);
+}
+
+.role-chip.o {
+  color: var(--pink);
+  background: rgba(255, 79, 216, .12);
+}
+
+.opponent-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: .5;
+}
+
+.status-dot.online {
+  background: var(--green);
+  opacity: 1;
+  box-shadow: 0 0 10px var(--green);
+}
+
+/* Tela de carregamento / erro */
+.online-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100dvh - 36px);
+}
+
+.online-message .modal-card {
+  transform: none;
+}
+
+/* ===========================
    Aviso flutuante (tempo esgotado)
    =========================== */
 
@@ -624,6 +754,80 @@ body::after {
 
   .cell.o::before {
     border-width: 4px;
+  }
+
+}
+
+/* Notebook / desktop: informações à esquerda e tabuleiro à direita,
+   dimensionado pela altura da tela para caber inteiro sem rolagem */
+@media (min-width: 1000px) and (orientation: landscape) {
+
+  :root {
+    --page-padding: 24px;
+    --side-width: clamp(300px, 26vw, 400px);
+    --columns-gap: clamp(24px, 3vw, 48px);
+  }
+
+  body {
+    padding: var(--page-padding);
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: var(--side-width) auto;
+    justify-content: center;
+    align-items: center;
+    gap: var(--columns-gap);
+    max-width: none;
+    min-height: calc(100dvh - var(--page-padding) * 2);
+  }
+
+  .top {
+    margin-bottom: 0;
+  }
+
+  /* "Jogo da Velha" em uma linha ao lado do botão de som; "2.0" na linha de baixo */
+  .title {
+    font-size: calc((var(--side-width) - 64px) / 8);
+  }
+
+  .title span {
+    display: block;
+  }
+
+  .info-bar {
+    flex-direction: column;
+  }
+
+  .info-card {
+    min-width: 0;
+  }
+
+  .main-board {
+    margin-top: 0;
+    width: min(
+      calc(100dvh - var(--page-padding) * 2),
+      calc(100vw - var(--page-padding) * 2 - var(--side-width) - var(--columns-gap))
+    );
+    gap: clamp(8px, 1.2vh, 16px);
+  }
+
+  .mini-board {
+    min-height: 0;
+    padding: clamp(6px, 1vh, 10px);
+    gap: clamp(4px, .8vh, 8px);
+  }
+
+  .board-overlay {
+    font-size: clamp(4rem, 12vh, 8rem);
+  }
+
+  .legend:empty {
+    display: none;
+  }
+
+  .container.online-message {
+    display: flex;
   }
 
 }

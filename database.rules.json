@@ -1,0 +1,68 @@
+{
+  "rules": {
+    "rooms": {
+      "$roomId": {
+        ".read": "auth != null",
+        ".write": "auth != null && !data.exists() && newData.child('players/x').val() === auth.uid",
+        ".validate": "newData.hasChildren(['players', 'state', 'createdAt'])",
+
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+
+        "players": {
+          "x": {
+            ".validate": "newData.isString()"
+          },
+          "o": {
+            ".write": "auth != null && !data.exists() && newData.val() === auth.uid && data.parent().child('x').val() !== auth.uid",
+            ".validate": "newData.isString()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+
+        "state": {
+          ".write": "auth != null && data.exists() && ((data.child('winner').val() === '-' && newData.child('turn').val() === data.child('turn').val() + 1 && data.parent().child('players/o').exists() && (auth.uid === data.parent().child('players').child(data.child('currentPlayer').val()).val() || (newData.child('cells').val() === data.child('cells').val() && now > data.child('turnStartedAt').val() + 20000 && ((data.child('currentPlayer').val() === 'x' && auth.uid === data.parent().child('players/o').val()) || (data.child('currentPlayer').val() === 'o' && auth.uid === data.parent().child('players/x').val()))))) || (data.child('winner').val() !== '-' && newData.child('turn').val() === 0 && (auth.uid === data.parent().child('players/x').val() || auth.uid === data.parent().child('players/o').val())))",
+          ".validate": "newData.hasChildren(['cells', 'results', 'currentPlayer', 'activeBoard', 'winner', 'turn', 'turnStartedAt'])",
+          "cells": {
+            ".validate": "newData.isString() && newData.val().matches(/^[xo-]{81}$/)"
+          },
+          "results": {
+            ".validate": "newData.isString() && newData.val().matches(/^[xod-]{9}$/)"
+          },
+          "currentPlayer": {
+            ".validate": "newData.val() === 'x' || newData.val() === 'o'"
+          },
+          "activeBoard": {
+            ".validate": "newData.isNumber() && newData.val() >= -1 && newData.val() <= 8"
+          },
+          "winner": {
+            ".validate": "newData.isString() && newData.val().matches(/^[xod-]$/)"
+          },
+          "turn": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "turnStartedAt": {
+            ".validate": "newData.val() === now"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+
+        "online": {
+          "$role": {
+            ".write": "auth != null && data.parent().parent().child('players').child($role).val() === auth.uid",
+            ".validate": "newData.isBoolean()"
+          }
+        },
+
+        "$other": {
+          ".validate": false
+        }
+      }
+    }
+  }
+}
