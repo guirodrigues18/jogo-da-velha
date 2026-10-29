@@ -17,6 +17,7 @@
   --cyan: #00e5ff;
   --pink: #ff4fd8;
   --green: #00ffb3;
+  --red: #ff4d6d;
 }
 
 /* ===========================
@@ -87,6 +88,34 @@ body::after {
   -webkit-text-fill-color: transparent;
 }
 
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.sound-toggle {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(13, 19, 41, .7);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.sound-toggle:hover {
+  border-color: rgba(255, 255, 255, .2);
+}
+
+.sound-toggle:active {
+  transform: scale(.9);
+}
+
 .subtitle {
   color: var(--muted);
   line-height: 1.6;
@@ -115,6 +144,8 @@ body::after {
 }
 
 .info-label {
+  display: flex;
+  justify-content: space-between;
   color: var(--muted);
   font-size: .85rem;
   margin-bottom: 8px;
@@ -123,6 +154,54 @@ body::after {
 .info-value {
   font-size: 1.15rem;
   font-weight: 700;
+}
+
+/* ===========================
+   Cronômetro do turno
+   =========================== */
+
+.timer {
+  height: 6px;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06);
+  overflow: hidden;
+}
+
+.timer-fill {
+  height: 100%;
+  border-radius: inherit;
+  transform-origin: left;
+  opacity: .35;
+  transition: background .3s ease;
+}
+
+.timer-fill.x {
+  background: var(--cyan);
+}
+
+.timer-fill.o {
+  background: var(--pink);
+}
+
+.timer-fill.running {
+  opacity: 1;
+  animation: countdown var(--turn-seconds) linear forwards;
+}
+
+.timer-fill.warning {
+  background: var(--red);
+}
+
+.timer-seconds {
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-seconds.warning {
+  color: var(--red);
+  animation: pulse 1s ease infinite;
 }
 
 /* ===========================
@@ -298,6 +377,12 @@ body::after {
   border-radius: 30px;
   padding: 34px;
   text-align: center;
+  transform: scale(.9) translateY(20px);
+  transition: transform .4s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.modal.show .modal-card {
+  transform: none;
 }
 
 .modal-title {
@@ -324,11 +409,148 @@ body::after {
   cursor: pointer;
 }
 
+.btn:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.btn-share {
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #f58529, #dd2a7b, #8134af);
+}
+
 .legend {
   margin-top: 20px;
   color: var(--muted);
   line-height: 1.7;
   font-size: .95rem;
+}
+
+/* ===========================
+   Aviso flutuante (tempo esgotado)
+   =========================== */
+
+.toast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  z-index: 50;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(13, 19, 41, .92);
+  border: 1px solid rgba(255, 77, 109, .5);
+  box-shadow: 0 0 25px rgba(255, 77, 109, .25);
+  backdrop-filter: blur(10px);
+  font-weight: 700;
+  white-space: nowrap;
+  /* Duração igual a NOTICE_DURATION_MS em useGame.ts */
+  animation: toast 2.4s ease both;
+}
+
+/* ===========================
+   Micro animações
+   =========================== */
+
+/* X se desenha traço a traço */
+.cell.x::before,
+.cell.x::after {
+  animation: draw-line .18s ease-out both;
+}
+
+.cell.x::after {
+  animation-delay: .1s;
+}
+
+/* O surge girando */
+.cell.o::before {
+  animation: pop-in-rotate .35s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+
+.cell:active {
+  transform: scale(.92);
+}
+
+/* Carimbo ao conquistar um mini-tabuleiro */
+.board-overlay {
+  animation: stamp .45s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+
+.pop-in {
+  animation: fade-up .3s ease both;
+}
+
+@keyframes draw-line {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes pop-in-rotate {
+  from {
+    transform: scale(0) rotate(-120deg);
+    opacity: 0;
+  }
+}
+
+@keyframes stamp {
+  from {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+}
+
+@keyframes countdown {
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: .4;
+  }
+}
+
+@keyframes toast {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+
+  10%,
+  85% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+
+  /* O cronômetro é informação, não decoração: continua animando */
+  .timer-fill.running {
+    animation-duration: var(--turn-seconds) !important;
+  }
+
 }
 
 /* ===========================
@@ -378,6 +600,10 @@ body::after {
 
   .info-bar {
     flex-direction: column;
+  }
+
+  .toast {
+    font-size: .9rem;
   }
 
   .main-board {
