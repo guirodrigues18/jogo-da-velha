@@ -29,7 +29,7 @@ e efeitos de vitória. Tudo fica no navegador; com **login com Google** (opciona
 na nuvem (`users/{uid}`) e acompanha a pessoa em qualquer aparelho.
 
 **Temas:** além dos neon (Neon, Retrô, Oceano, Pôr do sol e Dourado), há temas sem neon que mudam a tela
-inteira, peças incluídas: Blocos, Madeira, Caderno, Gelo, Jardim, Pizza de calabresa, Pitaya, Donuts e Militar.
+inteira, peças incluídas: Caderno, Gelo, Blocos, Madeira, Militar, Pitaya e Donuts.
 Cada tema é um bloco de variáveis CSS em `src/style.css` (`[data-theme="..."]`). No online, se os dois
 jogadores usam o mesmo símbolo, cada um vê o seu e o adversário aparece com o ✕/◯ clássico.
 

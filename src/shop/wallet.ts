@@ -49,6 +49,20 @@ export function equip(profile: Profile, id: ItemId): Profile | null {
 
 }
 
+/** Tira itens que saíram da loja; o que estava em uso volta para o padrão */
+export function withoutRemovedItems(profile: Profile): Profile {
+
+  const owned = profile.owned.filter(id => findItem(id));
+  const equipped = { ...DEFAULT_EQUIPPED };
+
+  for (const [type, id] of Object.entries(profile.equipped) as [ItemType, ItemId][]) {
+    if (findItem(id)?.type === type && owned.includes(id)) equipped[type] = id;
+  }
+
+  return { ...profile, owned, equipped };
+
+}
+
 /* ---------- Estado e armazenamento ---------- */
 
 /**
@@ -85,7 +99,7 @@ function load(): Profile {
 
     const parsed = JSON.parse(saved) as Profile;
 
-    return { ...emptyProfile(), ...parsed, equipped: { ...DEFAULT_EQUIPPED, ...parsed.equipped } };
+    return withoutRemovedItems({ ...emptyProfile(), ...parsed, equipped: { ...DEFAULT_EQUIPPED, ...parsed.equipped } });
 
   } catch {
     return emptyProfile();

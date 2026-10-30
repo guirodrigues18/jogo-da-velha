@@ -115,8 +115,6 @@ const pt = {
       'theme-wood': 'Madeira',
       'theme-notebook': 'Caderno',
       'theme-ice': 'Gelo',
-      'theme-garden': 'Jardim',
-      'theme-pizza': 'Pizza de calabresa',
       'theme-pitaya': 'Pitaya',
       'theme-donut': 'Donuts',
       'theme-military': 'Militar',

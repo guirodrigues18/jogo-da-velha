@@ -115,8 +115,6 @@ const en: Messages = {
       'theme-wood': 'Wood',
       'theme-notebook': 'Notebook',
       'theme-ice': 'Ice',
-      'theme-garden': 'Garden',
-      'theme-pizza': 'Pepperoni pizza',
       'theme-pitaya': 'Dragon fruit',
       'theme-donut': 'Donuts',
       'theme-military': 'Military',

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { emptyProfile, equip, purchase, retroactiveCoins } from './wallet';
+import { emptyProfile, equip, purchase, retroactiveCoins, withoutRemovedItems } from './wallet';
 import { coinsForGame } from './rewards';
 
 describe('loja', () => {
@@ -38,6 +38,19 @@ describe('loja', () => {
     const bought = purchase({ ...emptyProfile(), coins: 200 }, 'theme-retro')!;
 
     expect(equip(bought, 'theme-retro')?.equipped).toMatchObject({ theme: 'theme-retro', symbol: 'symbol-classic' });
+
+  });
+
+  it('itens que saíram da loja somem e o que estava em uso volta ao padrão', () => {
+
+    const profile = withoutRemovedItems({
+      coins: 50,
+      owned: [...emptyProfile().owned, 'theme-pizza', 'symbol-star'],
+      equipped: { symbol: 'symbol-star', theme: 'theme-pizza', effect: 'effect-classic' }
+    });
+
+    expect(profile.owned).not.toContain('theme-pizza');
+    expect(profile.equipped).toEqual({ symbol: 'symbol-star', theme: 'theme-neon', effect: 'effect-classic' });
 
   });
 
