@@ -11,11 +11,16 @@ interface Props {
   opponentJoined: boolean;
   opponentOnline: boolean;
   opponentLeft: boolean;
+  /** Segundos até a vitória por abandono (adversário desconectado); null se ele está online */
+  abandonSecondsLeft: number | null;
   spectatorNames: string[];
   onLeave: () => void;
 }
 
 const COPIED_FEEDBACK_MS = 2000;
+
+/** 237 → "3:57" */
+const formatTime = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 const SYMBOLS = { x: '✕', o: '◯' };
 
 export default function OnlinePanel({
@@ -25,6 +30,7 @@ export default function OnlinePanel({
   opponentJoined,
   opponentOnline,
   opponentLeft,
+  abandonSecondsLeft,
   spectatorNames,
   onLeave
 }: Props) {
@@ -53,6 +59,7 @@ export default function OnlinePanel({
   let opponentStatus = opponentOnline ? t.online.opponentOnline : t.online.opponentOffline;
 
   if (opponentLeft) opponentStatus = t.online.opponentLeft;
+  else if (abandonSecondsLeft !== null) opponentStatus = t.online.abandonCountdown(formatTime(abandonSecondsLeft));
 
   if (!opponentJoined) {
     return (
@@ -82,7 +89,9 @@ export default function OnlinePanel({
           {SYMBOLS[opponent]} <span className="player-name">{nameOf(opponent)}</span>
         </span>
       </div>
-      <span className="opponent-status">{opponentStatus}</span>
+      <span className={abandonSecondsLeft !== null && !opponentLeft ? 'opponent-status away' : 'opponent-status'}>
+        {opponentStatus}
+      </span>
       {spectatorNames.length > 0 && (
         <span className="spectators" title={spectatorNames.join(', ')}>
           {t.online.watchingCount(spectatorNames.length)}

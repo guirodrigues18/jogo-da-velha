@@ -12,6 +12,7 @@ Modos de jogo:
   - cada jogador escolhe um apelido provisório;
   - revanche só começa quando os dois aceitam, e o placar da série fica salvo na sala;
   - sair da sala conta como desistência (o adversário vence);
+  - quem fica mais de 4 minutos desconectado perde por abandono (conferido pelo relógio do servidor);
   - quem abrir o link de uma sala cheia entra como espectador (até 10 por sala);
   - reações rápidas com emoji aparecem para todos da sala.
 

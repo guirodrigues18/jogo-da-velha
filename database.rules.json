@@ -68,8 +68,15 @@
 
         "left": {
           "$role": {
+            ".write": "auth != null && ((data.parent().parent().child('players').child($role).val() === auth.uid && newData.val() === true) || (newData.val() === 'abandoned' && (($role === 'x' && data.parent().parent().child('players/o').val() === auth.uid) || ($role === 'o' && data.parent().parent().child('players/x').val() === auth.uid)) && !data.parent().parent().child('online').child($role).exists() && now > data.parent().parent().child('seen').child($role).val() + 240000 && data.parent().parent().child('state/winner').val() === '-'))",
+            ".validate": "newData.val() === true || newData.val() === 'abandoned'"
+          }
+        },
+
+        "seen": {
+          "$role": {
             ".write": "auth != null && data.parent().parent().child('players').child($role).val() === auth.uid",
-            ".validate": "newData.val() === true"
+            ".validate": "newData.isNumber()"
           }
         },
 

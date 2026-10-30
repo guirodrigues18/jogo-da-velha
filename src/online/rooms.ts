@@ -29,8 +29,10 @@ interface StoredRoom {
   state: StoredState;
   online?: PerPlayer<boolean>;
   names?: PerPlayer<string>;
-  /** Quem saiu da sala pelo botão "Sair" (desistência) */
-  left?: PerPlayer<boolean>;
+  /** Quem saiu: true = botão "Sair"; 'abandoned' = ficou desconectado tempo demais */
+  left?: PerPlayer<LeftReason>;
+  /** Quando cada jogador perdeu a conexão pela última vez (horário do servidor) */
+  seen?: PerPlayer<number>;
   /** Pedidos de revanche; a nova partida começa quando os dois pedem */
   rematch?: PerPlayer<boolean>;
   /** Espectadores conectados: uid → apelido */
@@ -50,12 +52,14 @@ export interface Reaction {
   t: number;
 }
 
+export type LeftReason = true | 'abandoned';
+
 export interface Room {
   players: Players;
   state: GameState;
   online: PerPlayer<boolean>;
   names: PerPlayer<string>;
-  left: PerPlayer<boolean>;
+  left: PerPlayer<LeftReason>;
   rematch: PerPlayer<boolean>;
   spectators: Record<string, string>;
   score: PerPlayer<number>;
@@ -228,6 +232,19 @@ export function leaveRoom(roomId: string, role: Player): Promise<void> {
 
 }
 
+/**
+ * Declara que o adversário abandonou a partida. As regras do banco só aceitam
+ * se ele estiver desconectado há mais de ABANDON_SECONDS (pelo relógio do servidor).
+ */
+export function claimAbandonment(roomId: string, opponent: Player): Promise<void> {
+
+  return set(roomRef(roomId, `left/${opponent}`), 'abandoned');
+
+}
+
+/** Precisa ser igual ao valor nas regras do banco (database.rules.json) */
+export const ABANDON_SECONDS = 240;
+
 export function saveName(roomId: string, role: Player, name: string): Promise<void> {
 
   return set(roomRef(roomId, `names/${role}`), name);
@@ -269,10 +286,24 @@ function keepWhileConnected(roomId: string, path: string, value: unknown): () =>
 
 }
 
-/** Marca o jogador como online */
+/**
+ * Marca o jogador como online. Se a conexão cair, o servidor também anota a hora
+ * (usada para decidir quando a partida pode ser dada como abandonada).
+ */
 export function trackPresence(roomId: string, role: Player): () => void {
 
-  return keepWhileConnected(roomId, `online/${role}`, true);
+  const seenRef = roomRef(roomId, `seen/${role}`);
+  const unsubscribe = onValue(ref(db, '.info/connected'), snapshot => {
+    if (snapshot.val()) onDisconnect(seenRef).set(serverTimestamp()).catch(() => {});
+  });
+
+  const stopOnline = keepWhileConnected(roomId, `online/${role}`, true);
+
+  return () => {
+    unsubscribe();
+    onDisconnect(seenRef).cancel().catch(() => {});
+    stopOnline();
+  };
 
 }
 

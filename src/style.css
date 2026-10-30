@@ -702,6 +702,11 @@ body::after {
   font-size: .9rem;
 }
 
+.opponent-status.away {
+  color: #ffb84d;
+  font-variant-numeric: tabular-nums;
+}
+
 .status-dot {
   flex-shrink: 0;
   width: 9px;

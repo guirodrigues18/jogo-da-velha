@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { applyMove, createGame, passTurn, type GameState, type Player } from '../game/logic';
 import { signIn } from '../online/firebase';
 import {
+  ABANDON_SECONDS,
+  claimAbandonment,
   clearRematch,
   createRoom,
   joinRoom,
@@ -31,6 +33,9 @@ const OPPONENT_GRACE_MS = 3000;
 
 /** Sem resposta do Firebase nesse tempo, mostra erro em vez de carregar para sempre */
 const CONNECT_TIMEOUT_MS = 20000;
+
+/** Folga depois do prazo de abandono, para o relógio do aparelho não se adiantar ao do servidor */
+const ABANDON_GRACE_MS = 2000;
 
 /** Intervalo mínimo entre reações da mesma pessoa (as regras do banco exigem 500 ms) */
 const REACTION_COOLDOWN_MS = 700;
@@ -335,6 +340,46 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     if (roomId && role) leaveRoom(roomId, role).catch(() => {});
   };
 
+  /* ---------- Abandono: adversário desconectado por tempo demais ---------- */
+
+  const opponentAway = Boolean(role && inProgress && !opponentOnline);
+  const [abandonDeadline, setAbandonDeadline] = useState<number | null>(null);
+  const [clock, setClock] = useState(() => Date.now());
+
+  // A contagem começa quando ele some e é cancelada se ele voltar
+  useEffect(() => {
+
+    setAbandonDeadline(opponentAway ? Date.now() + ABANDON_SECONDS * 1000 : null);
+
+  }, [opponentAway]);
+
+  useEffect(() => {
+
+    if (!abandonDeadline || !roomId) return;
+
+    const interval = setInterval(() => {
+
+      const now = Date.now();
+
+      setClock(now);
+
+      // Tenta a cada segundo depois do prazo: o servidor só aceita quando o tempo dele também passou
+      if (now >= abandonDeadline + ABANDON_GRACE_MS) claimAbandonment(roomId, opponent).catch(() => {});
+
+    }, 1000);
+
+    return () => clearInterval(interval);
+
+  }, [abandonDeadline, roomId, opponent]);
+
+  // Só aparece depois de alguns segundos, para não piscar em quedas rápidas de conexão
+  const abandonRemaining = abandonDeadline ? Math.max(0, Math.ceil((abandonDeadline - clock) / 1000)) : null;
+  const abandonSecondsLeft = abandonRemaining !== null && abandonRemaining <= ABANDON_SECONDS - 3
+    ? abandonRemaining
+    : null;
+
+  const opponentAbandoned = role ? left[opponent] === 'abandoned' : false;
+
   const status = error ? 'error' : room && seat ? 'ready' : 'connecting';
 
   return {
@@ -349,6 +394,8 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     opponentJoined,
     opponentOnline,
     opponentLeft,
+    opponentAbandoned,
+    abandonSecondsLeft,
     rematchRequested,
     opponentWantsRematch,
     myTurn,

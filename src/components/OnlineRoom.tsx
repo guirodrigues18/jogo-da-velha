@@ -119,6 +119,7 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
             opponentJoined={online.opponentJoined}
             opponentOnline={online.opponentOnline}
             opponentLeft={online.opponentLeft}
+            abandonSecondsLeft={online.abandonSecondsLeft}
             spectatorNames={online.spectatorNames}
             onLeave={leave}
           />
@@ -148,13 +149,25 @@ function playerModal(online: Online, role: Player, leave: () => void): ModalProp
     onShare: noop
   };
 
-  // Desistência: quem ficou vence, a menos que a partida já tivesse terminado
+  // Desistência ou abandono: quem ficou vence, a menos que a partida já tivesse terminado
   if (online.opponentLeft) {
+
+    let title = t.online.opponentLeftWon(opponentName);
+    let subtitle = t.online.matchEnded;
+
+    if (game.winner) {
+      title = resultTitle(game.winner, role, nameOf) ?? t.result.draw;
+      subtitle = t.online.leftRoom(opponentName);
+    } else if (online.opponentAbandoned) {
+      title = t.online.opponentAbandonedWon(opponentName);
+      subtitle = t.online.abandonedSubtitle;
+    }
+
     return {
       ...common,
       open: true,
-      title: game.winner ? resultTitle(game.winner, role, nameOf) : t.online.opponentLeftWon(opponentName),
-      subtitle: game.winner ? t.online.leftRoom(opponentName) : t.online.matchEnded,
+      title,
+      subtitle,
       restartLabel: t.online.backHome,
       onRestart: leave
     };
