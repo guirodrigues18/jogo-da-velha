@@ -13,8 +13,14 @@ let pendingSignIn: Promise<string> | null = null;
 /**
  * Login anônimo: cada navegador recebe um id persistente, sem cadastro.
  * Chamadas simultâneas reaproveitam o mesmo login (evita criar dois usuários).
+ * Se a pessoa entrou com Google, usa essa conta.
  */
 export function signIn(): Promise<string> {
+
+  // Trocou de conta (entrou ou saiu do Google) desde o último login: refaz
+  if (auth.currentUser && pendingSignIn) {
+    pendingSignIn = Promise.resolve(auth.currentUser.uid);
+  }
 
   pendingSignIn ??= (async () => {
 
@@ -32,5 +38,12 @@ export function signIn(): Promise<string> {
   });
 
   return pendingSignIn;
+
+}
+
+/** Depois de sair da conta Google, o próximo signIn() cria um login anônimo novo */
+export function resetSignIn() {
+
+  pendingSignIn = null;
 
 }

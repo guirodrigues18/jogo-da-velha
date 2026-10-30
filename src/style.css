@@ -18,6 +18,72 @@
   --pink: #ff4fd8;
   --green: #00ffb3;
   --red: #ff4d6d;
+
+  /* Tema (a loja troca estas cores) */
+  --page-bg:
+    radial-gradient(circle at top left, rgba(93, 76, 255, .25), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(0, 229, 255, .14), transparent 28%),
+    linear-gradient(145deg, #040612 0%, #081122 45%, #02040d 100%);
+  --orb-1: #7b5cff;
+  --orb-2: #00d9ff;
+  --board-bg: rgba(12, 18, 39, .8);
+  --cell-bg: linear-gradient(180deg, rgba(20, 27, 57, .95), rgba(13, 20, 43, .95));
+  --frame: #8b5cf6;
+  --frame-glow: rgba(139, 92, 246, .28);
+}
+
+/* ===========================
+   Temas da loja
+   =========================== */
+
+[data-theme="retro"] {
+  --page-bg:
+    radial-gradient(circle at top left, rgba(57, 255, 20, .14), transparent 30%),
+    linear-gradient(145deg, #020a03 0%, #04140a 50%, #010502 100%);
+  --orb-1: #1f8f3a;
+  --orb-2: #39ff14;
+  --board-bg: rgba(4, 22, 10, .85);
+  --cell-bg: linear-gradient(180deg, rgba(10, 40, 18, .95), rgba(5, 26, 11, .95));
+  --frame: #39ff14;
+  --frame-glow: rgba(57, 255, 20, .25);
+}
+
+[data-theme="ocean"] {
+  --page-bg:
+    radial-gradient(circle at top left, rgba(46, 196, 182, .22), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(30, 90, 200, .25), transparent 30%),
+    linear-gradient(145deg, #021422 0%, #052a3d 50%, #010b14 100%);
+  --orb-1: #1e5ac8;
+  --orb-2: #2ec4b6;
+  --board-bg: rgba(4, 30, 46, .85);
+  --cell-bg: linear-gradient(180deg, rgba(10, 50, 72, .95), rgba(6, 34, 52, .95));
+  --frame: #2ec4b6;
+  --frame-glow: rgba(46, 196, 182, .28);
+}
+
+[data-theme="sunset"] {
+  --page-bg:
+    radial-gradient(circle at top left, rgba(255, 140, 66, .25), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(214, 40, 120, .25), transparent 30%),
+    linear-gradient(145deg, #1a0716 0%, #2a0b24 50%, #0d040b 100%);
+  --orb-1: #d62878;
+  --orb-2: #ff8c42;
+  --board-bg: rgba(40, 10, 34, .85);
+  --cell-bg: linear-gradient(180deg, rgba(62, 18, 52, .95), rgba(42, 12, 36, .95));
+  --frame: #ff8c42;
+  --frame-glow: rgba(255, 140, 66, .28);
+}
+
+[data-theme="gold"] {
+  --page-bg:
+    radial-gradient(circle at top left, rgba(255, 209, 102, .16), transparent 30%),
+    linear-gradient(145deg, #0b0904 0%, #17130a 50%, #050402 100%);
+  --orb-1: #b8860b;
+  --orb-2: #ffd166;
+  --board-bg: rgba(26, 21, 8, .88);
+  --cell-bg: linear-gradient(180deg, rgba(40, 33, 14, .95), rgba(26, 21, 9, .95));
+  --frame: #ffd166;
+  --frame-glow: rgba(255, 209, 102, .25);
 }
 
 /* ===========================
@@ -26,10 +92,7 @@
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(93, 76, 255, .25), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(0, 229, 255, .14), transparent 28%),
-    linear-gradient(145deg, #040612 0%, #081122 45%, #02040d 100%);
+  background: var(--page-bg);
   font-family: 'Inter', sans-serif;
   color: white;
   overflow-x: hidden;
@@ -49,13 +112,13 @@ body::after {
 }
 
 body::before {
-  background: #7b5cff;
+  background: var(--orb-1);
   top: -100px;
   left: -100px;
 }
 
 body::after {
-  background: #00d9ff;
+  background: var(--orb-2);
   bottom: -100px;
   right: -100px;
 }
@@ -334,7 +397,7 @@ body::after {
 }
 
 .mini-board {
-  background: rgba(12, 18, 39, .8);
+  background: var(--board-bg);
   border: 2px solid rgba(255, 255, 255, .08);
   border-radius: 22px;
   padding: 10px;
@@ -368,10 +431,10 @@ body::after {
 }
 
 .mini-board.free {
-  border-color: #8b5cf6;
+  border-color: var(--frame);
   box-shadow:
-    0 0 25px rgba(139, 92, 246, .28),
-    inset 0 0 20px rgba(139, 92, 246, .08);
+    0 0 25px var(--frame-glow),
+    inset 0 0 20px var(--frame-glow);
 }
 
 /* ===========================
@@ -380,7 +443,7 @@ body::after {
 
 .cell {
   aspect-ratio: 1;
-  background: linear-gradient(180deg, rgba(20, 27, 57, .95), rgba(13, 20, 43, .95));
+  background: var(--cell-bg);
   border: 1px solid rgba(255, 255, 255, .06);
   border-radius: 14px;
   display: flex;
@@ -1147,6 +1210,286 @@ body::after {
   background: rgba(13, 19, 41, .85);
   font-size: .75rem;
   font-weight: 700;
+}
+
+/* ===========================
+   Símbolos da loja no tabuleiro
+   =========================== */
+
+.main-board {
+  container-type: inline-size;
+}
+
+.cell.glyph::before,
+.cell.glyph::after {
+  content: none;
+}
+
+.glyph-mark {
+  font-size: 6.2cqw;
+  line-height: 1;
+  animation: pop-in-rotate .35s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+
+.cell.x .glyph-mark {
+  filter: drop-shadow(0 0 6px rgba(0, 229, 255, .8));
+}
+
+.cell.o .glyph-mark {
+  filter: drop-shadow(0 0 6px rgba(255, 79, 216, .8));
+}
+
+.board-overlay.glyph {
+  font-size: 19cqw;
+  text-shadow: none;
+}
+
+/* ===========================
+   Símbolo, desafio diário e avisos de novidade
+   =========================== */
+
+.symbol-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: .82rem;
+}
+
+.symbol-option {
+  width: 38px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(13, 19, 41, .7);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.symbol-option.x {
+  color: var(--cyan);
+}
+
+.symbol-option.o {
+  color: var(--pink);
+}
+
+.symbol-option.active.x {
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(0, 229, 255, .35);
+}
+
+.symbol-option.active.o {
+  border-color: var(--pink);
+  box-shadow: 0 0 12px rgba(255, 79, 216, .35);
+}
+
+.symbol-picker-hint {
+  font-size: .75rem;
+  opacity: .8;
+}
+
+.modal-card .symbol-picker {
+  margin-bottom: 16px;
+}
+
+.segmented button {
+  position: relative;
+}
+
+.badge-dot {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffb84d;
+  box-shadow: 0 0 8px #ffb84d;
+}
+
+.daily-info {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: .85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ===========================
+   Loja, abas e conta
+   =========================== */
+
+.dialog-header .coin-balance {
+  margin-left: auto;
+  margin-right: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 209, 102, .12);
+  color: #ffd166;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.segmented.tabs {
+  margin: 14px 0 6px;
+}
+
+.shop-section {
+  margin-top: 18px;
+}
+
+.shop-section h3 {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.shop-hint {
+  margin: 2px 0 10px;
+  color: var(--muted);
+  font-size: .8rem;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.shop-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .04);
+  text-align: center;
+}
+
+.shop-item.in-use {
+  border-color: rgba(139, 92, 246, .6);
+  background: rgba(139, 92, 246, .12);
+}
+
+.shop-preview {
+  font-size: 1.8rem;
+  line-height: 1.2;
+}
+
+.shop-swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: 0 0 14px currentColor;
+}
+
+.shop-name {
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.shop-action {
+  width: 100%;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .06);
+  color: var(--text);
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.shop-action:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.shop-action.in-use {
+  border-color: transparent;
+  background: none;
+  color: var(--green);
+  cursor: default;
+}
+
+.account-box {
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .04);
+  text-align: center;
+}
+
+.account-box p {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: .85rem;
+  line-height: 1.5;
+}
+
+.account-box.signed-in {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.account-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.account-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.account-text strong {
+  display: block;
+  overflow: hidden;
+  font-size: .9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-text small {
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.google-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #fff;
+  color: #1f1f1f;
+}
+
+.google-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: conic-gradient(#ea4335 0 25%, #fbbc05 0 50%, #34a853 0 75%, #4285f4 0);
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 800;
+}
+
+.account-error {
+  margin: 10px 0 0 !important;
+  color: var(--red) !important;
 }
 
 /* ===========================

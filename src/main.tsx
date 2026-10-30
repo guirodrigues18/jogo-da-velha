@@ -3,7 +3,11 @@ import { createRoot } from 'react-dom/client';
 import { Analytics } from '@vercel/analytics/react';
 import App from './App';
 import { redirectToSavedLanguage } from './i18n';
+import { applyTheme } from './shop/wallet';
 import './style.css';
+
+// Tema da loja aplicado antes de desenhar, para não piscar o tema padrão
+applyTheme();
 
 // Quem já escolheu outro idioma é levado para a página dele antes de desenhar o jogo
 if (!redirectToSavedLanguage()) {

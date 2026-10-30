@@ -7,8 +7,12 @@ Cada jogador tem 20 segundos por turno; se o tempo acabar, a vez passa para o ad
 Modos de jogo:
 
 - **2 jogadores** no mesmo aparelho;
-- **contra o computador**, em três níveis (Fácil, Médio e Difícil — este usa busca de Monte Carlo);
+- **contra a IA**, em três níveis (Fácil, Médio e Difícil — este usa busca de Monte Carlo),
+  jogando com ✕ ou ◯ (o ✕ sempre começa);
+- **desafio diário**: uma posição sorteada pela data, igual para todos, contra a IA (estilo Wordle,
+  com resultado para compartilhar e sequência de dias);
 - **online**, convidando um amigo por link:
+  - quem cria a sala escolhe ✕ ou ◯; o convidado fica com o outro;
   - cada jogador escolhe um apelido provisório;
   - revanche só começa quando os dois aceitam, e o placar da série fica salvo na sala;
   - sair da sala conta como desistência (o adversário vence);
@@ -16,8 +20,13 @@ Modos de jogo:
   - quem abrir o link de uma sala cheia entra como espectador (até 10 por sala);
   - reações rápidas com emoji aparecem para todos da sala.
 
-Também tem placar da série, estatísticas e 13 conquistas (salvas no navegador),
-confete na vitória, vibração no Android e uma explicação das regras no botão "Como jogar".
+Também tem placar da série, estatísticas e 14 conquistas, confete na vitória, vibração no Android
+e uma explicação das regras no botão "Como jogar".
+
+**Moedas e loja:** vitórias contra a IA, no desafio diário e online (não no modo 2 jogadores) e conquistas
+rendem 🪙, trocadas na loja (botão 🏅) por símbolos (o adversário online também vê), temas de tabuleiro
+e efeitos de vitória. Tudo fica no navegador; com **login com Google** (opcional), o progresso é salvo
+na nuvem (`users/{uid}`) e acompanha a pessoa em qualquer aparelho.
 
 Disponível em **português** (`/`), **inglês** (`/en/`) e **espanhol** (`/es/`).
 
@@ -59,10 +68,15 @@ Sem configuração, o jogo funciona só no modo local. Para ativar o online (pla
 
 1. Crie um projeto no [console do Firebase](https://console.firebase.google.com).
 2. **Realtime Database** → Criar banco de dados → modo bloqueado.
-3. **Authentication** → Método de login → ative **Anônimo**.
-4. Realtime Database → **Regras** → cole o conteúdo de [`database.rules.json`](database.rules.json) e publique.
-5. Configurações do projeto → Seus apps → **Web** → copie os valores para um arquivo `.env`
+3. **Authentication** → Método de login → ative **Anônimo** e **Google**.
+4. Authentication → Configurações → **Domínios autorizados** → adicione o domínio do site (ex.: `seujogo.vercel.app`).
+5. Realtime Database → **Regras** → cole o conteúdo de [`database.rules.json`](database.rules.json) e publique.
+6. Configurações do projeto → Seus apps → **Web** → copie os valores para um arquivo `.env`
    (modelo em [`.env.example`](.env.example)).
+
+Salas com mais de 7 dias são apagadas aos poucos pelo próprio jogo (até 20 por vez, quando alguém
+cria uma sala nova); as regras do banco só permitem apagar salas antigas. Sem Cloud Functions,
+tudo continua no plano gratuito.
 
 As chaves do Firebase Web são públicas por natureza; quem protege os dados são as regras do banco:
 só jogadores da sala gravam nela, cada um só joga na sua vez, espectadores não alteram nada,
@@ -75,10 +89,18 @@ só começa com o aceite dos dois. Ao mudar as regras, cole-as de novo no consol
 src/
 ├── game/
 │   ├── logic.ts             # Regras do jogo (funções puras, sem React)
-│   ├── ai.ts                # Computador: aleatório, heurística e Monte Carlo
+│   ├── ai.ts                # IA: aleatória, heurística e Monte Carlo
+│   ├── daily.ts             # Desafio diário (posição sorteada pela data)
+│   ├── preferences.ts       # Modo, nível e símbolo preferidos
+│   ├── random.ts            # Números aleatórios com semente
 │   └── *.test.ts
+├── shop/
+│   ├── catalog.ts           # Itens da loja
+│   ├── wallet.ts            # Moedas, itens comprados e em uso (+ moedas retroativas)
+│   └── rewards.ts           # Quantas moedas cada partida rende
 ├── stats/
-│   └── achievements.ts      # Estatísticas e conquistas (localStorage)
+│   ├── achievements.ts      # Estatísticas e conquistas (localStorage)
+│   └── progress.ts          # Junta o progresso do aparelho com o da nuvem
 ├── effects/
 │   └── confetti.ts          # Confete da vitória (carregado sob demanda)
 ├── hooks/
@@ -89,6 +111,8 @@ src/
 ├── online/
 │   ├── config.ts            # Configuração do Firebase (lida do .env)
 │   ├── firebase.ts          # Inicialização e login anônimo
+│   ├── account.ts           # Login com Google e sincronização do progresso
+│   ├── accountInfo.ts       # Nome e foto da conta (sem precisar do Firebase)
 │   ├── nickname.ts          # Apelido provisório (lembrado no navegador)
 │   ├── rooms.ts             # Criar, entrar e sincronizar salas
 │   └── serialization.ts     # Estado do jogo ⇄ formato do banco
@@ -98,7 +122,11 @@ src/
 ├── components/
 │   ├── GameView.tsx         # Tela do jogo, compartilhada por todos os modos
 │   ├── LocalGame.tsx        # 2 jogadores e contra o computador
-│   ├── ModeSwitch.tsx       # Escolha do modo e do nível
+│   ├── ModeSwitch.tsx       # Escolha do modo, do nível, do desafio diário e do símbolo
+│   ├── SymbolPicker.tsx     # "Você joga com ✕ ◯"
+│   ├── StatsDialog.tsx      # Loja e conquistas (botão 🏅)
+│   ├── ShopPanel.tsx        # Loja
+│   ├── AccountBox.tsx       # Entrar com Google
 │   ├── Scoreboard.tsx       # Placar da série
 │   ├── TopActions.tsx       # Botões de conquistas, como jogar e som
 │   ├── Dialog.tsx           # Janela base (HelpDialog, StatsDialog)

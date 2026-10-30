@@ -1,9 +1,19 @@
 {
   "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
     "rooms": {
+      ".read": "auth != null && query.orderByChild == 'createdAt' && query.limitToFirst <= 20",
+      ".indexOn": ["createdAt"],
+
       "$roomId": {
         ".read": "auth != null",
-        ".write": "auth != null && !data.exists() && newData.child('players/x').val() === auth.uid",
+        ".write": "auth != null && ((!data.exists() && (newData.child('players/x').val() === auth.uid || newData.child('players/o').val() === auth.uid)) || (data.exists() && !newData.exists() && data.child('createdAt').val() < now - 604800000))",
         ".validate": "newData.hasChildren(['players', 'state', 'createdAt'])",
 
         "createdAt": {
@@ -12,10 +22,11 @@
 
         "players": {
           "x": {
+            ".write": "auth != null && !data.exists() && newData.val() === auth.uid && data.parent().child('o').exists() && data.parent().child('o').val() !== auth.uid",
             ".validate": "newData.isString()"
           },
           "o": {
-            ".write": "auth != null && !data.exists() && newData.val() === auth.uid && data.parent().child('x').val() !== auth.uid",
+            ".write": "auth != null && !data.exists() && newData.val() === auth.uid && data.parent().child('x').exists() && data.parent().child('x').val() !== auth.uid",
             ".validate": "newData.isString()"
           },
           "$other": {
@@ -24,7 +35,7 @@
         },
 
         "state": {
-          ".write": "auth != null && data.exists() && ((data.child('winner').val() === '-' && newData.child('turn').val() === data.child('turn').val() + 1 && data.parent().child('players/o').exists() && (auth.uid === data.parent().child('players').child(data.child('currentPlayer').val()).val() || (newData.child('cells').val() === data.child('cells').val() && now > data.child('turnStartedAt').val() + 20000 && ((data.child('currentPlayer').val() === 'x' && auth.uid === data.parent().child('players/o').val()) || (data.child('currentPlayer').val() === 'o' && auth.uid === data.parent().child('players/x').val()))))) || (data.child('winner').val() !== '-' && newData.child('turn').val() === 0 && data.parent().child('rematch/x').val() === true && data.parent().child('rematch/o').val() === true && (auth.uid === data.parent().child('players/x').val() || auth.uid === data.parent().child('players/o').val())))",
+          ".write": "auth != null && data.exists() && ((data.child('winner').val() === '-' && newData.child('turn').val() === data.child('turn').val() + 1 && data.parent().child('players/x').exists() && data.parent().child('players/o').exists() && (auth.uid === data.parent().child('players').child(data.child('currentPlayer').val()).val() || (newData.child('cells').val() === data.child('cells').val() && now > data.child('turnStartedAt').val() + 20000 && ((data.child('currentPlayer').val() === 'x' && auth.uid === data.parent().child('players/o').val()) || (data.child('currentPlayer').val() === 'o' && auth.uid === data.parent().child('players/x').val()))))) || (data.child('winner').val() !== '-' && newData.child('turn').val() === 0 && data.parent().child('rematch/x').val() === true && data.parent().child('rematch/o').val() === true && (auth.uid === data.parent().child('players/x').val() || auth.uid === data.parent().child('players/o').val())))",
           ".validate": "newData.hasChildren(['cells', 'results', 'currentPlayer', 'activeBoard', 'winner', 'turn', 'turnStartedAt'])",
           "cells": {
             ".validate": "newData.isString() && newData.val().matches(/^[xo-]{81}$/)"
@@ -80,6 +91,13 @@
           }
         },
 
+        "skins": {
+          "$role": {
+            ".write": "auth != null && data.parent().parent().child('players').child($role).val() === auth.uid",
+            ".validate": "newData.isString() && newData.val().matches(/^symbol-[a-z]{1,16}$/)"
+          }
+        },
+
         "rematch": {
           "$role": {
             ".write": "auth != null && data.parent().parent().child('players').child($role).val() === auth.uid",
@@ -89,7 +107,7 @@
 
         "spectators": {
           "$uid": {
-            ".write": "auth != null && auth.uid === $uid && data.parent().parent().child('players/o').exists() && data.parent().parent().child('players/x').val() !== auth.uid && data.parent().parent().child('players/o').val() !== auth.uid",
+            ".write": "auth != null && auth.uid === $uid && data.parent().parent().child('players/x').exists() && data.parent().parent().child('players/o').exists() && data.parent().parent().child('players/x').val() !== auth.uid && data.parent().parent().child('players/o').val() !== auth.uid",
             ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16"
           }
         },

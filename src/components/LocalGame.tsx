@@ -1,4 +1,9 @@
-import { HUMAN, useLocalGame } from '../hooks/useLocalGame';
+import { useState, type ComponentProps } from 'react';
+import { useLocalGame } from '../hooks/useLocalGame';
+import { loadDailyStreak } from '../game/daily';
+import { useProfile } from '../shop/wallet';
+import { symbolGlyph } from '../shop/catalog';
+import { shareLink } from '../share/shareLink';
 import { t } from '../i18n';
 import GameView from './GameView';
 import ModeSwitch from './ModeSwitch';
@@ -8,24 +13,51 @@ interface Props {
   onPlayOnline?: () => void;
 }
 
+type Local = ReturnType<typeof useLocalGame>;
+type ModalProps = ComponentProps<typeof GameView>['modal'];
+
 export default function LocalGame({ onPlayOnline }: Props) {
 
   const local = useLocalGame();
-  const { game, vsComputer } = local;
+  const profile = useProfile();
+  const [copied, setCopied] = useState(false);
 
-  const names = vsComputer
-    ? { x: t.local.you, o: t.local.computer }
+  const { game, mode, vsAI, human } = local;
+  const ai = human === 'x' ? 'o' : 'x';
+
+  const names = vsAI
+    ? { [human]: t.local.you, [ai]: t.local.ai } as Record<'x' | 'o', string>
     : { x: t.player('X'), o: t.player('O') };
 
   let turnLabel: string | undefined;
 
-  if (vsComputer) turnLabel = local.computerTurn ? t.local.thinking : t.local.yourTurn;
+  if (vsAI) turnLabel = local.aiTurn ? t.local.thinking : t.local.yourTurn;
 
-  let title: string | undefined;
+  // Seu símbolo da loja aparece nas suas peças (no modo 2 jogadores, os dois usam o clássico)
+  const glyphs = vsAI ? { [human]: symbolGlyph(profile.equipped.symbol) } : undefined;
 
-  if (vsComputer && game.winner && game.winner !== 'draw') {
-    title = game.winner === HUMAN ? t.result.youWon : t.result.computerWon;
-  }
+  const shareDaily = async () => {
+    const { number } = local.challenge;
+    const { attempts, moves } = local.dailyProgress;
+    const result = await shareLink(`${window.location.origin}${window.location.pathname}`, t.daily.shareText(number, attempts, moves));
+    if (result === 'copied') {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const modal = mode === 'daily'
+    ? dailyModal(local, shareDaily)
+    : {
+      title: vsAI && game.winner && game.winner !== 'draw'
+        ? (game.winner === human ? t.result.youWon : t.result.aiWon)
+        : undefined,
+      autoRestart: local.autoRestart,
+      // Contra a IA, só faz sentido compartilhar quando você vence
+      showShare: !vsAI || game.winner === human,
+      onShare: local.cancelAutoRestart,
+      onRestart: local.restart
+    };
 
   return (
     <GameView
@@ -33,30 +65,81 @@ export default function LocalGame({ onPlayOnline }: Props) {
       secondsLeft={local.secondsLeft}
       timerActive={local.timerActive}
       nudge={local.nudge}
-      notice={local.notice}
+      notice={copied ? { text: t.online.copied, id: 1 } : local.notice}
       shake={local.shake}
       turnLabel={turnLabel}
-      you={vsComputer ? HUMAN : undefined}
+      you={vsAI ? human : undefined}
+      glyphs={glyphs}
       onCellClick={local.play}
       controls={(
-        <ModeSwitch
-          mode={local.mode}
-          difficulty={local.difficulty}
-          onModeChange={local.setMode}
-          onDifficultyChange={local.setDifficulty}
-          onPlayOnline={onPlayOnline}
-        />
+        <>
+          <ModeSwitch
+            mode={mode}
+            difficulty={local.difficulty}
+            symbol={local.symbol}
+            dailyPending={!local.dailyProgress.won}
+            onModeChange={local.setMode}
+            onDifficultyChange={local.setDifficulty}
+            onSymbolChange={local.setSymbol}
+            onPlayOnline={onPlayOnline}
+          />
+          {mode === 'daily' && <DailyInfo local={local} />}
+        </>
       )}
-      score={{ names, values: local.score }}
-      modal={{
-        title,
-        autoRestart: local.autoRestart,
-        // Contra o computador, só faz sentido compartilhar quando você vence
-        showShare: !vsComputer || game.winner === HUMAN,
-        onShare: local.cancelAutoRestart,
-        onRestart: local.restart
-      }}
+      score={mode === 'daily' ? undefined : { names, values: local.score }}
+      modal={modal}
     />
   );
+
+}
+
+/** "📅 Desafio #3 · tentativa 2 · 🔥 4 dias" */
+function DailyInfo({ local }: { local: Local }) {
+
+  const { number } = local.challenge;
+  const { attempts, won } = local.dailyProgress;
+  const streak = loadDailyStreak();
+  const activeStreak = streak.lastWon >= number - 1 ? streak.current : 0;
+
+  const parts = [t.daily.title(number), won ? t.daily.doneToday : t.daily.attempt(attempts + 1)];
+
+  if (activeStreak > 0) parts.push(t.daily.streak(activeStreak));
+
+  return <div className="daily-info" title={t.daily.intro}>{parts.join(' · ')}</div>;
+
+}
+
+function dailyModal(local: Local, share: () => void): ModalProps {
+
+  const { game, human, challenge, dailyProgress, dailyReplay } = local;
+  const won = game.winner === human;
+
+  const base = { autoRestart: false, showShare: false, onShare: () => {} };
+
+  // Primeira vitória de hoje: resultado para compartilhar, estilo Wordle
+  if (won && !dailyReplay) {
+    return {
+      ...base,
+      title: t.daily.won(challenge.number),
+      subtitle: t.daily.wonDetail(dailyProgress.attempts, dailyProgress.moves),
+      restartLabel: t.daily.shareResult,
+      onRestart: share,
+      secondaryLabel: t.daily.playAgain,
+      onSecondary: local.restart
+    };
+  }
+
+  let title = t.daily.lost;
+
+  if (won) title = t.result.youWon;
+  else if (game.winner === 'draw') title = t.daily.drawn;
+
+  return {
+    ...base,
+    title,
+    subtitle: dailyReplay ? t.daily.replayDetail : t.daily.tryAgainDetail,
+    restartLabel: won ? t.daily.playAgain : t.daily.tryAgain,
+    onRestart: local.restart
+  };
 
 }

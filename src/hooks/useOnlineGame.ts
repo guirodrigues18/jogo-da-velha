@@ -10,6 +10,7 @@ import {
   leaveRoom,
   requestRematch,
   saveName,
+  saveSkin,
   saveState,
   sendReaction,
   startRematch,
@@ -21,6 +22,7 @@ import {
   type Seat
 } from '../online/rooms';
 import { markJoined } from '../online/nickname';
+import { getProfile } from '../shop/wallet';
 import { playSound } from '../audio/sounds';
 import { recordFromGame, recordGame, unlockAchievement } from '../stats/achievements';
 import type { FloatingReaction } from '../components/ReactionLayer';
@@ -57,9 +59,15 @@ export type OnlineError = JoinError | 'unavailable';
 const INITIAL_GAME = createGame();
 
 /**
- * Partida online. Com `roomId` null, cria uma sala nova e avisa por `onRoomCreated`.
+ * Partida online. Com `roomId` null, cria uma sala nova (você joga com `hostRole`)
+ * e avisa por `onRoomCreated`.
  */
-export function useOnlineGame(roomId: string | null, nickname: string, onRoomCreated: (roomId: string) => void) {
+export function useOnlineGame(
+  roomId: string | null,
+  nickname: string,
+  hostRole: Player,
+  onRoomCreated: (roomId: string) => void
+) {
 
   const [uid, setUid] = useState<string | null>(null);
   const [seat, setSeat] = useState<Seat | null>(null);
@@ -92,7 +100,7 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
         if (cancelled) return;
 
         if (!roomId) {
-          const createdId = await withTimeout(createRoom(uid));
+          const createdId = await withTimeout(createRoom(uid, hostRole));
           if (!cancelled) onRoomCreatedRef.current(createdId);
           return;
         }
@@ -110,9 +118,13 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
         setSeat(result);
         markJoined(roomId);
 
-        // Falhar ao salvar o apelido não impede a partida: aparece "Jogador X/O"
-        if (result !== 'spectator') saveName(roomId, result, nickname).catch(() => {});
-        else unlockAchievement('spectator');
+        // Falhar ao salvar o apelido ou a skin não impede a partida
+        if (result !== 'spectator') {
+          saveName(roomId, result, nickname).catch(() => {});
+          saveSkin(roomId, result, getProfile().equipped.symbol).catch(() => {});
+        } else {
+          unlockAchievement('spectator');
+        }
 
         const unsubscribe = subscribeRoom(roomId, data => {
           if (data) setRoom(data);
@@ -148,7 +160,7 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
   const spectator = seat === 'spectator';
 
   const opponent: Player = role === 'x' ? 'o' : 'x';
-  const opponentJoined = Boolean(room?.players.o);
+  const opponentJoined = Boolean(room?.players.x && room?.players.o);
   const opponentOnline = Boolean(room?.online[opponent]);
   const left = room?.left ?? {};
   const opponentLeft = Boolean(role ? left[opponent] : left.x || left.o);
@@ -406,6 +418,7 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     nudge,
     shake,
     floatingReactions,
+    skins: room?.skins ?? {},
     play,
     rematch,
     leave,

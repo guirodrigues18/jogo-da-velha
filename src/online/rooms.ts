@@ -1,7 +1,11 @@
 import {
+  endAt,
   get,
+  limitToFirst,
   onDisconnect,
   onValue,
+  orderByChild,
+  query,
   ref,
   remove,
   runTransaction,
@@ -17,10 +21,8 @@ import { decodeState, encodeState, type StoredState } from './serialization';
    Tipos
    =========================== */
 
-interface Players {
-  x: string;
-  o?: string;
-}
+/** Quem cria a sala escolhe X ou O; o convidado fica com o lugar livre */
+type Players = Partial<Record<Player, string>>;
 
 type PerPlayer<T> = Partial<Record<Player, T>>;
 
@@ -41,6 +43,8 @@ interface StoredRoom {
   score?: PerPlayer<number>;
   /** Última reação de cada pessoa: uid → emoji, apelido e horário */
   reactions?: Record<string, Reaction>;
+  /** Símbolo da loja que cada jogador usa (o adversário vê) */
+  skins?: PerPlayer<string>;
 }
 
 export interface Reaction {
@@ -64,6 +68,7 @@ export interface Room {
   spectators: Record<string, string>;
   score: PerPlayer<number>;
   reactions: Record<string, Reaction>;
+  skins: PerPlayer<string>;
 }
 
 /** Precisa ser igual à lista nas regras do banco (database.rules.json) */
@@ -75,8 +80,9 @@ export type Seat = Player | 'spectator';
 export type JoinError = 'not-found' | 'full' | 'closed';
 
 export interface RoomPreview {
-  hostName: string | null;
-  guestName: string | null;
+  names: PerPlayer<string>;
+  /** Lugar de quem criou a sala, enquanto ele ainda espera o convidado */
+  hostRole: Player | null;
   /** Já tem dois jogadores: quem entrar agora vai assistir */
   full: boolean;
 }
@@ -109,16 +115,18 @@ function toStored(state: GameState) {
 
 }
 
-/** Cria uma sala nova; quem cria joga com X */
-export async function createRoom(uid: string): Promise<string> {
+/** Cria uma sala nova; quem cria joga com o símbolo escolhido (X sempre começa) */
+export async function createRoom(uid: string, role: Player): Promise<string> {
 
   const roomId = generateRoomId();
 
   await set(roomRef(roomId), {
-    players: { x: uid },
+    players: { [role]: uid },
     state: toStored(createGame()),
     createdAt: serverTimestamp()
   });
+
+  cleanupOldRooms();
 
   return roomId;
 
@@ -138,18 +146,23 @@ export async function joinRoom(roomId: string, uid: string): Promise<Seat | Join
   if (players.x === uid) return left.x ? 'closed' : 'x';
   if (players.o === uid) return left.o ? 'closed' : 'o';
 
-  // Quem criou a sala desistiu antes de alguém entrar
-  if (left.x) return 'closed';
+  const openSeat: Player | null = !players.x ? 'x' : !players.o ? 'o' : null;
 
-  if (players.o) {
+  if (!openSeat) {
     const watching = Object.keys(spectators).filter(id => id !== uid).length;
     return watching < MAX_SPECTATORS ? 'spectator' : 'full';
   }
 
-  // Transação: se duas pessoas abrirem o convite ao mesmo tempo, só uma vira O (a outra assiste)
-  const result = await runTransaction(roomRef(roomId, 'players/o'), current => (current === null ? uid : undefined));
+  // Quem criou a sala desistiu antes de alguém entrar
+  if (left[openSeat === 'x' ? 'o' : 'x']) return 'closed';
 
-  return result.snapshot.val() === uid ? 'o' : 'spectator';
+  // Transação: se duas pessoas abrirem o convite ao mesmo tempo, só uma entra (a outra assiste)
+  const result = await runTransaction(
+    roomRef(roomId, `players/${openSeat}`),
+    current => (current === null ? uid : undefined)
+  );
+
+  return result.snapshot.val() === uid ? openSeat : 'spectator';
 
 }
 
@@ -168,7 +181,8 @@ export function subscribeRoom(roomId: string, onChange: (room: Room | null) => v
       rematch: data.rematch ?? {},
       spectators: data.spectators ?? {},
       score: data.score ?? {},
-      reactions: data.reactions ?? {}
+      reactions: data.reactions ?? {},
+      skins: data.skins ?? {}
     });
 
   });
@@ -184,11 +198,57 @@ export async function getRoomPreview(roomId: string): Promise<RoomPreview | null
 
   const { players, names = {} } = snapshot.val() as StoredRoom;
 
-  return {
-    hostName: names.x ?? null,
-    guestName: names.o ?? null,
-    full: Boolean(players.o)
-  };
+  const full = Boolean(players.x && players.o);
+  let hostRole: Player | null = null;
+
+  if (!full) hostRole = players.x ? 'x' : 'o';
+
+  return { names, hostRole, full };
+
+}
+
+export function saveSkin(roomId: string, role: Player, itemId: string): Promise<void> {
+
+  return set(roomRef(roomId, `skins/${role}`), itemId);
+
+}
+
+/* ===========================
+   Limpeza de salas antigas
+   Sem servidor pago: quem cria uma sala apaga até 20 salas com mais de uma semana
+   (as regras do banco só permitem apagar salas antigas).
+   =========================== */
+
+const ROOM_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+/** Margem para o relógio do aparelho estar adiantado em relação ao do servidor */
+const CLOCK_MARGIN_MS = 60 * 60 * 1000;
+const CLEANUP_BATCH = 20;
+const CLEANUP_INTERVAL_MS = 12 * 60 * 60 * 1000;
+const CLEANUP_KEY = 'jogo-da-velha:limpeza';
+
+async function cleanupOldRooms() {
+
+  try {
+
+    // No máximo duas vezes por dia por aparelho
+    const last = Number(localStorage.getItem(CLEANUP_KEY) ?? 0);
+
+    if (Date.now() - last < CLEANUP_INTERVAL_MS) return;
+
+    localStorage.setItem(CLEANUP_KEY, String(Date.now()));
+
+    const oldRooms = await get(query(
+      ref(db, 'rooms'),
+      orderByChild('createdAt'),
+      endAt(Date.now() - ROOM_MAX_AGE_MS - CLOCK_MARGIN_MS),
+      limitToFirst(CLEANUP_BATCH)
+    ));
+
+    await Promise.all(Object.keys(oldRooms.val() ?? {}).map(id => remove(roomRef(id))));
+
+  } catch {
+    // Limpeza é só manutenção: se falhar, tenta de novo na próxima sala criada
+  }
 
 }
 

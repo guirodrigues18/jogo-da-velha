@@ -1,6 +1,14 @@
-import { useEffect, useState } from 'react';
-import { applyMove, createGame, passTurn, type Player } from '../game/logic';
+import { useEffect, useMemo, useState } from 'react';
+import { applyMove, createGame, passTurn, type GameState, type Player } from '../game/logic';
 import { chooseMove, type Difficulty } from '../game/ai';
+import {
+  dailyChallenge,
+  dailyRandom,
+  loadDailyProgress,
+  recordDailyAttempt,
+  type DailyProgress
+} from '../game/daily';
+import { loadPreferences, savePreferences, type LocalMode, type Preferences } from '../game/preferences';
 import { recordFromGame, recordGame } from '../stats/achievements';
 import { t } from '../i18n';
 import { useTurnTimer } from './useTurnTimer';
@@ -8,93 +16,91 @@ import { useGameFeedback } from './useGameFeedback';
 
 const RESTART_DELAY_MS = 4000;
 
-/** Pausa antes da jogada do computador, para dar tempo de ver a sua */
-const COMPUTER_DELAY_MS = 450;
+/** Pausa antes da jogada da IA, para dar tempo de ver a sua */
+const AI_DELAY_MS = 450;
 
-/** Contra o computador, você é sempre X (começa) e ele é O */
-export const HUMAN: Player = 'x';
-const COMPUTER: Player = 'o';
+/** No desafio diário você é sempre X: a posição do dia começa na vez do X */
+const DAILY_HUMAN: Player = 'x';
+const DAILY_DIFFICULTY: Difficulty = 'medium';
 
-export type LocalMode = 'pvp' | 'ai';
+export type { LocalMode };
 
 export interface Score {
   x: number;
   o: number;
 }
 
-interface Preferences {
-  mode: LocalMode;
-  difficulty: Difficulty;
-}
-
-const PREFERENCES_KEY = 'jogo-da-velha:modo-local';
-const DEFAULT_PREFERENCES: Preferences = { mode: 'pvp', difficulty: 'medium' };
-
-function loadPreferences(): Preferences {
-
-  try {
-    const saved = localStorage.getItem(PREFERENCES_KEY);
-    return saved ? { ...DEFAULT_PREFERENCES, ...JSON.parse(saved) } : DEFAULT_PREFERENCES;
-  } catch {
-    return DEFAULT_PREFERENCES;
-  }
-
-}
-
-function savePreferences(preferences: Preferences) {
-
-  try {
-    localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences));
-  } catch {
-    // Vale só para esta visita
-  }
-
-}
-
-/** Partida no mesmo aparelho: dois jogadores ou contra o computador */
+/** Partida no mesmo aparelho: dois jogadores, contra a IA ou o desafio diário */
 export function useLocalGame() {
 
   const [preferences, setPreferences] = useState(loadPreferences);
-  const [game, setGame] = useState(createGame);
-  const [score, setScore] = useState<Score>({ x: 0, o: 0 });
-  const [autoRestart, setAutoRestart] = useState(true);
-
   const { mode, difficulty } = preferences;
-  const vsComputer = mode === 'ai';
-  const computerTurn = vsComputer && game.currentPlayer === COMPUTER && !game.winner;
 
-  // O cronômetro só começa depois da primeira jogada (e não corre para o computador)
-  const timerActive = game.turn > 0 && !game.winner && !computerTurn;
+  const challenge = useMemo(() => dailyChallenge(), []);
+  const [dailyProgress, setDailyProgress] = useState<DailyProgress>(() => loadDailyProgress(challenge.number));
+
+  const startingGame = (forMode: LocalMode): GameState => (forMode === 'daily' ? challenge.start : createGame());
+
+  const [game, setGame] = useState(() => startingGame(mode));
+  const [score, setScore] = useState<Score>({ x: 0, o: 0 });
+  const [autoRestart, setAutoRestart] = useState(mode !== 'daily');
+
+  /** Esta tentativa começou com o desafio de hoje já vencido (é só por diversão) */
+  const [dailyReplay, setDailyReplay] = useState(dailyProgress.won);
+
+  const vsAI = mode !== 'pvp';
+  const human: Player = mode === 'daily' ? DAILY_HUMAN : preferences.symbol;
+  const ai: Player = human === 'x' ? 'o' : 'x';
+  const aiTurn = vsAI && game.currentPlayer === ai && !game.winner;
+
+  // O cronômetro só começa depois da primeira jogada (e não corre para a IA)
+  const timerActive = game.turn > 0 && !game.winner && !aiTurn;
 
   const secondsLeft = useTurnTimer(game.turn, timerActive, () => setGame(passTurn));
 
   const { notice, nudge, shake, reject } = useGameFeedback(game, secondsLeft, timerActive, {
-    turnText: vsComputer ? player => (player === HUMAN ? t.local.yourTurn : t.local.computerTurn) : undefined,
-    isMe: vsComputer ? player => player === HUMAN : undefined,
+    turnText: vsAI ? player => (player === human ? t.local.yourTurn : t.local.aiTurn) : undefined,
+    isMe: vsAI ? player => player === human : undefined,
     onGameEnd: finished => {
+
       const winner = finished.winner;
+
       if (winner === 'x' || winner === 'o') setScore(s => ({ ...s, [winner]: s[winner] + 1 }));
-      if (vsComputer) recordGame(recordFromGame(finished, HUMAN, 'ai', difficulty));
+
+      if (mode === 'ai') recordGame(recordFromGame(finished, human, 'ai', difficulty));
+
+      if (mode === 'daily') {
+        // Depois de vencer o desafio do dia, jogar de novo é só por diversão
+        if (!dailyProgress.won) recordGame(recordFromGame(finished, human, 'daily'));
+        const moves = finished.boards.reduce((total, b) => total + b.cells.filter(Boolean).length, 0);
+        setDailyProgress(recordDailyAttempt(challenge.number, winner === human, moves));
+      }
+
     }
   });
 
-  // Vez do computador
+  // Vez da IA (no desafio diário, a mesma jogada sua recebe sempre a mesma resposta)
   useEffect(() => {
 
-    if (!computerTurn) return;
+    if (!aiTurn) return;
 
-    const timer = setTimeout(() => setGame(applyMove(game, ...chooseMove(game, difficulty))), COMPUTER_DELAY_MS);
+    const timer = setTimeout(() => {
+      const move = mode === 'daily'
+        ? chooseMove(game, DAILY_DIFFICULTY, undefined, dailyRandom(challenge, game))
+        : chooseMove(game, difficulty);
+      setGame(applyMove(game, ...move));
+    }, AI_DELAY_MS);
 
     return () => clearTimeout(timer);
 
-  }, [game, computerTurn, difficulty]);
+  }, [game, aiTurn, difficulty, mode, challenge]);
 
   // Reinício automático; o cleanup cancela o timer se o jogo for reiniciado antes
   useEffect(() => {
 
     if (!game.winner || !autoRestart) return;
 
-    const timer = setTimeout(() => setGame(createGame()), RESTART_DELAY_MS);
+    const timer = setTimeout(() => setGame(startingGame(mode)), RESTART_DELAY_MS);
 
     return () => clearTimeout(timer);
 
@@ -102,7 +108,7 @@ export function useLocalGame() {
 
   const play = (boardIndex: number, cellIndex: number) => {
 
-    if (computerTurn) return;
+    if (aiTurn) return;
 
     const next = applyMove(game, boardIndex, cellIndex);
 
@@ -115,18 +121,18 @@ export function useLocalGame() {
 
   };
 
-  const restart = () => {
-    setGame(createGame());
-    setAutoRestart(true);
+  const restart = (forMode = mode) => {
+    setGame(startingGame(forMode));
+    setAutoRestart(forMode !== 'daily');
+    setDailyReplay(loadDailyProgress(challenge.number).won);
   };
 
-  /** Trocar de modo ou de nível começa uma série nova */
+  /** Trocar de modo, nível ou símbolo começa uma série nova */
   const changePreferences = (changes: Partial<Preferences>) => {
-    const next = { ...preferences, ...changes };
+    const next = savePreferences(changes);
     setPreferences(next);
-    savePreferences(next);
     setScore({ x: 0, o: 0 });
-    restart();
+    restart(next.mode);
   };
 
   // Mantém o resultado na tela (ex.: enquanto o jogador compartilha a vitória)
@@ -136,9 +142,14 @@ export function useLocalGame() {
     game,
     mode,
     difficulty,
-    vsComputer,
-    computerTurn,
+    symbol: preferences.symbol,
+    human,
+    vsAI,
+    aiTurn,
     score,
+    challenge,
+    dailyProgress,
+    dailyReplay,
     autoRestart,
     secondsLeft,
     timerActive,
@@ -146,10 +157,11 @@ export function useLocalGame() {
     notice,
     shake,
     play,
-    restart,
+    restart: () => restart(),
     cancelAutoRestart,
     setMode: (value: LocalMode) => changePreferences({ mode: value }),
-    setDifficulty: (value: Difficulty) => changePreferences({ difficulty: value })
+    setDifficulty: (value: Difficulty) => changePreferences({ difficulty: value, mode: 'ai' }),
+    setSymbol: (value: Player) => changePreferences({ symbol: value })
   };
 
 }

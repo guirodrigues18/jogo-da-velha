@@ -66,7 +66,7 @@ export default function OnlinePanel({
       <div className="online-panel">
         <div className="online-title">{t.online.inviteTitle}</div>
         <p className="online-text">
-          {t.online.inviteBefore}<strong className="o">O</strong>{t.online.inviteAfter}
+          {t.online.inviteBefore}<strong className={opponent}>{SYMBOLS[opponent]}</strong>{t.online.inviteAfter}
         </p>
         <button className="btn" onClick={invite}>{t.online.sendInvite}</button>
         <button className="btn btn-ghost" onClick={copy}>

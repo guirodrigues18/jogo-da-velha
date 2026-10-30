@@ -25,7 +25,7 @@ const pt = {
     autoRestart: 'O jogo será reiniciado automaticamente.',
     playAgain: 'Jogar novamente',
     youWon: '🏆 Você venceu!',
-    computerWon: '🤖 O computador venceu',
+    aiWon: '🤖 A IA venceu',
     otherWon: (name: string) => `😢 ${name} venceu`,
     someoneWon: (name: string) => `🏆 ${name} venceu!`
   },
@@ -43,7 +43,7 @@ const pt = {
   },
 
   actions: {
-    achievements: 'Conquistas',
+    achievements: 'Loja e conquistas',
     help: 'Como jogar',
     language: 'Idioma',
     soundOn: 'Ativar sons e vibração',
@@ -53,9 +53,74 @@ const pt = {
   modes: {
     label: 'Modo de jogo',
     pvp: '👥 2 jogadores',
-    ai: '🤖 Computador',
+    ai: '🤖 IA',
     online: '🌐 Online',
-    levelLabel: 'Nível do computador'
+    levelLabel: 'Nível da IA',
+    daily: '📅 Diário',
+    symbolLabel: 'Você joga com',
+    startsHint: 'o ✕ sempre começa'
+  },
+
+  daily: {
+    title: (n: number) => `📅 Desafio #${n}`,
+    attempt: (n: number) => `tentativa ${n}`,
+    doneToday: 'concluído ✅',
+    streak: (n: number) => `🔥 ${n} ${n === 1 ? 'dia' : 'dias'}`,
+    intro: 'Vença a IA a partir da posição de hoje. É a mesma para todo mundo!',
+    won: (n: number) => `🏆 Desafio #${n} concluído!`,
+    wonDetail: (attempts: number, moves: number) =>
+      `Em ${attempts} ${attempts === 1 ? 'tentativa' : 'tentativas'} e ${moves} jogadas. Volte amanhã para o próximo!`,
+    lost: '😢 Não foi dessa vez',
+    drawn: 'Empate! Quase lá',
+    tryAgainDetail: 'A posição é a mesma: tente outro caminho.',
+    replayDetail: 'Você já venceu o desafio de hoje. Jogar de novo não conta.',
+    tryAgain: 'Tentar de novo',
+    playAgain: 'Jogar de novo',
+    shareResult: '📤 Compartilhar resultado',
+    shareText: (n: number, attempts: number, moves: number) =>
+      `Jogo da Velha 2.0 · Desafio #${n}\n✅ Venci em ${attempts} ${attempts === 1 ? 'tentativa' : 'tentativas'} (${moves} jogadas)\n${'🟥'.repeat(Math.min(attempts - 1, 9))}🟩`
+  },
+
+  shop: {
+    tabs: { shop: '🛒 Loja', achievements: '🏅 Conquistas' },
+    types: { symbol: 'Símbolos', theme: 'Temas', effect: 'Efeitos de vitória' },
+    hints: {
+      symbol: 'Aparecem no lugar do seu X/O. No online, o adversário também vê.',
+      theme: 'Cores do tabuleiro e do fundo.',
+      effect: 'Aparecem quando você vence.'
+    },
+    use: 'Usar',
+    inUse: 'Em uso',
+    howToEarn: 'Ganhe 🪙 vencendo partidas (mais no Difícil e no online), no desafio diário e com conquistas.',
+    items: {
+      'symbol-classic': 'Clássico',
+      'symbol-star': 'Estrela',
+      'symbol-fire': 'Fogo',
+      'symbol-heart': 'Coração',
+      'symbol-cat': 'Gato',
+      'symbol-skull': 'Caveira',
+      'symbol-alien': 'Alien',
+      'symbol-crown': 'Coroa',
+      'theme-neon': 'Neon',
+      'theme-retro': 'Retrô',
+      'theme-ocean': 'Oceano',
+      'theme-sunset': 'Pôr do sol',
+      'theme-gold': 'Dourado',
+      'effect-classic': 'Confete',
+      'effect-stars': 'Chuva de estrelas',
+      'effect-hearts': 'Chuva de corações',
+      'effect-fireworks': 'Fogos de artifício'
+    } as Record<string, string>
+  },
+
+  account: {
+    cta: 'Entrar com Google',
+    benefit: 'Salve moedas, itens e conquistas na nuvem e jogue em qualquer aparelho.',
+    signedIn: (name: string) => `Conectado como ${name}`,
+    synced: 'Progresso salvo na nuvem ☁️',
+    signOut: 'Sair da conta',
+    error: 'Não foi possível entrar. Tente de novo.',
+    blocked: 'O login com Google não funciona dentro do WhatsApp/Instagram. Abra o jogo no Chrome ou Safari.'
   },
 
   difficulty: {
@@ -66,10 +131,10 @@ const pt = {
 
   local: {
     you: 'Você',
-    computer: 'Computador',
+    ai: 'IA',
     thinking: '🤖 Pensando…',
     yourTurn: 'Sua vez',
-    computerTurn: 'Vez do computador'
+    aiTurn: 'Vez da IA'
   },
 
   online: {
@@ -140,6 +205,11 @@ const pt = {
     back: 'Voltar'
   },
 
+  coins: {
+    earned: 'Moedas ganhas',
+    retroactive: 'Pelas suas partidas anteriores'
+  },
+
   help: {
     title: 'Como jogar',
     steps: [
@@ -148,7 +218,8 @@ const pt = {
       { icon: '➡️', strong: 'A regra de ouro:', text: 'a casa em que você joga decide em qual tabuleiro o adversário joga depois.', example: true },
       { icon: '🔓', strong: 'Tabuleiro fechado?', text: 'Se o tabuleiro de destino já estiver fechado, o adversário pode jogar em qualquer um aberto.' },
       { icon: '⏱', strong: '20 segundos', text: 'por jogada. Se o tempo acabar, a vez passa para o adversário.' },
-      { icon: '🌐', strong: 'Online:', text: 'crie uma sala e envie o link. Quem abrir joga com O; se a sala já tiver dois jogadores, a pessoa assiste. Sair no meio da partida conta como desistência.' }
+      { icon: '🌐', strong: 'Online:', text: 'crie uma sala, escolha ✕ ou ◯ e envie o link. Quem abrir joga com o outro símbolo; se a sala já tiver dois jogadores, a pessoa assiste. Sair no meio da partida conta como desistência.' },
+      { icon: '🪙', strong: 'Moedas:', text: 'vença partidas, o desafio diário e conquistas para ganhar moedas e trocar por símbolos, temas e efeitos na loja (🏅).' }
     ],
     caption: 'Jogou no canto de cima à direita? O adversário joga no tabuleiro do canto de cima à direita.',
     ok: 'Entendi, bora jogar!'
@@ -159,14 +230,14 @@ const pt = {
   },
 
   stats: {
-    title: 'Suas conquistas',
+    title: 'Loja e conquistas',
     played: 'Partidas',
     wins: 'Vitórias',
     losses: 'Derrotas',
     draws: 'Empates',
     streak: 'Sequência',
     best: 'Recorde',
-    note: 'Contam as partidas contra o computador e online, salvas neste aparelho.',
+    note: 'Contam as partidas contra a IA, o desafio diário e as online.',
     achievements: 'Conquistas',
     progress: (unlocked: number, total: number) => `${unlocked} de ${total}`,
     unlocked: 'Conquista desbloqueada!'
@@ -174,10 +245,11 @@ const pt = {
 
   achievements: {
     'first-win': { title: 'Primeira vitória', description: 'Vença sua primeira partida' },
-    'beat-easy': { title: 'Aquecimento', description: 'Vença o computador no Fácil' },
-    'beat-medium': { title: 'Estrategista', description: 'Vença o computador no Médio' },
-    'beat-hard': { title: 'Mestre da velha', description: 'Vença o computador no Difícil' },
+    'beat-easy': { title: 'Aquecimento', description: 'Vença a IA no Fácil' },
+    'beat-medium': { title: 'Estrategista', description: 'Vença a IA no Médio' },
+    'beat-hard': { title: 'Mestre da velha', description: 'Vença a IA no Difícil' },
     'online-win': { title: 'Desafiante', description: 'Vença uma partida online' },
+    'daily-win': { title: 'Desafio cumprido', description: 'Vença um desafio diário' },
     'streak-3': { title: 'Embalado', description: 'Vença 3 partidas seguidas' },
     'streak-5': { title: 'Imparável', description: 'Vença 5 partidas seguidas' },
     flawless: { title: 'Intocável', description: 'Vença sem o adversário conquistar nenhum tabuleiro' },

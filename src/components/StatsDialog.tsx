@@ -1,12 +1,44 @@
+import { useState } from 'react';
 import { ACHIEVEMENTS, loadStats } from '../stats/achievements';
+import { useProfile } from '../shop/wallet';
 import { t } from '../i18n';
 import Dialog from './Dialog';
+import ShopPanel from './ShopPanel';
+import AccountBox from './AccountBox';
 
 interface Props {
   onClose: () => void;
 }
 
+type Tab = 'shop' | 'achievements';
+
+/** Loja e conquistas (botão 🏅), com o saldo de moedas e o login */
 export default function StatsDialog({ onClose }: Props) {
+
+  const [tab, setTab] = useState<Tab>('shop');
+  const profile = useProfile();
+
+  return (
+    <Dialog title={t.stats.title} onClose={onClose} headerExtra={<span className="coin-balance">🪙 {profile.coins}</span>}>
+
+      <AccountBox />
+
+      <div className="segmented tabs" role="tablist">
+        {(['shop', 'achievements'] as Tab[]).map(id => (
+          <button key={id} role="tab" aria-selected={tab === id} className={tab === id ? 'active' : ''} onClick={() => setTab(id)}>
+            {t.shop.tabs[id]}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'shop' ? <ShopPanel /> : <AchievementsPanel />}
+
+    </Dialog>
+  );
+
+}
+
+function AchievementsPanel() {
 
   const stats = loadStats();
   const unlockedCount = ACHIEVEMENTS.filter(a => stats.unlocked[a.id]).length;
@@ -21,8 +53,7 @@ export default function StatsDialog({ onClose }: Props) {
   ];
 
   return (
-    <Dialog title={t.stats.title} onClose={onClose}>
-
+    <>
       <div className="stats-grid">
         {numbers.map(([label, value]) => (
           <div className="stat" key={label}>
@@ -52,8 +83,7 @@ export default function StatsDialog({ onClose }: Props) {
           );
         })}
       </ul>
-
-    </Dialog>
+    </>
   );
 
 }

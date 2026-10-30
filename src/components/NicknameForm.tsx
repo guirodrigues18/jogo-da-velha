@@ -1,20 +1,27 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import type { Player } from '../game/logic';
 import { signIn } from '../online/firebase';
 import { getRoomPreview, type RoomPreview } from '../online/rooms';
 import { loadNickname, normalizeNickname, NICKNAME_MAX_LENGTH } from '../online/nickname';
+import { firstName, getAccountInfo } from '../online/accountInfo';
+import { loadPreferences, savePreferences } from '../game/preferences';
 import { t } from '../i18n';
 import HelpDialog from './HelpDialog';
+import SymbolPicker from './SymbolPicker';
 
 interface Props {
   /** null = vai criar uma sala; com id = foi convidado para ela */
   roomId: string | null;
-  onSubmit: (nickname: string) => void;
+  /** `symbol`: com quem joga quem cria a sala (ignorado para quem foi convidado) */
+  onSubmit: (nickname: string, symbol: Player) => void;
   onCancel: () => void;
 }
 
 export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
 
-  const [value, setValue] = useState(loadNickname);
+  // Sugere o último apelido usado ou, para quem entrou com Google, o primeiro nome
+  const [value, setValue] = useState(() => loadNickname() || firstName(getAccountInfo()));
+  const [symbol, setSymbol] = useState(() => loadPreferences().symbol);
   const [preview, setPreview] = useState<RoomPreview | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
 
@@ -42,23 +49,24 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
-    if (nickname) onSubmit(nickname);
+    if (!nickname) return;
+    if (!roomId) savePreferences({ symbol });
+    onSubmit(nickname, symbol);
   };
 
   const watching = Boolean(preview?.full);
-  const host = preview?.hostName ?? t.player('X');
-  const guest = preview?.guestName ?? t.player('O');
+  const hostName = preview?.hostRole ? preview.names[preview.hostRole] : undefined;
 
   let title = t.nickname.playOnline;
   let subtitle = t.nickname.ask;
   let action = t.nickname.create;
 
   if (roomId && watching) {
-    title = t.nickname.watchTitle(host, guest);
+    title = t.nickname.watchTitle(preview?.names.x ?? t.player('X'), preview?.names.o ?? t.player('O'));
     subtitle = t.nickname.watchAsk;
     action = t.nickname.watch;
   } else if (roomId) {
-    title = preview?.hostName ? t.nickname.challenged(preview.hostName) : t.nickname.invited;
+    title = hostName ? t.nickname.challenged(hostName) : t.nickname.invited;
     action = t.nickname.join;
   }
 
@@ -78,6 +86,7 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
           enterKeyHint="go"
           autoFocus
         />
+        {!roomId && <SymbolPicker value={symbol} onChange={setSymbol} />}
         <button className="btn" type="submit" disabled={!nickname}>
           {action}
         </button>

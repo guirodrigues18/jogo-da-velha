@@ -4,6 +4,7 @@ import LocalGame from './components/LocalGame';
 import OnlineMessage from './components/OnlineMessage';
 import AchievementToaster from './components/AchievementToaster';
 import { t } from './i18n';
+import { getAccountInfo } from './online/accountInfo';
 
 // O SDK do Firebase só é baixado por quem entra no modo online
 const OnlineGame = lazy(() => import('./components/OnlineGame'));
@@ -26,6 +27,15 @@ export default function App() {
 
   // Desistência da sala atual, registrada pela partida online enquanto ela está aberta
   const leaveRoomRef = useRef<(() => void) | null>(null);
+
+  // Quem entrou com Google antes: sincroniza o progresso com a nuvem ao abrir o jogo
+  useEffect(() => {
+
+    if (!isOnlineConfigured || !getAccountInfo()) return;
+
+    import('./online/account').then(account => account.resumeAccount()).catch(() => {});
+
+  }, []);
 
   // Botões voltar/avançar do navegador
   useEffect(() => {

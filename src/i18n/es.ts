@@ -25,7 +25,7 @@ const es: Messages = {
     autoRestart: 'La partida se reiniciará automáticamente.',
     playAgain: 'Jugar de nuevo',
     youWon: '🏆 ¡Ganaste!',
-    computerWon: '🤖 Ganó la computadora',
+    aiWon: '🤖 Ganó la IA',
     otherWon: name => `😢 Ganó ${name}`,
     someoneWon: name => `🏆 ¡Ganó ${name}!`
   },
@@ -43,7 +43,7 @@ const es: Messages = {
   },
 
   actions: {
-    achievements: 'Logros',
+    achievements: 'Tienda y logros',
     help: 'Cómo jugar',
     language: 'Idioma',
     soundOn: 'Activar sonido y vibración',
@@ -53,9 +53,74 @@ const es: Messages = {
   modes: {
     label: 'Modo de juego',
     pvp: '👥 2 jugadores',
-    ai: '🤖 Computadora',
+    ai: '🤖 IA',
     online: '🌐 En línea',
-    levelLabel: 'Nivel de la computadora'
+    levelLabel: 'Nivel de la IA',
+    daily: '📅 Diario',
+    symbolLabel: 'Juegas con',
+    startsHint: 'el ✕ siempre empieza'
+  },
+
+  daily: {
+    title: n => `📅 Desafío #${n}`,
+    attempt: n => `intento ${n}`,
+    doneToday: 'completado ✅',
+    streak: n => `🔥 ${n} ${n === 1 ? 'día' : 'días'}`,
+    intro: 'Vence a la IA desde la posición de hoy. ¡Es la misma para todos!',
+    won: n => `🏆 ¡Desafío #${n} completado!`,
+    wonDetail: (attempts, moves) =>
+      `En ${attempts} ${attempts === 1 ? 'intento' : 'intentos'} y ${moves} jugadas. ¡Vuelve mañana por el próximo!`,
+    lost: '😢 Esta vez no',
+    drawn: '¡Empate! Casi',
+    tryAgainDetail: 'La posición es la misma: prueba otro camino.',
+    replayDetail: 'Ya ganaste el desafío de hoy. Jugar de nuevo no cuenta.',
+    tryAgain: 'Intentar de nuevo',
+    playAgain: 'Jugar de nuevo',
+    shareResult: '📤 Compartir resultado',
+    shareText: (n, attempts, moves) =>
+      `Tres en Raya 2.0 · Desafío #${n}\n✅ Gané en ${attempts} ${attempts === 1 ? 'intento' : 'intentos'} (${moves} jugadas)\n${'🟥'.repeat(Math.min(attempts - 1, 9))}🟩`
+  },
+
+  shop: {
+    tabs: { shop: '🛒 Tienda', achievements: '🏅 Logros' },
+    types: { symbol: 'Símbolos', theme: 'Temas', effect: 'Efectos de victoria' },
+    hints: {
+      symbol: 'Aparecen en lugar de tu X/O. En línea, tu rival también los ve.',
+      theme: 'Colores del tablero y del fondo.',
+      effect: 'Aparecen cuando ganas.'
+    },
+    use: 'Usar',
+    inUse: 'En uso',
+    howToEarn: 'Gana 🪙 venciendo partidas (más en Difícil y en línea), el desafío diario y logros.',
+    items: {
+      'symbol-classic': 'Clásico',
+      'symbol-star': 'Estrella',
+      'symbol-fire': 'Fuego',
+      'symbol-heart': 'Corazón',
+      'symbol-cat': 'Gato',
+      'symbol-skull': 'Calavera',
+      'symbol-alien': 'Alien',
+      'symbol-crown': 'Corona',
+      'theme-neon': 'Neón',
+      'theme-retro': 'Retro',
+      'theme-ocean': 'Océano',
+      'theme-sunset': 'Atardecer',
+      'theme-gold': 'Dorado',
+      'effect-classic': 'Confeti',
+      'effect-stars': 'Lluvia de estrellas',
+      'effect-hearts': 'Lluvia de corazones',
+      'effect-fireworks': 'Fuegos artificiales'
+    }
+  },
+
+  account: {
+    cta: 'Entrar con Google',
+    benefit: 'Guarda monedas, objetos y logros en la nube y juega en cualquier dispositivo.',
+    signedIn: name => `Conectado como ${name}`,
+    synced: 'Progreso guardado en la nube ☁️',
+    signOut: 'Cerrar sesión',
+    error: 'No se pudo entrar. Inténtalo de nuevo.',
+    blocked: 'El inicio de sesión con Google no funciona dentro de WhatsApp/Instagram. Abre el juego en Chrome o Safari.'
   },
 
   difficulty: {
@@ -66,10 +131,10 @@ const es: Messages = {
 
   local: {
     you: 'Tú',
-    computer: 'Computadora',
+    ai: 'IA',
     thinking: '🤖 Pensando…',
     yourTurn: 'Tu turno',
-    computerTurn: 'Turno de la computadora'
+    aiTurn: 'Turno de la IA'
   },
 
   online: {
@@ -140,6 +205,11 @@ const es: Messages = {
     back: 'Volver'
   },
 
+  coins: {
+    earned: 'Monedas ganadas',
+    retroactive: 'Por tus partidas anteriores'
+  },
+
   help: {
     title: 'Cómo jugar',
     steps: [
@@ -148,7 +218,8 @@ const es: Messages = {
       { icon: '➡️', strong: 'La regla de oro:', text: 'la casilla donde juegas decide en qué tablero juega tu rival después.', example: true },
       { icon: '🔓', strong: '¿Tablero cerrado?', text: 'Si el tablero de destino ya está decidido, tu rival puede jugar en cualquiera abierto.' },
       { icon: '⏱', strong: '20 segundos', text: 'por jugada. Si se acaba el tiempo, el turno pasa a tu rival.' },
-      { icon: '🌐', strong: 'En línea:', text: 'crea una sala y envía el enlace. Quien lo abra juega con O; si la sala ya tiene dos jugadores, mira la partida. Salir a mitad de partida cuenta como rendirse.' }
+      { icon: '🌐', strong: 'En línea:', text: 'crea una sala, elige ✕ o ◯ y envía el enlace. Quien lo abra juega con el otro símbolo; si la sala ya tiene dos jugadores, mira la partida. Salir a mitad de partida cuenta como rendirse.' },
+      { icon: '🪙', strong: 'Monedas:', text: 'gana partidas, el desafío diario y logros para conseguir monedas y cambiarlas por símbolos, temas y efectos en la tienda (🏅).' }
     ],
     caption: '¿Jugaste en la esquina superior derecha? Tu rival juega en el tablero de la esquina superior derecha.',
     ok: '¡Entendido, a jugar!'
@@ -159,14 +230,14 @@ const es: Messages = {
   },
 
   stats: {
-    title: 'Tus logros',
+    title: 'Tienda y logros',
     played: 'Partidas',
     wins: 'Victorias',
     losses: 'Derrotas',
     draws: 'Empates',
     streak: 'Racha',
     best: 'Récord',
-    note: 'Cuentan las partidas contra la computadora y en línea, guardadas en este dispositivo.',
+    note: 'Cuentan las partidas contra la IA, el desafío diario y en línea.',
     achievements: 'Logros',
     progress: (unlocked, total) => `${unlocked} de ${total}`,
     unlocked: '¡Logro desbloqueado!'
@@ -174,10 +245,11 @@ const es: Messages = {
 
   achievements: {
     'first-win': { title: 'Primera victoria', description: 'Gana tu primera partida' },
-    'beat-easy': { title: 'Calentamiento', description: 'Vence a la computadora en Fácil' },
-    'beat-medium': { title: 'Estratega', description: 'Vence a la computadora en Medio' },
-    'beat-hard': { title: 'Gran maestro', description: 'Vence a la computadora en Difícil' },
+    'beat-easy': { title: 'Calentamiento', description: 'Vence a la IA en Fácil' },
+    'beat-medium': { title: 'Estratega', description: 'Vence a la IA en Medio' },
+    'beat-hard': { title: 'Gran maestro', description: 'Vence a la IA en Difícil' },
     'online-win': { title: 'Retador', description: 'Gana una partida en línea' },
+    'daily-win': { title: 'Desafío cumplido', description: 'Gana un desafío diario' },
     'streak-3': { title: 'En racha', description: 'Gana 3 partidas seguidas' },
     'streak-5': { title: 'Imparable', description: 'Gana 5 partidas seguidas' },
     flawless: { title: 'Intocable', description: 'Gana sin que tu rival conquiste ningún tablero' },

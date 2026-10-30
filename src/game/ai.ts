@@ -19,7 +19,16 @@ export const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
 /** Tempo de "pensamento" do nível difícil (simulações de Monte Carlo) */
 const HARD_THINK_MS = 600;
 
-export function chooseMove(state: GameState, difficulty: Difficulty, thinkMs = HARD_THINK_MS): Move {
+/**
+ * Escolhe a jogada do computador. `random` permite respostas reproduzíveis
+ * (no desafio diário, a mesma jogada sua recebe sempre a mesma resposta).
+ */
+export function chooseMove(
+  state: GameState,
+  difficulty: Difficulty,
+  thinkMs = HARD_THINK_MS,
+  random: () => number = Math.random
+): Move {
 
   const moves = getValidMoves(state);
 
@@ -28,17 +37,17 @@ export function chooseMove(state: GameState, difficulty: Difficulty, thinkMs = H
 
   if (winning) return winning;
 
-  if (difficulty === 'easy') return randomItem(moves);
+  if (difficulty === 'easy') return randomItem(moves, random);
 
-  if (difficulty === 'medium') return bestByHeuristic(state, moves);
+  if (difficulty === 'medium') return bestByHeuristic(state, moves, random);
 
   return monteCarloMove(state, moves, thinkMs);
 
 }
 
-function randomItem<T>(items: T[]): T {
+function randomItem<T>(items: T[], random: () => number = Math.random): T {
 
-  return items[Math.floor(Math.random() * items.length)];
+  return items[Math.floor(random() * items.length)];
 
 }
 
@@ -51,14 +60,14 @@ const opponentOf = (player: Player): Player => (player === 'x' ? 'o' : 'x');
 // Centro e cantos valem mais, como no jogo da velha comum
 const POSITION_VALUE = [3, 1, 3, 1, 4, 1, 3, 1, 3];
 
-function bestByHeuristic(state: GameState, moves: Move[]): Move {
+function bestByHeuristic(state: GameState, moves: Move[], random: () => number): Move {
 
   let best = moves[0];
   let bestScore = -Infinity;
 
   for (const move of moves) {
 
-    const score = scoreMove(state, move) + Math.random() * 2;
+    const score = scoreMove(state, move) + random() * 2;
 
     if (score > bestScore) {
       best = move;

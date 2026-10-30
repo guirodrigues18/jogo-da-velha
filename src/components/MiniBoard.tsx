@@ -2,6 +2,9 @@ import { useEffect, useRef } from 'react';
 import type { MiniBoard as MiniBoardState, Player } from '../game/logic';
 import { t } from '../i18n';
 
+/** Emoji da loja usado no lugar do X/O de cada jogador (ausente = símbolo clássico) */
+export type Glyphs = Partial<Record<Player, string | null>>;
+
 interface Props {
   board: MiniBoardState;
   /** O jogador atual pode jogar neste tabuleiro */
@@ -9,6 +12,7 @@ interface Props {
   /** Nenhum tabuleiro obrigatório: destaca todos os abertos */
   free: boolean;
   currentPlayer: Player;
+  glyphs?: Glyphs;
   /** Muda de valor quando o tabuleiro deve tremer (jogada inválida em outro lugar) */
   nudgeId?: number;
   onCellClick: (cellIndex: number) => void;
@@ -25,7 +29,7 @@ const SHAKE: Keyframe[] = [
   { transform: 'translateX(0)' }
 ];
 
-export default function MiniBoard({ board, playable, free, currentPlayer, nudgeId, onCellClick }: Props) {
+export default function MiniBoard({ board, playable, free, currentPlayer, glyphs = {}, nudgeId, onCellClick }: Props) {
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -47,20 +51,30 @@ export default function MiniBoard({ board, playable, free, currentPlayer, nudgeI
     classes.push(free ? 'free' : `active ${currentPlayer}-turn`);
   }
 
+  const overlayGlyph = board.winner && board.winner !== 'draw' ? glyphs[board.winner] : null;
+
   return (
     <div className={classes.join(' ')} ref={ref}>
 
-      {board.cells.map((cell, i) => (
-        <div
-          key={i}
-          className={cell ? `cell ${cell}` : 'cell'}
-          onClick={() => onCellClick(i)}
-        />
-      ))}
+      {board.cells.map((cell, i) => {
+
+        const glyph = cell ? glyphs[cell] : null;
+
+        return (
+          <div
+            key={i}
+            className={['cell', cell, glyph && 'glyph'].filter(Boolean).join(' ')}
+            onClick={() => onCellClick(i)}
+          >
+            {glyph && <span className="glyph-mark">{glyph}</span>}
+          </div>
+        );
+
+      })}
 
       {board.winner && (
-        <div className={`board-overlay ${board.winner}`}>
-          {OVERLAY_TEXT[board.winner]}
+        <div className={`board-overlay ${board.winner}${overlayGlyph ? ' glyph' : ''}`}>
+          {overlayGlyph ?? OVERLAY_TEXT[board.winner]}
         </div>
       )}
 

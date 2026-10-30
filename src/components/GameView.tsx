@@ -2,7 +2,7 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { isBoardPlayable, type GameState, type Player } from '../game/logic';
 import type { Notice, Nudge } from '../hooks/useGameFeedback';
 import InfoBar from './InfoBar';
-import MiniBoard from './MiniBoard';
+import MiniBoard, { type Glyphs } from './MiniBoard';
 import GameOverModal from './GameOverModal';
 import TopActions from './TopActions';
 import Scoreboard, { type ScoreInfo } from './Scoreboard';
@@ -18,8 +18,10 @@ interface Props {
   shake?: number;
   /** Substitui "Jogador X/O" no card de turno (ex.: "Sua vez") */
   turnLabel?: string;
-  /** Símbolo de quem usa este aparelho (contra o computador e online): destaca a sua vez */
+  /** Símbolo de quem usa este aparelho (contra a IA e online): destaca a sua vez */
   you?: Player;
+  /** Símbolos da loja no lugar do X/O */
+  glyphs?: Glyphs;
   /** Acima das informações (ex.: escolha do modo de jogo) */
   controls?: ReactNode;
   /** Placar da série; ausente antes de existir uma série */
@@ -66,6 +68,7 @@ export default function GameView({
   shake = 0,
   turnLabel,
   you,
+  glyphs,
   controls,
   score,
   panel,
@@ -125,6 +128,7 @@ export default function GameView({
               playable={isBoardPlayable(game, i)}
               free={game.activeBoard === null}
               currentPlayer={game.currentPlayer}
+              glyphs={glyphs}
               nudgeId={nudge?.board === i ? nudge.id : undefined}
               onCellClick={cell => onCellClick(i, cell)}
             />

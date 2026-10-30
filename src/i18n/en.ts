@@ -25,7 +25,7 @@ const en: Messages = {
     autoRestart: 'A new game starts automatically.',
     playAgain: 'Play again',
     youWon: '🏆 You won!',
-    computerWon: '🤖 The computer won',
+    aiWon: '🤖 The AI won',
     otherWon: name => `😢 ${name} won`,
     someoneWon: name => `🏆 ${name} won!`
   },
@@ -43,7 +43,7 @@ const en: Messages = {
   },
 
   actions: {
-    achievements: 'Achievements',
+    achievements: 'Shop and achievements',
     help: 'How to play',
     language: 'Language',
     soundOn: 'Turn on sound and vibration',
@@ -53,9 +53,74 @@ const en: Messages = {
   modes: {
     label: 'Game mode',
     pvp: '👥 2 players',
-    ai: '🤖 Computer',
+    ai: '🤖 AI',
     online: '🌐 Online',
-    levelLabel: 'Computer level'
+    levelLabel: 'AI level',
+    daily: '📅 Daily',
+    symbolLabel: 'You play as',
+    startsHint: '✕ always goes first'
+  },
+
+  daily: {
+    title: n => `📅 Challenge #${n}`,
+    attempt: n => `attempt ${n}`,
+    doneToday: 'done ✅',
+    streak: n => `🔥 ${n} ${n === 1 ? 'day' : 'days'}`,
+    intro: "Beat the AI from today's position. Everyone gets the same one!",
+    won: n => `🏆 Challenge #${n} complete!`,
+    wonDetail: (attempts, moves) =>
+      `In ${attempts} ${attempts === 1 ? 'attempt' : 'attempts'} and ${moves} moves. Come back tomorrow for the next one!`,
+    lost: '😢 Not this time',
+    drawn: 'Draw! So close',
+    tryAgainDetail: 'Same position: try a different path.',
+    replayDetail: "You've already beaten today's challenge. Playing again doesn't count.",
+    tryAgain: 'Try again',
+    playAgain: 'Play again',
+    shareResult: '📤 Share result',
+    shareText: (n, attempts, moves) =>
+      `Tic-Tac-Toe 2.0 · Challenge #${n}\n✅ Won in ${attempts} ${attempts === 1 ? 'attempt' : 'attempts'} (${moves} moves)\n${'🟥'.repeat(Math.min(attempts - 1, 9))}🟩`
+  },
+
+  shop: {
+    tabs: { shop: '🛒 Shop', achievements: '🏅 Achievements' },
+    types: { symbol: 'Symbols', theme: 'Themes', effect: 'Victory effects' },
+    hints: {
+      symbol: 'Shown instead of your X/O. Online, your opponent sees it too.',
+      theme: 'Board and background colors.',
+      effect: 'Shown when you win.'
+    },
+    use: 'Use',
+    inUse: 'In use',
+    howToEarn: 'Earn 🪙 by winning games (more on Hard and online), the daily challenge and achievements.',
+    items: {
+      'symbol-classic': 'Classic',
+      'symbol-star': 'Star',
+      'symbol-fire': 'Fire',
+      'symbol-heart': 'Heart',
+      'symbol-cat': 'Cat',
+      'symbol-skull': 'Skull',
+      'symbol-alien': 'Alien',
+      'symbol-crown': 'Crown',
+      'theme-neon': 'Neon',
+      'theme-retro': 'Retro',
+      'theme-ocean': 'Ocean',
+      'theme-sunset': 'Sunset',
+      'theme-gold': 'Gold',
+      'effect-classic': 'Confetti',
+      'effect-stars': 'Star shower',
+      'effect-hearts': 'Heart shower',
+      'effect-fireworks': 'Fireworks'
+    }
+  },
+
+  account: {
+    cta: 'Sign in with Google',
+    benefit: 'Save coins, items and achievements in the cloud and play on any device.',
+    signedIn: name => `Signed in as ${name}`,
+    synced: 'Progress saved to the cloud ☁️',
+    signOut: 'Sign out',
+    error: "Couldn't sign in. Please try again.",
+    blocked: "Google sign-in doesn't work inside WhatsApp/Instagram. Open the game in Chrome or Safari."
   },
 
   difficulty: {
@@ -66,10 +131,10 @@ const en: Messages = {
 
   local: {
     you: 'You',
-    computer: 'Computer',
+    ai: 'AI',
     thinking: '🤖 Thinking…',
     yourTurn: 'Your turn',
-    computerTurn: "Computer's turn"
+    aiTurn: "AI's turn"
   },
 
   online: {
@@ -140,6 +205,11 @@ const en: Messages = {
     back: 'Back'
   },
 
+  coins: {
+    earned: 'Coins earned',
+    retroactive: 'For your previous games'
+  },
+
   help: {
     title: 'How to play',
     steps: [
@@ -148,7 +218,8 @@ const en: Messages = {
       { icon: '➡️', strong: 'The golden rule:', text: 'the square you play in decides which board your opponent plays in next.', example: true },
       { icon: '🔓', strong: 'Board closed?', text: 'If the target board is already decided, your opponent can play in any open board.' },
       { icon: '⏱', strong: '20 seconds', text: "per move. If time runs out, it's your opponent's turn." },
-      { icon: '🌐', strong: 'Online:', text: 'create a room and send the link. Whoever opens it plays as O; if the room already has two players, they watch. Leaving mid-match counts as giving up.' }
+      { icon: '🌐', strong: 'Online:', text: 'create a room, pick ✕ or ◯ and send the link. Whoever opens it plays the other symbol; if the room already has two players, they watch. Leaving mid-match counts as giving up.' },
+      { icon: '🪙', strong: 'Coins:', text: 'win games, the daily challenge and achievements to earn coins and trade them for symbols, themes and effects in the shop (🏅).' }
     ],
     caption: 'Played in the top-right corner? Your opponent plays in the top-right board.',
     ok: "Got it, let's play!"
@@ -159,14 +230,14 @@ const en: Messages = {
   },
 
   stats: {
-    title: 'Your achievements',
+    title: 'Shop and achievements',
     played: 'Games',
     wins: 'Wins',
     losses: 'Losses',
     draws: 'Draws',
     streak: 'Streak',
     best: 'Best',
-    note: 'Counts games against the computer and online, saved on this device.',
+    note: 'Counts games against the AI, the daily challenge and online.',
     achievements: 'Achievements',
     progress: (unlocked, total) => `${unlocked} of ${total}`,
     unlocked: 'Achievement unlocked!'
@@ -174,10 +245,11 @@ const en: Messages = {
 
   achievements: {
     'first-win': { title: 'First win', description: 'Win your first game' },
-    'beat-easy': { title: 'Warm-up', description: 'Beat the computer on Easy' },
-    'beat-medium': { title: 'Strategist', description: 'Beat the computer on Medium' },
-    'beat-hard': { title: 'Grandmaster', description: 'Beat the computer on Hard' },
+    'beat-easy': { title: 'Warm-up', description: 'Beat the AI on Easy' },
+    'beat-medium': { title: 'Strategist', description: 'Beat the AI on Medium' },
+    'beat-hard': { title: 'Grandmaster', description: 'Beat the AI on Hard' },
     'online-win': { title: 'Challenger', description: 'Win an online match' },
+    'daily-win': { title: 'Challenge accepted', description: 'Beat a daily challenge' },
     'streak-3': { title: 'On fire', description: 'Win 3 games in a row' },
     'streak-5': { title: 'Unstoppable', description: 'Win 5 games in a row' },
     flawless: { title: 'Untouchable', description: "Win without your opponent taking a single board" },

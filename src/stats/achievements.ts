@@ -1,9 +1,11 @@
 import type { Difficulty } from '../game/ai';
 import type { GameState, Player } from '../game/logic';
+import { addCoins } from '../shop/wallet';
+import { COINS, coinsForGame } from '../shop/rewards';
 
 /* ===========================
-   Estatísticas e conquistas (salvas no navegador)
-   Contam só partidas em que existe um "você": contra o computador e online.
+   Estatísticas e conquistas (salvas no navegador; com login, também na nuvem)
+   Contam só partidas em que existe um "você": contra a IA, desafio diário e online.
    =========================== */
 
 export interface Stats {
@@ -18,7 +20,7 @@ export interface Stats {
 }
 
 export interface GameRecord {
-  mode: 'ai' | 'online';
+  mode: 'ai' | 'daily' | 'online';
   difficulty?: Difficulty;
   result: 'win' | 'loss' | 'draw';
   /** Mini-tabuleiros conquistados por você */
@@ -35,6 +37,7 @@ export type AchievementId =
   | 'beat-medium'
   | 'beat-hard'
   | 'online-win'
+  | 'daily-win'
   | 'streak-3'
   | 'streak-5'
   | 'flawless'
@@ -60,6 +63,7 @@ const DEFINITIONS: (Achievement & { check?: Check })[] = [
   { id: 'beat-medium', icon: '🧠', check: (_, r) => win(r) && r.difficulty === 'medium' },
   { id: 'beat-hard', icon: '👑', check: (_, r) => win(r) && r.difficulty === 'hard' },
   { id: 'online-win', icon: '🌐', check: (_, r) => win(r) && r.mode === 'online' },
+  { id: 'daily-win', icon: '📅', check: (_, r) => win(r) && r.mode === 'daily' },
   { id: 'streak-3', icon: '🔥', check: s => s.streak >= 3 },
   { id: 'streak-5', icon: '☄️', check: s => s.streak >= 5 },
   { id: 'flawless', icon: '🛡️', check: (_, r) => win(r) && r.boardsLost === 0 },
@@ -136,6 +140,7 @@ const STORAGE_KEY = 'jogo-da-velha:stats';
 type Listener = (unlocked: Achievement[]) => void;
 
 const listeners = new Set<Listener>();
+const changeListeners = new Set<() => void>();
 
 export function loadStats(): Stats {
 
@@ -156,6 +161,8 @@ function save(stats: Stats) {
     // Armazenamento indisponível: as estatísticas valem só para esta visita
   }
 
+  changeListeners.forEach(listener => listener());
+
 }
 
 function notify(unlocked: Achievement[]) {
@@ -164,13 +171,14 @@ function notify(unlocked: Achievement[]) {
 
 }
 
-/** Registra uma partida terminada e avisa as conquistas novas */
+/** Registra uma partida terminada, paga as moedas e avisa as conquistas novas */
 export function recordGame(record: GameRecord) {
 
   const { stats, unlocked } = applyRecord(loadStats(), record);
 
   save(stats);
   notify(unlocked);
+  addCoins(coinsForGame(record) + unlocked.length * COINS.achievement);
 
 }
 
@@ -184,6 +192,25 @@ export function unlockAchievement(id: AchievementId) {
   stats.unlocked[id] = Date.now();
   save(stats);
   notify(ACHIEVEMENTS.filter(a => a.id === id));
+  addCoins(COINS.achievement);
+
+}
+
+/** Usado pela sincronização com a nuvem */
+export function replaceStats(stats: Stats) {
+
+  save(stats);
+
+}
+
+/** Avisa qualquer mudança nas estatísticas (para sincronizar com a nuvem) */
+export function onStatsChange(listener: () => void): () => void {
+
+  changeListeners.add(listener);
+
+  return () => {
+    changeListeners.delete(listener);
+  };
 
 }
 

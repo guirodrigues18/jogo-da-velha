@@ -2,6 +2,7 @@ import { useEffect, type ComponentProps, type RefObject } from 'react';
 import type { Player, Result } from '../game/logic';
 import { useOnlineGame } from '../hooks/useOnlineGame';
 import { t } from '../i18n';
+import { symbolGlyph } from '../shop/catalog';
 import GameView from './GameView';
 import OnlinePanel from './OnlinePanel';
 import OnlineMessage from './OnlineMessage';
@@ -13,6 +14,8 @@ interface Props {
   /** null = criar uma sala nova */
   roomId: string | null;
   nickname: string;
+  /** Com quem joga quem cria a sala */
+  hostRole: Player;
   /** Onde registrar a função de desistência (usada pelo botão voltar) */
   leaveRoomRef: RefObject<(() => void) | null>;
   onRoomCreated: (roomId: string) => void;
@@ -25,9 +28,9 @@ type NameOf = (player: Player) => string;
 
 const noop = () => {};
 
-export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreated, onLeave }: Props) {
+export default function OnlineRoom({ roomId, nickname, hostRole, leaveRoomRef, onRoomCreated, onLeave }: Props) {
 
-  const online = useOnlineGame(roomId, nickname, onRoomCreated);
+  const online = useOnlineGame(roomId, nickname, hostRole, onRoomCreated);
   const { game, role, nameOf } = online;
 
   useEffect(() => {
@@ -61,6 +64,9 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
     : undefined;
 
   const reactionBar = online.opponentJoined && !online.opponentLeft && <ReactionBar onReact={online.react} />;
+
+  // Cada jogador aparece com o símbolo que escolheu na loja
+  const glyphs = { x: symbolGlyph(online.skins.x), o: symbolGlyph(online.skins.o) };
   const overlay = <ReactionLayer reactions={online.floatingReactions} onDone={online.dismissReaction} />;
 
   // Espectador: só assiste (sem jogar, sem revanche)
@@ -78,6 +84,7 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
         shake={online.shake}
         score={score}
         overlay={overlay}
+        glyphs={glyphs}
         turnLabel={leftPlayer ? t.online.matchOver : t.online.turnOf(nameOf(current))}
         onCellClick={noop}
         panel={(
@@ -107,6 +114,7 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
       shake={online.shake}
       score={score}
       overlay={overlay}
+      glyphs={glyphs}
       turnLabel={turnLabel}
       you={online.opponentJoined && !online.opponentLeft ? role : undefined}
       onCellClick={online.play}
