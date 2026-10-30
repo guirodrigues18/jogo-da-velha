@@ -10,6 +10,7 @@ import { getAccountInfo } from './online/accountInfo';
 import { acceptInviteFromUrl, REFERRAL_COINS, startReferralWatch } from './online/invite';
 import { shouldGreet } from './shop/dailyReward';
 import { loadStats } from './stats/achievements';
+import { clearChallenge, onChallengeStart } from './stats/rivals';
 import { showToast } from './effects/toasts';
 
 // O SDK do Firebase só é baixado por quem entra no modo online
@@ -57,6 +58,9 @@ export default function App() {
 
   }, []);
 
+  // Revanche pedida no ranking de rivais: abre a criação de uma sala nova
+  useEffect(() => onChallengeStart(() => setMode({ kind: 'online', roomId: null })), []);
+
   // Botões voltar/avançar do navegador
   useEffect(() => {
 
@@ -64,7 +68,9 @@ export default function App() {
       // Sair da sala pelo botão voltar também conta como desistência. Precisa ser
       // avisado aqui, antes de trocar de tela: depois a partida já foi desmontada
       leaveRoomRef.current?.();
-      setMode(modeFromUrl());
+      const next = modeFromUrl();
+      if (next.kind === 'local') clearChallenge();
+      setMode(next);
     };
 
     window.addEventListener('popstate', onPopState);
@@ -80,6 +86,7 @@ export default function App() {
 
   const leaveOnline = () => {
     window.history.pushState(null, '', window.location.pathname);
+    clearChallenge();
     setMode({ kind: 'local' });
   };
 

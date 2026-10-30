@@ -40,6 +40,10 @@ jogadores usam o mesmo símbolo, cada um vê o seu e o adversário aparece com o
   pular um dia volta ao dia 1. Quem já jogou antes vê a recompensa sozinha ao abrir o jogo.
 - **Missões diárias:** três por dia (fácil, média e difícil, de uma lista de 20), sorteadas pela data e iguais
   para todo mundo. Dá para trocar uma por dia; completar as três rende um bônus.
+- **Rivais (aba ⚔️):** placar contra cada pessoa que você já enfrentou online e um ranking entre vocês pelo
+  aproveitamento, com revanche em um toque (sala nova com o placar no convite). Só conta partidas em que os
+  dois entraram com Google; as regras do banco conferem isso (`rooms/{id}/google/{x|o}`, só com e-mail verificado).
+  O placar vai para a nuvem junto com o resto do progresso.
 - **Convide e ganhe:** quando um amigo chega pelo seu link (`?amigo=id`) ou pela sua sala online e termina
   a primeira partida, os dois ganham 50 🪙. O amigo grava um aviso em `referrals/{quem convidou}` e quem
   convidou recebe as moedas ao ver o aviso (e o apaga).

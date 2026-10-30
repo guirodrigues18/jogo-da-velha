@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { applyMove, createGame, passTurn, type GameState, type Player } from '../game/logic';
-import { signIn } from '../online/firebase';
+import { auth, signIn } from '../online/firebase';
 import {
   ABANDON_SECONDS,
   claimAbandonment,
@@ -8,6 +8,7 @@ import {
   createRoom,
   joinRoom,
   leaveRoom,
+  markGoogleAccount,
   requestRematch,
   saveName,
   saveSkin,
@@ -28,6 +29,7 @@ import { getProfile } from '../shop/wallet';
 import { playSound } from '../audio/sounds';
 import { loadStats, recordFromGame, recordGame, unlockAchievement } from '../stats/achievements';
 import { trackMission } from '../stats/missions';
+import { recordRival } from '../stats/rivals';
 import type { FloatingReaction } from '../components/ReactionLayer';
 import { t } from '../i18n';
 import { TURN_SECONDS, useTurnTimer } from './useTurnTimer';
@@ -136,6 +138,12 @@ export function useOnlineGame(
         if (result !== 'spectator') {
           saveName(roomId, result, nickname).catch(() => {});
           saveSkin(roomId, result, getProfile().equipped.symbol).catch(() => {});
+
+          // Conta Google: vale para o placar de rivais (token renovado para já ter o e-mail, conferido pelas regras)
+          const user = auth.currentUser;
+          if (user && !user.isAnonymous) {
+            user.getIdToken(true).then(() => markGoogleAccount(roomId, result)).catch(() => {});
+          }
         } else {
           unlockAchievement('spectator');
         }
@@ -226,7 +234,18 @@ export function useOnlineGame(
     turnText: player => (isMe(player) ? t.online.yourTurn : t.online.turnOf(nameOf(player))),
     isMe,
     onGameEnd: finished => {
-      if (role) recordGame(recordFromGame(finished, role, 'online'));
+
+      if (!role) return;
+
+      const record = recordFromGame(finished, role, 'online');
+      const opponentId = room?.players[opponent];
+
+      recordGame(record);
+
+      // Placar de rivais: só entre duas contas Google (a mesma pessoa em qualquer aparelho)
+      const bothGoogle = Boolean(room?.google[role] && room?.google[opponent]);
+      if (opponentId && bothGoogle) recordRival(opponentId, nameOf(opponent), record.result);
+
     }
   });
 

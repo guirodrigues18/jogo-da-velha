@@ -45,6 +45,8 @@ interface StoredRoom {
   reactions?: Record<string, Reaction>;
   /** Símbolo da loja que cada jogador usa (o adversário vê) */
   skins?: PerPlayer<string>;
+  /** Quem entrou com Google (conferido pelas regras do banco); o placar de rivais só conta entre eles */
+  google?: PerPlayer<boolean>;
 }
 
 export interface Reaction {
@@ -69,6 +71,7 @@ export interface Room {
   score: PerPlayer<number>;
   reactions: Record<string, Reaction>;
   skins: PerPlayer<string>;
+  google: PerPlayer<boolean>;
 }
 
 /** Precisa ser igual à lista nas regras do banco (database.rules.json) */
@@ -190,7 +193,8 @@ export function subscribeRoom(roomId: string, onChange: (room: Room | null) => v
       spectators: data.spectators ?? {},
       score: data.score ?? {},
       reactions: data.reactions ?? {},
-      skins: data.skins ?? {}
+      skins: data.skins ?? {},
+      google: data.google ?? {}
     });
 
   });
@@ -218,6 +222,13 @@ export async function getRoomPreview(roomId: string): Promise<RoomPreview | null
 export function saveSkin(roomId: string, role: Player, itemId: string): Promise<void> {
 
   return set(roomRef(roomId, `skins/${role}`), itemId);
+
+}
+
+/** Marca que você entrou com Google (as regras do banco recusam contas anônimas) */
+export function markGoogleAccount(roomId: string, role: Player): Promise<void> {
+
+  return set(roomRef(roomId, `google/${role}`), true);
 
 }
 

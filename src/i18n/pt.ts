@@ -82,7 +82,7 @@ const pt = {
   },
 
   shop: {
-    tabs: { missions: '🎯 Missões', shop: '🛒 Loja', achievements: '🏅 Conquistas' },
+    tabs: { missions: '🎯 Missões', shop: '🛒 Loja', achievements: '🏅 Conquistas', rivals: '⚔️ Rivais' },
     types: { symbol: 'Símbolos', theme: 'Temas', team: '⚽ Times', effect: 'Efeitos de vitória' },
     hints: {
       symbol: 'Aparecem no lugar do seu X/O. No online, o adversário também vê.',
@@ -303,6 +303,22 @@ const pt = {
     friendJoined: (name: string) => `${name} entrou pelo seu convite!`,
     someone: 'Um amigo',
     roomHint: (coins: number) => `🎁 Se for a primeira partida dele no jogo, vocês dois ganham ${coins} 🪙.`
+  },
+
+  rivals: {
+    note: 'Ranking entre você e quem você já enfrentou online, pelo aproveitamento nas partidas entre vocês. Só contam partidas em que os dois entraram com Google.',
+    needGoogle: 'O placar contra rivais é só entre contas Google, para ser a mesma pessoa em qualquer aparelho. Entre com Google (acima) e jogue online com amigos que também entraram.',
+    you: 'Você',
+    yourRecord: (wins: number, draws: number, losses: number) => `${wins}V · ${draws}E · ${losses}D no total`,
+    versus: (mine: number, theirs: number, draws: number) =>
+      `você ${mine} × ${theirs}${draws ? ` · ${draws} ${draws === 1 ? 'empate' : 'empates'}` : ''}`,
+    rematch: 'Revanche',
+    rematchHint: 'Cria uma sala nova e manda o convite',
+    inRoom: 'Termine a partida atual para pedir revanche.',
+    empty: 'Você ainda não tem rivais. Crie uma sala e mande o link para um amigo: se ele também tiver entrado com Google, o placar de vocês aparece aqui.',
+    challengeTitle: (name: string) => `Revanche contra ${name} ⚔️`,
+    inviteMessage: (rival: string, me: string, mine: number, theirs: number) =>
+      `${rival}, bora revanche no Jogo da Velha 2.0? ⚔️ Placar até agora: ${me} ${mine} × ${theirs} ${rival}`
   },
 
   cookies: {

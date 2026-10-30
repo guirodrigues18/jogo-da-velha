@@ -4,6 +4,7 @@ import { copyText, shareLink } from '../share/shareLink';
 import { ROOM_PARAM } from '../online/config';
 import { REFERRAL_COINS } from '../online/invite';
 import { track } from '../online/consent';
+import { useChallenge } from '../stats/rivals';
 import { t } from '../i18n';
 
 interface Props {
@@ -42,7 +43,11 @@ export default function OnlinePanel({
   const opponent: Player = role === 'x' ? 'o' : 'x';
   // Mantém a página do idioma atual (/, /en/, /es/): o convidado provavelmente fala o mesmo idioma
   const inviteUrl = `${window.location.origin}${window.location.pathname}?${ROOM_PARAM}=${roomId}`;
-  const inviteText = t.online.inviteMessage(nameOf(role));
+  // Revanche pedida no ranking: o convite já leva o placar entre vocês
+  const rival = useChallenge();
+  const inviteText = rival
+    ? t.rivals.inviteMessage(rival.name, nameOf(role), rival.wins, rival.losses)
+    : t.online.inviteMessage(nameOf(role));
 
   const showCopied = () => {
     setCopied(true);

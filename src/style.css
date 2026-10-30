@@ -2000,6 +2000,14 @@ body::after {
   margin: 14px 0 6px;
 }
 
+/* Quatro abas: no celular viram uma grade 2×2 */
+@media (max-width: 440px) {
+  .segmented.tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .shop-section {
   margin-top: 18px;
 }
@@ -2411,6 +2419,73 @@ body::after {
 
 .help-links a:hover {
   color: var(--text);
+}
+
+/* Rivais: ranking entre você e quem você já enfrentou */
+.rival-ranking {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.rival-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .04);
+}
+
+.rival-row.you {
+  border-color: rgba(139, 92, 246, .55);
+  background: rgba(139, 92, 246, .12);
+}
+
+.rival-position {
+  width: 26px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--muted);
+}
+
+.rival-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.rival-info strong {
+  display: block;
+  overflow: hidden;
+  font-size: .92rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rival-info small {
+  color: var(--muted);
+  font-size: .76rem;
+}
+
+.rival-rate {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.rival-challenge {
+  width: auto;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
+.rivals-empty {
+  margin: 18px 0 6px;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.6;
+  text-align: center;
 }
 
 /* Aviso de cookies (rodapé da tela, uma vez só) */

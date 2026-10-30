@@ -5,6 +5,7 @@ import { getRoomPreview, type RoomPreview } from '../online/rooms';
 import { loadNickname, normalizeNickname, NICKNAME_MAX_LENGTH } from '../online/nickname';
 import { firstName, getAccountInfo } from '../online/accountInfo';
 import { loadPreferences, savePreferences } from '../game/preferences';
+import { useChallenge } from '../stats/rivals';
 import { t } from '../i18n';
 import HelpDialog from './HelpDialog';
 import SymbolPicker from './SymbolPicker';
@@ -24,6 +25,8 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
   const [symbol, setSymbol] = useState(() => loadPreferences().symbol);
   const [preview, setPreview] = useState<RoomPreview | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
+  // Revanche pedida no ranking de rivais
+  const rival = useChallenge();
 
   // Convidado: mostra quem fez o desafio, ou quem está jogando (se não der, fica o título genérico)
   useEffect(() => {
@@ -57,7 +60,7 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
   const watching = Boolean(preview?.full);
   const hostName = preview?.hostRole ? preview.names[preview.hostRole] : undefined;
 
-  let title = t.nickname.playOnline;
+  let title = rival && !roomId ? t.rivals.challengeTitle(rival.name) : t.nickname.playOnline;
   let subtitle = t.nickname.ask;
   let action = t.nickname.create;
 

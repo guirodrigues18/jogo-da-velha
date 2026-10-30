@@ -1,11 +1,13 @@
 import { emptyStats, type Stats } from './achievements';
 import { emptyProfile, type Profile } from '../shop/wallet';
 import { findItem } from '../shop/catalog';
+import { mergeRivals, type Rivals } from './rivals';
 
-/** Tudo o que é salvo na conta: estatísticas, conquistas, moedas e itens */
+/** Tudo o que é salvo na conta: estatísticas, conquistas, moedas, itens e rivais */
 export interface Progress {
   stats: Stats;
   profile: Profile;
+  rivals: Rivals;
 }
 
 /**
@@ -51,7 +53,8 @@ export function mergeProgress(local: Progress, cloud: Partial<Progress> | null):
       coins: Math.max(local.profile.coins, cloudProfile.coins),
       owned,
       equipped
-    }
+    },
+    rivals: mergeRivals(local.rivals, cloud.rivals)
   };
 
 }

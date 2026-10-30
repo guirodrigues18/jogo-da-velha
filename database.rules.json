@@ -108,6 +108,13 @@
           }
         },
 
+        "google": {
+          "$role": {
+            ".write": "auth != null && data.parent().parent().child('players').child($role).val() === auth.uid && auth.token.email_verified === true",
+            ".validate": "newData.val() === true"
+          }
+        },
+
         "rematch": {
           "$role": {
             ".write": "auth != null && data.parent().parent().child('players').child($role).val() === auth.uid",

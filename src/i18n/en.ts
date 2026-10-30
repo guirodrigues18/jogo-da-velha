@@ -82,7 +82,7 @@ const en: Messages = {
   },
 
   shop: {
-    tabs: { missions: '🎯 Missions', shop: '🛒 Shop', achievements: '🏅 Achievements' },
+    tabs: { missions: '🎯 Missions', shop: '🛒 Shop', achievements: '🏅 Achievements', rivals: '⚔️ Rivals' },
     types: { symbol: 'Symbols', theme: 'Themes', team: '⚽ Teams', effect: 'Victory effects' },
     hints: {
       symbol: 'Shown instead of your X/O. Online, your opponent sees it too.',
@@ -303,6 +303,22 @@ const en: Messages = {
     friendJoined: name => `${name} joined through your invite!`,
     someone: 'A friend',
     roomHint: coins => `🎁 If it's their first game, you both get ${coins} 🪙.`
+  },
+
+  rivals: {
+    note: "Ranking between you and everyone you've played online, by win rate in your games together. Only games where both players signed in with Google count.",
+    needGoogle: 'Rival scores only count between Google accounts, so it is the same person on any device. Sign in with Google (above) and play online with friends who did too.',
+    you: 'You',
+    yourRecord: (wins, draws, losses) => `${wins}W · ${draws}D · ${losses}L overall`,
+    versus: (mine, theirs, draws) =>
+      `you ${mine} × ${theirs}${draws ? ` · ${draws} ${draws === 1 ? 'draw' : 'draws'}` : ''}`,
+    rematch: 'Rematch',
+    rematchHint: 'Creates a new room and sends the invite',
+    inRoom: 'Finish the current match to ask for a rematch.',
+    empty: "You don't have any rivals yet. Create a room and send the link to a friend: if they're signed in with Google too, your score will show up here.",
+    challengeTitle: name => `Rematch against ${name} ⚔️`,
+    inviteMessage: (rival, me, mine, theirs) =>
+      `${rival}, rematch on Tic-Tac-Toe 2.0? ⚔️ Score so far: ${me} ${mine} × ${theirs} ${rival}`
   },
 
   cookies: {

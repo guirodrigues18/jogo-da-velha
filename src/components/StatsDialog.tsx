@@ -5,17 +5,18 @@ import { t } from '../i18n';
 import Dialog from './Dialog';
 import DailyPanel from './DailyPanel';
 import ShopPanel from './ShopPanel';
+import RivalsPanel from './RivalsPanel';
 import AccountBox from './AccountBox';
 
 interface Props {
   onClose: () => void;
 }
 
-type Tab = 'missions' | 'shop' | 'achievements';
+type Tab = 'missions' | 'shop' | 'achievements' | 'rivals';
 
-const TABS: Tab[] = ['missions', 'shop', 'achievements'];
+const TABS: Tab[] = ['missions', 'shop', 'achievements', 'rivals'];
 
-/** Missões, loja e conquistas (botão 🏅), com o saldo de moedas e o login */
+/** Missões, loja, conquistas e rivais (botão 🏅), com o saldo de moedas e o login */
 export default function StatsDialog({ onClose }: Props) {
 
   const [tab, setTab] = useState<Tab>('missions');
@@ -37,6 +38,7 @@ export default function StatsDialog({ onClose }: Props) {
       {tab === 'missions' && <DailyPanel />}
       {tab === 'shop' && <ShopPanel />}
       {tab === 'achievements' && <AchievementsPanel />}
+      {tab === 'rivals' && <RivalsPanel onChallenge={onClose} />}
 
     </Dialog>
   );

@@ -5,7 +5,8 @@ import { emptyProfile } from '../shop/wallet';
 
 const local: Progress = {
   stats: { ...emptyStats(), played: 5, wins: 3, unlocked: { 'first-win': 200, 'beat-easy': 300 } },
-  profile: { ...emptyProfile(), coins: 80, owned: [...emptyProfile().owned, 'symbol-star'] }
+  profile: { ...emptyProfile(), coins: 80, owned: [...emptyProfile().owned, 'symbol-star'] },
+  rivals: { bruno: { name: 'Bruno', wins: 2, losses: 1, draws: 0, last: 500 } }
 };
 
 describe('mergeProgress', () => {
@@ -46,6 +47,22 @@ describe('mergeProgress', () => {
 
     expect(merged.profile.equipped.theme).toBe('theme-retro');
     expect(merged.profile.equipped.symbol).toBe('symbol-classic');
+
+  });
+
+  it('junta os rivais dos dois lados', () => {
+
+    const cloud: Partial<Progress> = {
+      rivals: {
+        bruno: { name: 'Brunão', wins: 1, losses: 3, draws: 1, last: 100 },
+        ana: { name: 'Ana', wins: 0, losses: 1, draws: 0, last: 50 }
+      }
+    };
+
+    const merged = mergeProgress(local, cloud);
+
+    expect(merged.rivals.bruno).toEqual({ name: 'Bruno', wins: 2, losses: 3, draws: 1, last: 500 });
+    expect(merged.rivals.ana.name).toBe('Ana');
 
   });
 

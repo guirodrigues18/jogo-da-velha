@@ -82,7 +82,7 @@ const es: Messages = {
   },
 
   shop: {
-    tabs: { missions: '🎯 Misiones', shop: '🛒 Tienda', achievements: '🏅 Logros' },
+    tabs: { missions: '🎯 Misiones', shop: '🛒 Tienda', achievements: '🏅 Logros', rivals: '⚔️ Rivales' },
     types: { symbol: 'Símbolos', theme: 'Temas', team: '⚽ Equipos', effect: 'Efectos de victoria' },
     hints: {
       symbol: 'Aparecen en lugar de tu X/O. En línea, tu rival también los ve.',
@@ -303,6 +303,22 @@ const es: Messages = {
     friendJoined: name => `¡${name} entró con tu invitación!`,
     someone: 'Un amigo',
     roomHint: coins => `🎁 Si es su primera partida, los dos ganan ${coins} 🪙.`
+  },
+
+  rivals: {
+    note: 'Ranking entre tú y quienes ya enfrentaste en línea, por el rendimiento en las partidas entre ustedes. Solo cuentan las partidas en que los dos entraron con Google.',
+    needGoogle: 'El marcador contra rivales es solo entre cuentas de Google, para que sea la misma persona en cualquier dispositivo. Entra con Google (arriba) y juega en línea con amigos que también hayan entrado.',
+    you: 'Tú',
+    yourRecord: (wins, draws, losses) => `${wins}V · ${draws}E · ${losses}D en total`,
+    versus: (mine, theirs, draws) =>
+      `tú ${mine} × ${theirs}${draws ? ` · ${draws} ${draws === 1 ? 'empate' : 'empates'}` : ''}`,
+    rematch: 'Revancha',
+    rematchHint: 'Crea una sala nueva y envía la invitación',
+    inRoom: 'Termina la partida actual para pedir la revancha.',
+    empty: 'Aún no tienes rivales. Crea una sala y envía el enlace a un amigo: si también entró con Google, el marcador de ustedes aparecerá aquí.',
+    challengeTitle: name => `Revancha contra ${name} ⚔️`,
+    inviteMessage: (rival, me, mine, theirs) =>
+      `${rival}, ¿revancha en Tres en Raya 2.0? ⚔️ Marcador: ${me} ${mine} × ${theirs} ${rival}`
   },
 
   cookies: {

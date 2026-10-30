@@ -12,6 +12,7 @@ import { auth, db, resetSignIn } from './firebase';
 import { loadStats, onStatsChange, replaceStats } from '../stats/achievements';
 import { getProfile, replaceProfile, subscribeProfile } from '../shop/wallet';
 import { mergeProgress, type Progress } from '../stats/progress';
+import { getRivals, onRivalsChange, replaceRivals } from '../stats/rivals';
 import { saveAccountInfo, type AccountInfo } from './accountInfo';
 
 /* ===========================
@@ -88,7 +89,7 @@ const userRef = (uid: string) => ref(db, `users/${uid}`);
 
 function localProgress(): Progress {
 
-  return { stats: loadStats(), profile: getProfile() };
+  return { stats: loadStats(), profile: getProfile(), rivals: getRivals() };
 
 }
 
@@ -111,6 +112,7 @@ export async function syncProgress(uid: string) {
 
   replaceStats(merged.stats);
   replaceProfile(merged.profile);
+  replaceRivals(merged.rivals);
 
   await push(uid);
 
@@ -125,11 +127,13 @@ export async function syncProgress(uid: string) {
 
   const unsubscribeStats = onStatsChange(schedule);
   const unsubscribeProfile = subscribeProfile(schedule);
+  const unsubscribeRivals = onRivalsChange(schedule);
 
   stopAutoSync = () => {
     clearTimeout(timer);
     unsubscribeStats();
     unsubscribeProfile();
+    unsubscribeRivals();
     stopAutoSync = null;
   };
 
