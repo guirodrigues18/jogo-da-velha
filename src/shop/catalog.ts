@@ -25,7 +25,8 @@ export function sectionOf(item: ShopItem): ShopSection {
 
 }
 
-const TEAM_PRICE = 400;
+// TEMPORÁRIO para testes: o preço normal é 400
+const TEAM_PRICE = 0;
 
 /** Tema de time: listras/fundo para a prévia da loja */
 const team = (id: string, preview: string): ShopItem => ({ id: `theme-team-${id}`, type: 'theme', price: TEAM_PRICE, preview, group: 'team' });
