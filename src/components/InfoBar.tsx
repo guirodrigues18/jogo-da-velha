@@ -7,13 +7,17 @@ interface Props {
   currentPlayer: Player;
   /** Substitui "Jogador X/O" (ex.: "Sua vez" no modo online) */
   turnLabel?: string;
+  /** Símbolo de quem usa este aparelho; ausente no modo 2 jogadores e para espectadores */
+  you?: Player;
   activeBoard: number | null;
   turn: number;
   secondsLeft: number;
   timerActive: boolean;
 }
 
-export default function InfoBar({ currentPlayer, turnLabel, activeBoard, turn, secondsLeft, timerActive }: Props) {
+const SYMBOLS: Record<Player, string> = { x: '✕', o: '◯' };
+
+export default function InfoBar({ currentPlayer, turnLabel, you, activeBoard, turn, secondsLeft, timerActive }: Props) {
 
   const warning = timerActive && secondsLeft <= WARNING_SECONDS;
 
@@ -22,10 +26,15 @@ export default function InfoBar({ currentPlayer, turnLabel, activeBoard, turn, s
   if (timerActive) fillClasses.push('running');
   if (warning) fillClasses.push('warning');
 
+  // Na sua vez, o card brilha na sua cor; na vez do outro, fica discreto
+  const cardClasses = ['info-card', 'turn-card', currentPlayer];
+
+  if (you) cardClasses.push(you === currentPlayer ? 'my-turn' : 'their-turn');
+
   return (
     <div className="info-bar">
 
-      <div className="info-card">
+      <div className={cardClasses.join(' ')}>
         <div className="info-label">
           {t.info.turn}
           {timerActive && (
@@ -36,6 +45,7 @@ export default function InfoBar({ currentPlayer, turnLabel, activeBoard, turn, s
         </div>
         {/* A key reinicia a animação de entrada a cada turno */}
         <div className="info-value pop-in" key={turn}>
+          <span className={`turn-symbol ${currentPlayer}`}>{SYMBOLS[currentPlayer]}</span>
           {turnLabel ?? t.player(currentPlayer.toUpperCase())}
         </div>
         <div className="timer">

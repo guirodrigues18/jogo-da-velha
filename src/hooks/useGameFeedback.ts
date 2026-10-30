@@ -22,16 +22,18 @@ export interface Notice {
 interface Options {
   /** Descreve de quem é a vez no aviso de tempo esgotado (ex.: "Vez de Ana") */
   turnText?: (player: Player) => string;
-  /** Se as jogadas deste jogador tocam som neste aparelho (online: só as próprias) */
-  soundFor?: (player: Player) => boolean;
-  /** Se este jogador é "você" neste aparelho: vibração e confete na vitória */
-  celebrateFor?: (player: Player) => boolean;
+  /**
+   * Se este jogador é "você" neste aparelho: tique do cronômetro, vibração,
+   * confete e som de derrota. No modo 2 jogadores, os dois são "você".
+   */
+  isMe?: (player: Player) => boolean;
   /** Chamado uma vez quando uma partida termina com uma jogada feita agora */
   onGameEnd?: (game: GameState) => void;
 }
 
 const defaultTurnText = (player: Player) => t.turnOfPlayer(player.toUpperCase());
 const everyone = () => true;
+const opponentOf = (player: Player): Player => (player === 'x' ? 'o' : 'x');
 
 /**
  * Sons, vibração, confete, avisos e tremidas a partir das mudanças de estado.
@@ -41,7 +43,7 @@ export function useGameFeedback(
   game: GameState,
   secondsLeft: number,
   timerActive: boolean,
-  { turnText = defaultTurnText, soundFor = everyone, celebrateFor = everyone, onGameEnd }: Options = {}
+  { turnText = defaultTurnText, isMe = everyone, onGameEnd }: Options = {}
 ) {
 
   const [notice, setNotice] = useState<Notice | null>(null);
@@ -65,7 +67,7 @@ export function useGameFeedback(
 
     if (boardIndex === null) {
       setNotice({ text: t.timeout(turnText(game.currentPlayer)), id: Date.now() });
-      if (soundFor(actor)) playSound('timeout');
+      playSound('timeout');
       return;
     }
 
@@ -73,15 +75,20 @@ export function useGameFeedback(
 
     if (conquered) setShake(n => n + 1);
 
-    if (soundFor(actor)) playSound(moveSound(game, boardIndex, actor));
+    // Todas as jogadas tocam som; se quem venceu foi o seu adversário, toca o som de derrota
+    const lost = game.winner === actor && !isMe(actor) && isMe(opponentOf(actor));
 
-    if (celebrateFor(actor)) {
+    playSound(lost ? 'lose' : moveSound(game, boardIndex, actor));
+
+    if (isMe(actor)) {
       if (game.winner === actor) vibrate(VIBRATION.win);
       else vibrate(conquered ? VIBRATION.board : VIBRATION.move);
+    } else if (!game.winner && isMe(game.currentPlayer)) {
+      vibrate(VIBRATION.yourTurn); // o adversário jogou: agora é a sua vez
     }
 
     if (game.winner) {
-      if (game.winner !== 'draw' && celebrateFor(game.winner)) celebrate();
+      if (game.winner !== 'draw' && isMe(game.winner)) celebrate();
       onGameEnd?.(game);
     }
 
@@ -90,7 +97,7 @@ export function useGameFeedback(
   // Tique nos últimos segundos, só para quem está com a vez
   useEffect(() => {
 
-    if (!timerActive || !soundFor(game.currentPlayer)) return;
+    if (!timerActive || !isMe(game.currentPlayer)) return;
 
     if (secondsLeft > 0 && secondsLeft <= WARNING_SECONDS) playSound('tick');
 
@@ -118,7 +125,10 @@ export function useGameFeedback(
 
   };
 
-  return { notice, nudge, shake, reject };
+  /** Mostra um aviso rápido no topo (ex.: "Você joga com ◯") */
+  const announce = (text: string) => setNotice({ text, id: Date.now() });
+
+  return { notice, nudge, shake, reject, announce };
 
 }
 

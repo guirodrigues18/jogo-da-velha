@@ -70,7 +70,7 @@ export function useLocalGame() {
 
   const { notice, nudge, shake, reject } = useGameFeedback(game, secondsLeft, timerActive, {
     turnText: vsComputer ? player => (player === HUMAN ? t.local.yourTurn : t.local.computerTurn) : undefined,
-    celebrateFor: vsComputer ? player => player === HUMAN : undefined,
+    isMe: vsComputer ? player => player === HUMAN : undefined,
     onGameEnd: finished => {
       const winner = finished.winner;
       if (winner === 'x' || winner === 'o') setScore(s => ({ ...s, [winner]: s[winner] + 1 }));

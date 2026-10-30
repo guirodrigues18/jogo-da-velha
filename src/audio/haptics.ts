@@ -3,6 +3,7 @@ import { isMuted } from './sounds';
 /** Padrões de vibração (ms vibrando, ms parado, ...) */
 export const VIBRATION = {
   move: 15,
+  yourTurn: [10, 60, 10],
   board: [40, 40, 60],
   win: [80, 60, 80, 60, 160],
   invalid: 50

@@ -54,7 +54,6 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
   };
 
   const current = game.currentPlayer;
-  const symbol = current.toUpperCase();
 
   // Placar e reações só fazem sentido com os dois jogadores na sala
   const score = online.opponentJoined
@@ -79,7 +78,7 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
         shake={online.shake}
         score={score}
         overlay={overlay}
-        turnLabel={leftPlayer ? t.online.matchOver : t.online.turnOfSymbol(nameOf(current), symbol)}
+        turnLabel={leftPlayer ? t.online.matchOver : t.online.turnOf(nameOf(current))}
         onCellClick={noop}
         panel={(
           <>
@@ -93,7 +92,7 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
 
   }
 
-  let turnLabel = role === current ? t.online.yourTurnSymbol(symbol) : t.online.turnOfSymbol(nameOf(current), symbol);
+  let turnLabel = role === current ? t.online.yourTurn : t.online.turnOf(nameOf(current));
 
   if (!online.opponentJoined) turnLabel = t.online.waitingOpponent;
   else if (online.opponentLeft) turnLabel = t.online.matchOver;
@@ -109,6 +108,7 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
       score={score}
       overlay={overlay}
       turnLabel={turnLabel}
+      you={online.opponentJoined && !online.opponentLeft ? role : undefined}
       onCellClick={online.play}
       panel={(
         <>

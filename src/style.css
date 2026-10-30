@@ -216,6 +216,65 @@ body::after {
 }
 
 /* ===========================
+   De quem é a vez
+   =========================== */
+
+.turn-card {
+  transition: border-color .3s ease, box-shadow .3s ease, opacity .3s ease;
+}
+
+.turn-symbol {
+  margin-right: 8px;
+  font-weight: 800;
+}
+
+.turn-symbol.x {
+  color: var(--cyan);
+  text-shadow: 0 0 10px rgba(0, 229, 255, .7);
+}
+
+.turn-symbol.o {
+  color: var(--pink);
+  text-shadow: 0 0 10px rgba(255, 79, 216, .7);
+}
+
+/* Sua vez: o card brilha na sua cor */
+.turn-card.my-turn.x {
+  border-color: rgba(0, 229, 255, .6);
+  animation: my-turn-x 2s ease-in-out infinite;
+}
+
+.turn-card.my-turn.o {
+  border-color: rgba(255, 79, 216, .6);
+  animation: my-turn-o 2s ease-in-out infinite;
+}
+
+.turn-card.their-turn {
+  opacity: .75;
+}
+
+.main-board {
+  transition: opacity .3s ease, filter .3s ease;
+}
+
+.main-board.waiting {
+  opacity: .72;
+  filter: saturate(.75);
+}
+
+@keyframes my-turn-x {
+  50% {
+    box-shadow: 0 0 22px rgba(0, 229, 255, .3);
+  }
+}
+
+@keyframes my-turn-o {
+  50% {
+    box-shadow: 0 0 22px rgba(255, 79, 216, .3);
+  }
+}
+
+/* ===========================
    Cronômetro do turno
    =========================== */
 

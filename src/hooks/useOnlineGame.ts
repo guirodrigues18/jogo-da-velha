@@ -35,6 +35,8 @@ const CONNECT_TIMEOUT_MS = 20000;
 /** Intervalo mínimo entre reações da mesma pessoa (as regras do banco exigem 500 ms) */
 const REACTION_COOLDOWN_MS = 700;
 
+const SYMBOLS: Record<Player, string> = { x: '✕', o: '◯' };
+
 function withTimeout<T>(promise: Promise<T>): Promise<T> {
 
   const timeout = new Promise<never>((_, reject) => {
@@ -186,17 +188,50 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     // Depende só do turno (não do objeto `game`), para mudanças de presença não reiniciarem a espera
   }, [game.turn, timerActive, myTurn, role]);
 
-  // Cada aparelho só toca, vibra e comemora as próprias ações (espectador: nenhuma)
+  // Todas as jogadas tocam som; tique, vibração e confete são só seus (espectador: nenhum)
   const isMe = (player: Player) => player === role;
 
-  const { notice, nudge, shake, reject } = useGameFeedback(game, secondsLeft, timerActive, {
+  const { notice, nudge, shake, reject, announce } = useGameFeedback(game, secondsLeft, timerActive, {
     turnText: player => (isMe(player) ? t.online.yourTurn : t.online.turnOf(nameOf(player))),
-    soundFor: isMe,
-    celebrateFor: isMe,
+    isMe,
     onGameEnd: finished => {
       if (role) recordGame(recordFromGame(finished, role, 'online'));
     }
   });
+
+  // Quando o adversário entra (ou começa uma revanche), lembra com qual símbolo você joga
+  const matchStarting = Boolean(role && opponentJoined && game.turn === 0 && !game.winner);
+
+  useEffect(() => {
+
+    if (!matchStarting || !role) return;
+
+    const symbol = SYMBOLS[role];
+
+    announce(role === 'x' ? t.online.youStart(symbol) : t.online.opponentStarts(symbol, nameOf('x')));
+
+  }, [matchStarting]);
+
+  // Aba em segundo plano (ex.: foi ao WhatsApp mandar o convite): o título avisa que é a sua vez
+  useEffect(() => {
+
+    if (!myTurn || !inProgress) return;
+
+    const original = document.title;
+
+    const update = () => {
+      document.title = document.hidden ? `● ${t.online.yourTurn}! – ${original}` : original;
+    };
+
+    update();
+    document.addEventListener('visibilitychange', update);
+
+    return () => {
+      document.removeEventListener('visibilitychange', update);
+      document.title = original;
+    };
+
+  }, [myTurn, inProgress]);
 
   const play = (boardIndex: number, cellIndex: number) => {
 

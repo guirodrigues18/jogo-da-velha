@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { isBoardPlayable, type GameState } from '../game/logic';
+import { isBoardPlayable, type GameState, type Player } from '../game/logic';
 import type { Notice, Nudge } from '../hooks/useGameFeedback';
 import InfoBar from './InfoBar';
 import MiniBoard from './MiniBoard';
@@ -18,6 +18,8 @@ interface Props {
   shake?: number;
   /** Substitui "Jogador X/O" no card de turno (ex.: "Sua vez") */
   turnLabel?: string;
+  /** Símbolo de quem usa este aparelho (contra o computador e online): destaca a sua vez */
+  you?: Player;
   /** Acima das informações (ex.: escolha do modo de jogo) */
   controls?: ReactNode;
   /** Placar da série; ausente antes de existir uma série */
@@ -63,6 +65,7 @@ export default function GameView({
   notice,
   shake = 0,
   turnLabel,
+  you,
   controls,
   score,
   panel,
@@ -72,6 +75,8 @@ export default function GameView({
 }: Props) {
 
   const boardRef = useRef<HTMLDivElement>(null);
+
+  const waiting = Boolean(you && you !== game.currentPlayer && !game.winner);
 
   // Tremida ao conquistar um mini-tabuleiro
   useEffect(() => {
@@ -99,6 +104,7 @@ export default function GameView({
           <InfoBar
             currentPlayer={game.currentPlayer}
             turnLabel={turnLabel}
+            you={you}
             activeBoard={game.activeBoard}
             turn={game.turn}
             secondsLeft={secondsLeft}
@@ -110,7 +116,8 @@ export default function GameView({
           {panel}
         </div>
 
-        <div className="main-board" ref={boardRef}>
+        {/* Na vez do outro, o tabuleiro fica levemente apagado */}
+        <div className={waiting ? 'main-board waiting' : 'main-board'} ref={boardRef}>
           {game.boards.map((board, i) => (
             <MiniBoard
               key={i}

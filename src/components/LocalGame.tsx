@@ -19,7 +19,7 @@ export default function LocalGame({ onPlayOnline }: Props) {
 
   let turnLabel: string | undefined;
 
-  if (vsComputer) turnLabel = local.computerTurn ? t.local.thinking : t.local.yourTurnX;
+  if (vsComputer) turnLabel = local.computerTurn ? t.local.thinking : t.local.yourTurn;
 
   let title: string | undefined;
 
@@ -36,6 +36,7 @@ export default function LocalGame({ onPlayOnline }: Props) {
       notice={local.notice}
       shake={local.shake}
       turnLabel={turnLabel}
+      you={vsComputer ? HUMAN : undefined}
       onCellClick={local.play}
       controls={(
         <ModeSwitch

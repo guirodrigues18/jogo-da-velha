@@ -68,7 +68,6 @@ const pt = {
     you: 'Você',
     computer: 'Computador',
     thinking: '🤖 Pensando…',
-    yourTurnX: 'Sua vez (X)',
     yourTurn: 'Sua vez',
     computerTurn: 'Vez do computador'
   },
@@ -85,9 +84,9 @@ const pt = {
       unavailable: { title: 'Não foi possível conectar', text: 'Verifique sua internet e tente novamente.' }
     },
     yourTurn: 'Sua vez',
-    yourTurnSymbol: (symbol: string) => `Sua vez (${symbol})`,
     turnOf: (name: string) => `Vez de ${name}`,
-    turnOfSymbol: (name: string, symbol: string) => `Vez de ${name} (${symbol})`,
+    youStart: (symbol: string) => `Você joga com ${symbol} e começa!`,
+    opponentStarts: (symbol: string, name: string) => `Você joga com ${symbol}. ${name} começa.`,
     waitingOpponent: 'Aguardando adversário…',
     matchOver: 'Partida encerrada',
     opponentLeftWon: (name: string) => `🏆 ${name} saiu, você venceu!`,

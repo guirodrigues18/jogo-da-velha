@@ -68,7 +68,6 @@ const en: Messages = {
     you: 'You',
     computer: 'Computer',
     thinking: '🤖 Thinking…',
-    yourTurnX: 'Your turn (X)',
     yourTurn: 'Your turn',
     computerTurn: "Computer's turn"
   },
@@ -85,9 +84,9 @@ const en: Messages = {
       unavailable: { title: "Couldn't connect", text: 'Check your internet connection and try again.' }
     },
     yourTurn: 'Your turn',
-    yourTurnSymbol: symbol => `Your turn (${symbol})`,
     turnOf: name => `${name}'s turn`,
-    turnOfSymbol: (name, symbol) => `${name}'s turn (${symbol})`,
+    youStart: symbol => `You play as ${symbol} and go first!`,
+    opponentStarts: (symbol, name) => `You play as ${symbol}. ${name} goes first.`,
     waitingOpponent: 'Waiting for opponent…',
     matchOver: 'Match over',
     opponentLeftWon: name => `🏆 ${name} left, you win!`,

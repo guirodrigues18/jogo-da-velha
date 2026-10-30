@@ -2,7 +2,7 @@
    Efeitos sonoros sintetizados (Web Audio), sem arquivos de áudio
    =========================== */
 
-export type SoundName = 'x' | 'o' | 'board' | 'invalid' | 'tick' | 'timeout' | 'win' | 'draw' | 'achievement';
+export type SoundName = 'x' | 'o' | 'board' | 'invalid' | 'tick' | 'timeout' | 'win' | 'lose' | 'draw' | 'achievement';
 
 interface Tone {
   freq: number;
@@ -29,6 +29,11 @@ const SOUNDS: Record<SoundName, Tone[]> = {
   tick: [{ freq: 1200, duration: .04, volume: .08 }],
   timeout: [{ freq: 520, to: 180, duration: .45, type: 'sawtooth', volume: .06 }],
   win: [...arpeggio([523, 659, 784], .1, .18), { freq: 1047, at: .3, duration: .6, type: 'triangle' }],
+  lose: [
+    { freq: 392, duration: .22, type: 'triangle' },
+    { freq: 330, at: .2, duration: .22, type: 'triangle' },
+    { freq: 262, at: .4, duration: .5, type: 'triangle' }
+  ],
   draw: [
     { freq: 440, duration: .2, type: 'triangle' },
     { freq: 349, at: .2, duration: .35, type: 'triangle' }
