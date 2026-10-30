@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { MiniBoard as MiniBoardState, Player } from '../game/logic';
+import { t } from '../i18n';
 
 interface Props {
   board: MiniBoardState;
@@ -13,7 +14,7 @@ interface Props {
   onCellClick: (cellIndex: number) => void;
 }
 
-const OVERLAY_TEXT = { x: 'X', o: 'O', draw: 'EMPATE' };
+const OVERLAY_TEXT = { x: 'X', o: 'O', draw: t.boardDraw };
 
 const SHAKE: Keyframe[] = [
   { transform: 'translateX(0)' },

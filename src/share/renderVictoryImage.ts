@@ -1,4 +1,5 @@
 import { getWinningLine, type MiniBoard, type Player } from '../game/logic';
+import { t } from '../i18n';
 
 /* ===========================
    Configuração da imagem (formato Stories)
@@ -40,7 +41,7 @@ type Ctx = CanvasRenderingContext2D;
 export async function renderVictoryImage(
   boards: MiniBoard[],
   winner: Player,
-  winnerName = `Jogador ${winner.toUpperCase()}`
+  winnerName = t.player(winner.toUpperCase())
 ): Promise<Blob> {
 
   // Garante que a fonte Inter está carregada antes de desenhar textos
@@ -115,7 +116,7 @@ function drawBackground(ctx: Ctx) {
 function drawHeader(ctx: Ctx, boards: MiniBoard[], winner: Player, winnerName: string) {
 
   drawLogo(ctx, 170);
-  drawBadge(ctx, '🏆  VITÓRIA', 250, winner);
+  drawBadge(ctx, t.image.badge, 250, winner);
 
   ctx.textAlign = 'center';
 
@@ -128,20 +129,20 @@ function drawHeader(ctx: Ctx, boards: MiniBoard[], winner: Player, winnerName: s
 
   ctx.font = '700 58px Inter';
   ctx.fillStyle = COLORS.text;
-  ctx.fillText('venceu a partida!', CENTER, 515);
+  ctx.fillText(t.image.won, CENTER, 515);
 
   const moves = boards.reduce((total, b) => total + b.cells.filter(Boolean).length, 0);
   const conquered = boards.filter(b => b.winner === winner).length;
 
   ctx.font = '500 36px Inter';
   ctx.fillStyle = COLORS.muted;
-  ctx.fillText(`em ${moves} jogadas · ${conquered} tabuleiros conquistados`, CENTER, 572);
+  ctx.fillText(t.image.stats(moves, conquered), CENTER, 572);
 
 }
 
 function drawLogo(ctx: Ctx, y: number) {
 
-  const title = 'Jogo da Velha';
+  const title = t.title;
   const version = ' 2.0';
 
   ctx.font = '800 54px Inter';
@@ -363,9 +364,9 @@ function drawCallToAction(ctx: Ctx) {
   ctx.textAlign = 'center';
   ctx.font = '800 60px Inter';
   ctx.fillStyle = COLORS.text;
-  ctx.fillText('Duvido você me vencer 😏', CENTER, 1545);
+  ctx.fillText(t.image.challenge, CENTER, 1545);
 
-  const text = `Jogue grátis: ${window.location.host}`;
+  const text = t.image.playFree(window.location.host);
 
   ctx.font = '700 38px Inter';
 

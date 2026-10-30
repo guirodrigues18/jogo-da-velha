@@ -6,6 +6,7 @@ import MiniBoard from './MiniBoard';
 import GameOverModal from './GameOverModal';
 import TopActions from './TopActions';
 import Scoreboard, { type ScoreInfo } from './Scoreboard';
+import { t } from '../i18n';
 
 interface Props {
   game: GameState;
@@ -87,14 +88,11 @@ export default function GameView({
 
         <div className="top">
           <div className="top-row">
-            <h1 className="title">Jogo da Velha<span> 2.0</span></h1>
+            <h1 className="title">{t.title}<span> 2.0</span></h1>
             <TopActions />
           </div>
 
-          <p className="subtitle">
-            Ganhe mini-tabuleiros para dominar o tabuleiro principal.
-            Cada jogada define onde o próximo jogador deverá jogar.
-          </p>
+          <p className="subtitle">{t.subtitle}</p>
 
           {controls}
 

@@ -3,6 +3,7 @@ import { isOnlineConfigured, ROOM_PARAM, roomIdFromUrl } from './online/config';
 import LocalGame from './components/LocalGame';
 import OnlineMessage from './components/OnlineMessage';
 import AchievementToaster from './components/AchievementToaster';
+import { t } from './i18n';
 
 // O SDK do Firebase só é baixado por quem entra no modo online
 const OnlineGame = lazy(() => import('./components/OnlineGame'));
@@ -54,7 +55,7 @@ export default function App() {
 
   const screen = mode.kind === 'online'
     ? (
-      <Suspense fallback={<OnlineMessage title="Conectando…" />}>
+      <Suspense fallback={<OnlineMessage title={t.online.connecting} />}>
         <OnlineGame
           roomId={mode.roomId}
           leaveRoomRef={leaveRoomRef}

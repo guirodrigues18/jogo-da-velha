@@ -122,6 +122,59 @@ body::after {
   transform: scale(.9);
 }
 
+.language-button {
+  color: var(--text);
+  font: inherit;
+  font-size: .85rem;
+  font-weight: 800;
+  letter-spacing: .03em;
+}
+
+.language-options {
+  display: grid;
+  gap: 8px;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .05);
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.language-option:hover {
+  border-color: rgba(255, 255, 255, .2);
+}
+
+.language-option.active {
+  border-color: rgba(139, 92, 246, .6);
+  background: rgba(139, 92, 246, .15);
+}
+
+.language-code {
+  width: 36px;
+  padding: 4px 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .08);
+  font-size: .8rem;
+  text-align: center;
+}
+
+.language-check {
+  margin-left: auto;
+  color: var(--green);
+}
+
 .subtitle {
   color: var(--muted);
   line-height: 1.6;
@@ -1244,21 +1297,29 @@ body::after {
   }
 
   .title {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
   }
 
   .title span {
     display: block;
   }
 
+  .top-row {
+    gap: 8px;
+  }
+
   .icon-button {
-    width: 40px;
-    height: 40px;
-    font-size: 1.1rem;
+    width: 38px;
+    height: 38px;
+    font-size: 1.05rem;
+  }
+
+  .language-button {
+    font-size: .78rem;
   }
 
   .top-actions {
-    gap: 6px;
+    gap: 5px;
   }
 
   .mode-controls {

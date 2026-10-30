@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { Player } from '../game/logic';
 import { copyText, shareLink } from '../share/shareLink';
+import { ROOM_PARAM } from '../online/config';
+import { t } from '../i18n';
 
 interface Props {
   roomId: string;
@@ -30,8 +32,9 @@ export default function OnlinePanel({
   const [copied, setCopied] = useState(false);
 
   const opponent: Player = role === 'x' ? 'o' : 'x';
-  const inviteUrl = `${window.location.origin}/?sala=${roomId}`;
-  const inviteText = `${nameOf(role)} te desafiou no Jogo da Velha 2.0 😏 Duvido você ganhar!`;
+  // Mantém a página do idioma atual (/, /en/, /es/): o convidado provavelmente fala o mesmo idioma
+  const inviteUrl = `${window.location.origin}${window.location.pathname}?${ROOM_PARAM}=${roomId}`;
+  const inviteText = t.online.inviteMessage(nameOf(role));
 
   const showCopied = () => {
     setCopied(true);
@@ -47,23 +50,22 @@ export default function OnlinePanel({
     showCopied();
   };
 
-  let opponentStatus = opponentOnline ? 'Adversário online' : 'Adversário desconectado';
+  let opponentStatus = opponentOnline ? t.online.opponentOnline : t.online.opponentOffline;
 
-  if (opponentLeft) opponentStatus = 'Adversário saiu da partida';
+  if (opponentLeft) opponentStatus = t.online.opponentLeft;
 
   if (!opponentJoined) {
     return (
       <div className="online-panel">
-        <div className="online-title">Convide um amigo</div>
+        <div className="online-title">{t.online.inviteTitle}</div>
         <p className="online-text">
-          Envie o link: quem abrir joga com <strong className="o">O</strong>.
-          A partida começa quando ele entrar.
+          {t.online.inviteBefore}<strong className="o">O</strong>{t.online.inviteAfter}
         </p>
-        <button className="btn" onClick={invite}>Enviar convite</button>
+        <button className="btn" onClick={invite}>{t.online.sendInvite}</button>
         <button className="btn btn-ghost" onClick={copy}>
-          {copied ? '✓ Link copiado!' : 'Copiar link'}
+          {copied ? t.online.copied : t.online.copyLink}
         </button>
-        <button className="link-button" onClick={onLeave}>Sair da sala</button>
+        <button className="link-button" onClick={onLeave}>{t.online.leaveRoom}</button>
       </div>
     );
   }
@@ -72,9 +74,9 @@ export default function OnlinePanel({
     <div className="online-panel online-status">
       <div className="players">
         <span className={`role-chip ${role}`}>
-          {SYMBOLS[role]} <span className="player-name">{nameOf(role)}</span> <small>(você)</small>
+          {SYMBOLS[role]} <span className="player-name">{nameOf(role)}</span> <small>{t.online.youTag}</small>
         </span>
-        <span className="versus">vs</span>
+        <span className="versus">{t.online.versus}</span>
         <span className={`role-chip ${opponent}`} title={opponentStatus}>
           <span className={opponentOnline && !opponentLeft ? 'status-dot online' : 'status-dot'} />
           {SYMBOLS[opponent]} <span className="player-name">{nameOf(opponent)}</span>
@@ -83,10 +85,10 @@ export default function OnlinePanel({
       <span className="opponent-status">{opponentStatus}</span>
       {spectatorNames.length > 0 && (
         <span className="spectators" title={spectatorNames.join(', ')}>
-          👀 {spectatorNames.length} assistindo
+          {t.online.watchingCount(spectatorNames.length)}
         </span>
       )}
-      <button className="link-button" onClick={onLeave}>Sair</button>
+      <button className="link-button" onClick={onLeave}>{t.online.leave}</button>
     </div>
   );
 

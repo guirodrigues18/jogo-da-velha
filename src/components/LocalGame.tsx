@@ -1,4 +1,5 @@
 import { HUMAN, useLocalGame } from '../hooks/useLocalGame';
+import { t } from '../i18n';
 import GameView from './GameView';
 import ModeSwitch from './ModeSwitch';
 
@@ -13,17 +14,17 @@ export default function LocalGame({ onPlayOnline }: Props) {
   const { game, vsComputer } = local;
 
   const names = vsComputer
-    ? { x: 'Você', o: 'Computador' }
-    : { x: 'Jogador X', o: 'Jogador O' };
+    ? { x: t.local.you, o: t.local.computer }
+    : { x: t.player('X'), o: t.player('O') };
 
   let turnLabel: string | undefined;
 
-  if (vsComputer) turnLabel = local.computerTurn ? '🤖 Pensando…' : 'Sua vez (X)';
+  if (vsComputer) turnLabel = local.computerTurn ? t.local.thinking : t.local.yourTurnX;
 
   let title: string | undefined;
 
   if (vsComputer && game.winner && game.winner !== 'draw') {
-    title = game.winner === HUMAN ? '🏆 Você venceu!' : '🤖 O computador venceu';
+    title = game.winner === HUMAN ? t.result.youWon : t.result.computerWon;
   }
 
   return (

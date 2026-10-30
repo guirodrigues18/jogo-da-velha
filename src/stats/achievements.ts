@@ -44,11 +44,10 @@ export type AchievementId =
   | 'spectator'
   | 'sharer';
 
+/** Título e descrição ficam nos textos de cada idioma (i18n), pelo id */
 export interface Achievement {
   id: AchievementId;
   icon: string;
-  title: string;
-  description: string;
 }
 
 type Check = (stats: Stats, record: GameRecord) => boolean;
@@ -56,19 +55,19 @@ type Check = (stats: Stats, record: GameRecord) => boolean;
 const win = (record: GameRecord) => record.result === 'win';
 
 const DEFINITIONS: (Achievement & { check?: Check })[] = [
-  { id: 'first-win', icon: '🥇', title: 'Primeira vitória', description: 'Vença sua primeira partida', check: (_, r) => win(r) },
-  { id: 'beat-easy', icon: '🤖', title: 'Aquecimento', description: 'Vença o computador no Fácil', check: (_, r) => win(r) && r.difficulty === 'easy' },
-  { id: 'beat-medium', icon: '🧠', title: 'Estrategista', description: 'Vença o computador no Médio', check: (_, r) => win(r) && r.difficulty === 'medium' },
-  { id: 'beat-hard', icon: '👑', title: 'Mestre da velha', description: 'Vença o computador no Difícil', check: (_, r) => win(r) && r.difficulty === 'hard' },
-  { id: 'online-win', icon: '🌐', title: 'Desafiante', description: 'Vença uma partida online', check: (_, r) => win(r) && r.mode === 'online' },
-  { id: 'streak-3', icon: '🔥', title: 'Embalado', description: 'Vença 3 partidas seguidas', check: s => s.streak >= 3 },
-  { id: 'streak-5', icon: '☄️', title: 'Imparável', description: 'Vença 5 partidas seguidas', check: s => s.streak >= 5 },
-  { id: 'flawless', icon: '🛡️', title: 'Intocável', description: 'Vença sem o adversário conquistar nenhum tabuleiro', check: (_, r) => win(r) && r.boardsLost === 0 },
-  { id: 'quick', icon: '⚡', title: 'Relâmpago', description: 'Vença uma partida com até 30 jogadas no total', check: (_, r) => win(r) && r.moves <= 30 },
-  { id: 'conqueror', icon: '🎯', title: 'Conquistador', description: 'Conquiste 5 tabuleiros em uma partida', check: (_, r) => r.boardsWon >= 5 },
-  { id: 'veteran', icon: '🎖️', title: 'Veterano', description: 'Jogue 10 partidas', check: s => s.played >= 10 },
-  { id: 'spectator', icon: '👀', title: 'Comentarista', description: 'Assista a uma partida online' },
-  { id: 'sharer', icon: '📸', title: 'Influencer', description: 'Compartilhe uma vitória' }
+  { id: 'first-win', icon: '🥇', check: (_, r) => win(r) },
+  { id: 'beat-easy', icon: '🤖', check: (_, r) => win(r) && r.difficulty === 'easy' },
+  { id: 'beat-medium', icon: '🧠', check: (_, r) => win(r) && r.difficulty === 'medium' },
+  { id: 'beat-hard', icon: '👑', check: (_, r) => win(r) && r.difficulty === 'hard' },
+  { id: 'online-win', icon: '🌐', check: (_, r) => win(r) && r.mode === 'online' },
+  { id: 'streak-3', icon: '🔥', check: s => s.streak >= 3 },
+  { id: 'streak-5', icon: '☄️', check: s => s.streak >= 5 },
+  { id: 'flawless', icon: '🛡️', check: (_, r) => win(r) && r.boardsLost === 0 },
+  { id: 'quick', icon: '⚡', check: (_, r) => win(r) && r.moves <= 30 },
+  { id: 'conqueror', icon: '🎯', check: (_, r) => r.boardsWon >= 5 },
+  { id: 'veteran', icon: '🎖️', check: s => s.played >= 10 },
+  { id: 'spectator', icon: '👀' },
+  { id: 'sharer', icon: '📸' }
 ];
 
 export const ACHIEVEMENTS: Achievement[] = DEFINITIONS.map(({ check: _check, ...achievement }) => achievement);

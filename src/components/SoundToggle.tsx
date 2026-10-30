@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { isMuted, setMuted } from '../audio/sounds';
+import { t } from '../i18n';
 
 export default function SoundToggle() {
 
@@ -10,7 +11,7 @@ export default function SoundToggle() {
     setMutedState(!muted);
   };
 
-  const label = muted ? 'Ativar sons e vibração' : 'Desativar sons e vibração';
+  const label = muted ? t.actions.soundOn : t.actions.soundOff;
 
   return (
     <button className="icon-button" onClick={toggle} aria-label={label} title={label}>

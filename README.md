@@ -18,6 +18,20 @@ Modos de jogo:
 Também tem placar da série, estatísticas e 13 conquistas (salvas no navegador),
 confete na vitória, vibração no Android e uma explicação das regras no botão "Como jogar".
 
+Disponível em **português** (`/`), **inglês** (`/en/`) e **espanhol** (`/es/`).
+
+## Idiomas e SEO
+
+- Cada idioma tem sua própria página HTML (`index.html`, `en/index.html`, `es/index.html`), com
+  título, descrição, `hreflang`, link canônico, Open Graph e dados estruturados (schema.org) próprios.
+  O app lê o idioma do `<html lang>` da página.
+- Os textos da interface ficam em `src/i18n/` (`pt.ts` é o modelo; `en.ts` e `es.ts` seguem o mesmo tipo,
+  então o TypeScript acusa qualquer texto faltando).
+- A escolha de idioma fica salva no navegador; quem volta é levado direto à página escolhida
+  (o idioma do navegador nunca é usado sozinho, para o Google sempre ver cada página no idioma dela).
+- `public/robots.txt` e `public/sitemap.xml` apontam as três páginas. Ao mudar de domínio,
+  atualize o endereço nesses arquivos e nos três HTML.
+
 Feito com React, TypeScript e Vite. Modo online com Firebase Realtime Database.
 
 ## Rodando localmente
@@ -105,6 +119,7 @@ src/
 │   ├── renderVictoryImage.ts  # Gera a imagem da vitória (1080×1920) em canvas
 │   ├── shareImage.ts          # Compartilhar imagem (menu nativo ou download)
 │   └── shareLink.ts           # Compartilhar link (menu nativo ou copiar)
+├── i18n/                    # Textos em pt, en e es
 ├── App.tsx                  # Alterna entre modo local e online (?sala=código)
 ├── main.tsx
 └── style.css

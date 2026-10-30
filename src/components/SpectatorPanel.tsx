@@ -1,4 +1,5 @@
 import type { Player } from '../game/logic';
+import { t } from '../i18n';
 
 interface Props {
   nameOf: (player: Player) => string;
@@ -15,13 +16,13 @@ export default function SpectatorPanel({ nameOf, spectatorCount, onLeave }: Prop
     <div className="online-panel online-status">
       <div className="players">
         <span className="role-chip x">✕ <span className="player-name">{nameOf('x')}</span></span>
-        <span className="versus">vs</span>
+        <span className="versus">{t.online.versus}</span>
         <span className="role-chip o">◯ <span className="player-name">{nameOf('o')}</span></span>
       </div>
       <span className="opponent-status">
-        👀 Você está assistindo{others > 0 && ` com mais ${others}`}
+        {t.online.youAreWatching}{others > 0 && t.online.withMore(others)}
       </span>
-      <button className="link-button" onClick={onLeave}>Sair</button>
+      <button className="link-button" onClick={onLeave}>{t.online.leave}</button>
     </div>
   );
 

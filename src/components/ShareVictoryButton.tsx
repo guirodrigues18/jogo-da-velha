@@ -3,6 +3,7 @@ import type { MiniBoard, Player } from '../game/logic';
 import { renderVictoryImage } from '../share/renderVictoryImage';
 import { shareImage } from '../share/shareImage';
 import { unlockAchievement } from '../stats/achievements';
+import { t } from '../i18n';
 
 interface Props {
   boards: MiniBoard[];
@@ -43,7 +44,7 @@ export default function ShareVictoryButton({ boards, winner, winnerName, onShare
 
   return (
     <button className="btn btn-share" disabled={!image} onClick={handleClick}>
-      Compartilhar nos Stories
+      {t.share.button}
     </button>
   );
 

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jogo-da-velha-2-one.vercel.app/sitemap.xml

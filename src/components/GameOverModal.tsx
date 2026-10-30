@@ -1,5 +1,6 @@
 import type { MiniBoard, Result } from '../game/logic';
 import ShareVictoryButton from './ShareVictoryButton';
+import { t } from '../i18n';
 
 interface Props {
   winner: Result;
@@ -24,9 +25,9 @@ interface Props {
 }
 
 const TITLES = {
-  x: '✕ Jogador X venceu!',
-  o: '◯ Jogador O venceu!',
-  draw: 'Empate!'
+  x: t.result.x,
+  o: t.result.o,
+  draw: t.result.draw
 };
 
 export default function GameOverModal({
@@ -37,7 +38,7 @@ export default function GameOverModal({
   subtitle,
   winnerName,
   autoRestart,
-  restartLabel = 'Jogar novamente',
+  restartLabel = t.result.playAgain,
   restartDisabled = false,
   showShare,
   onShare,
@@ -53,9 +54,7 @@ export default function GameOverModal({
       <div className="modal-card">
         <div className="modal-title">{open && (title ?? defaultTitle)}</div>
         {autoRestart ? (
-          <div className="modal-subtitle">
-            O jogo será reiniciado automaticamente.
-          </div>
+          <div className="modal-subtitle">{t.result.autoRestart}</div>
         ) : subtitle && (
           <div className="modal-subtitle">{subtitle}</div>
         )}

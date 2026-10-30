@@ -1,4 +1,5 @@
 import { REACTION_EMOJIS } from '../online/rooms';
+import { t } from '../i18n';
 
 interface Props {
   onReact: (emoji: string) => void;
@@ -8,9 +9,9 @@ interface Props {
 export default function ReactionBar({ onReact }: Props) {
 
   return (
-    <div className="reaction-bar" role="group" aria-label="Reações">
+    <div className="reaction-bar" role="group" aria-label={t.online.reactions}>
       {REACTION_EMOJIS.map(emoji => (
-        <button key={emoji} className="reaction-option" onClick={() => onReact(emoji)} aria-label={`Reagir com ${emoji}`}>
+        <button key={emoji} className="reaction-option" onClick={() => onReact(emoji)} aria-label={t.online.react(emoji)}>
           {emoji}
         </button>
       ))}

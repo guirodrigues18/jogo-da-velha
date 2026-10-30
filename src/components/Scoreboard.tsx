@@ -1,4 +1,5 @@
 import type { Player } from '../game/logic';
+import { t } from '../i18n';
 
 export interface ScoreInfo {
   names: Record<Player, string>;
@@ -9,7 +10,7 @@ export interface ScoreInfo {
 export default function Scoreboard({ names, values }: ScoreInfo) {
 
   return (
-    <div className="scoreboard" aria-label={`Placar: ${names.x} ${values.x}, ${names.o} ${values.o}`}>
+    <div className="scoreboard" aria-label={t.scoreLabel(names.x, values.x, names.o, values.o)}>
       <span className="score-side x">
         <span className="player-name">{names.x}</span> ✕
       </span>

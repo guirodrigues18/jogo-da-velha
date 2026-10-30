@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { applyMove, createGame, passTurn, type Player } from '../game/logic';
 import { chooseMove, type Difficulty } from '../game/ai';
 import { recordFromGame, recordGame } from '../stats/achievements';
+import { t } from '../i18n';
 import { useTurnTimer } from './useTurnTimer';
 import { useGameFeedback } from './useGameFeedback';
 
@@ -68,7 +69,7 @@ export function useLocalGame() {
   const secondsLeft = useTurnTimer(game.turn, timerActive, () => setGame(passTurn));
 
   const { notice, nudge, shake, reject } = useGameFeedback(game, secondsLeft, timerActive, {
-    turnText: vsComputer ? player => (player === HUMAN ? 'Sua vez' : 'Vez do computador') : undefined,
+    turnText: vsComputer ? player => (player === HUMAN ? t.local.yourTurn : t.local.computerTurn) : undefined,
     celebrateFor: vsComputer ? player => player === HUMAN : undefined,
     onGameEnd: finished => {
       const winner = finished.winner;

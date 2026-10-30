@@ -22,6 +22,7 @@ import { markJoined } from '../online/nickname';
 import { playSound } from '../audio/sounds';
 import { recordFromGame, recordGame, unlockAchievement } from '../stats/achievements';
 import type { FloatingReaction } from '../components/ReactionLayer';
+import { t } from '../i18n';
 import { TURN_SECONDS, useTurnTimer } from './useTurnTimer';
 import { useGameFeedback } from './useGameFeedback';
 
@@ -150,7 +151,7 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
   // Partida em andamento: dois jogadores presentes e ninguém venceu
   const inProgress = opponentJoined && !left.x && !left.o && !game.winner;
 
-  const nameOf = (player: Player) => room?.names[player] ?? `Jogador ${player.toUpperCase()}`;
+  const nameOf = (player: Player) => room?.names[player] ?? t.player(player.toUpperCase());
 
   // O cronômetro só começa depois da primeira jogada
   const timerActive = inProgress && game.turn > 0;
@@ -189,7 +190,7 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
   const isMe = (player: Player) => player === role;
 
   const { notice, nudge, shake, reject } = useGameFeedback(game, secondsLeft, timerActive, {
-    turnText: player => (isMe(player) ? 'Sua vez' : `Vez de ${nameOf(player)}`),
+    turnText: player => (isMe(player) ? t.online.yourTurn : t.online.turnOf(nameOf(player))),
     soundFor: isMe,
     celebrateFor: isMe,
     onGameEnd: finished => {
@@ -260,7 +261,7 @@ export function useOnlineGame(roomId: string | null, nickname: string, onRoomCre
     sendReaction(roomId, uid, emoji, nickname).catch(() => {});
 
     // A própria reação aparece na hora (o eco que volta do banco é ignorado abaixo)
-    setFloatingReactions(current => [...current, { id: `me-${now}`, emoji, name: 'Você' }]);
+    setFloatingReactions(current => [...current, { id: `me-${now}`, emoji, name: t.online.you }]);
 
   };
 

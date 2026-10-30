@@ -4,6 +4,7 @@ import { playSound, type SoundName } from '../audio/sounds';
 import { vibrate, VIBRATION } from '../audio/haptics';
 import { celebrate } from '../effects/confetti';
 import { WARNING_SECONDS } from './useTurnTimer';
+import { t } from '../i18n';
 
 const NOTICE_DURATION_MS = 2400;
 
@@ -29,7 +30,7 @@ interface Options {
   onGameEnd?: (game: GameState) => void;
 }
 
-const defaultTurnText = (player: Player) => `Vez do Jogador ${player.toUpperCase()}`;
+const defaultTurnText = (player: Player) => t.turnOfPlayer(player.toUpperCase());
 const everyone = () => true;
 
 /**
@@ -63,7 +64,7 @@ export function useGameFeedback(
     const boardIndex = findChangedBoard(prev, game);
 
     if (boardIndex === null) {
-      setNotice({ text: `⏱ Tempo esgotado! ${turnText(game.currentPlayer)}`, id: Date.now() });
+      setNotice({ text: t.timeout(turnText(game.currentPlayer)), id: Date.now() });
       if (soundFor(actor)) playSound('timeout');
       return;
     }

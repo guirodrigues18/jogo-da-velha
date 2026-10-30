@@ -1,3 +1,5 @@
+import { t } from '../i18n';
+
 /**
  * Abre o menu de compartilhamento nativo com o link (WhatsApp, Telegram...).
  * Onde não houver suporte, copia o link para a área de transferência.
@@ -7,7 +9,7 @@ export async function shareLink(url: string, text: string): Promise<'shared' | '
   if (navigator.share) {
 
     try {
-      await navigator.share({ title: 'Jogo da Velha 2.0', text, url });
+      await navigator.share({ title: t.shareTitle, text, url });
       return 'shared';
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return 'cancelled';

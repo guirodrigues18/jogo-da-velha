@@ -1,4 +1,5 @@
 import { ACHIEVEMENTS, loadStats } from '../stats/achievements';
+import { t } from '../i18n';
 import Dialog from './Dialog';
 
 interface Props {
@@ -11,16 +12,16 @@ export default function StatsDialog({ onClose }: Props) {
   const unlockedCount = ACHIEVEMENTS.filter(a => stats.unlocked[a.id]).length;
 
   const numbers = [
-    ['Partidas', stats.played],
-    ['Vitórias', stats.wins],
-    ['Derrotas', stats.losses],
-    ['Empates', stats.draws],
-    ['Sequência', stats.streak],
-    ['Recorde', stats.bestStreak]
+    [t.stats.played, stats.played],
+    [t.stats.wins, stats.wins],
+    [t.stats.losses, stats.losses],
+    [t.stats.draws, stats.draws],
+    [t.stats.streak, stats.streak],
+    [t.stats.best, stats.bestStreak]
   ];
 
   return (
-    <Dialog title="Suas conquistas" onClose={onClose}>
+    <Dialog title={t.stats.title} onClose={onClose}>
 
       <div className="stats-grid">
         {numbers.map(([label, value]) => (
@@ -31,21 +32,21 @@ export default function StatsDialog({ onClose }: Props) {
         ))}
       </div>
 
-      <p className="stats-note">Contam as partidas contra o computador e online, salvas neste aparelho.</p>
+      <p className="stats-note">{t.stats.note}</p>
 
       <div className="achievements-header">
-        Conquistas <span>{unlockedCount} de {ACHIEVEMENTS.length}</span>
+        {t.stats.achievements} <span>{t.stats.progress(unlockedCount, ACHIEVEMENTS.length)}</span>
       </div>
 
       <ul className="achievements">
-        {ACHIEVEMENTS.map(achievement => {
-          const unlocked = Boolean(stats.unlocked[achievement.id]);
+        {ACHIEVEMENTS.map(({ id, icon }) => {
+          const unlocked = Boolean(stats.unlocked[id]);
           return (
-            <li key={achievement.id} className={unlocked ? 'achievement unlocked' : 'achievement'}>
-              <span className="achievement-icon">{unlocked ? achievement.icon : '🔒'}</span>
+            <li key={id} className={unlocked ? 'achievement unlocked' : 'achievement'}>
+              <span className="achievement-icon">{unlocked ? icon : '🔒'}</span>
               <span>
-                <strong>{achievement.title}</strong>
-                <small>{achievement.description}</small>
+                <strong>{t.achievements[id].title}</strong>
+                <small>{t.achievements[id].description}</small>
               </span>
             </li>
           );

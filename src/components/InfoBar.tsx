@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import type { Player } from '../game/logic';
 import { TURN_SECONDS, WARNING_SECONDS } from '../hooks/useTurnTimer';
+import { t } from '../i18n';
 
 interface Props {
   currentPlayer: Player;
@@ -26,7 +27,7 @@ export default function InfoBar({ currentPlayer, turnLabel, activeBoard, turn, s
 
       <div className="info-card">
         <div className="info-label">
-          Turno atual
+          {t.info.turn}
           {timerActive && (
             <span className={warning ? 'timer-seconds warning' : 'timer-seconds'}>
               {secondsLeft}s
@@ -35,7 +36,7 @@ export default function InfoBar({ currentPlayer, turnLabel, activeBoard, turn, s
         </div>
         {/* A key reinicia a animação de entrada a cada turno */}
         <div className="info-value pop-in" key={turn}>
-          {turnLabel ?? (currentPlayer === 'x' ? 'Jogador X' : 'Jogador O')}
+          {turnLabel ?? t.player(currentPlayer.toUpperCase())}
         </div>
         <div className="timer">
           <div
@@ -47,9 +48,9 @@ export default function InfoBar({ currentPlayer, turnLabel, activeBoard, turn, s
       </div>
 
       <div className="info-card">
-        <div className="info-label">Próximo tabuleiro</div>
+        <div className="info-label">{t.info.nextBoard}</div>
         <div className="info-value pop-in" key={activeBoard ?? 'free'}>
-          {activeBoard === null ? 'Livre — qualquer tabuleiro' : `Tabuleiro ${activeBoard + 1}`}
+          {activeBoard === null ? t.info.free : t.info.board(activeBoard + 1)}
         </div>
       </div>
 

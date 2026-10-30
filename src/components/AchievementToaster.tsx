@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { onAchievementsUnlocked, type Achievement } from '../stats/achievements';
 import { playSound } from '../audio/sounds';
+import { t } from '../i18n';
 
 const TOAST_DURATION_MS = 3200;
 
@@ -30,8 +31,8 @@ export default function AchievementToaster() {
     <div className="achievement-toast" key={current.id} role="status">
       <span className="achievement-toast-icon">{current.icon}</span>
       <span>
-        <small>Conquista desbloqueada!</small>
-        <strong>{current.title}</strong>
+        <small>{t.stats.unlocked}</small>
+        <strong>{t.achievements[current.id].title}</strong>
       </span>
     </div>
   );

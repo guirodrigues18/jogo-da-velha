@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { signIn } from '../online/firebase';
 import { getRoomPreview, type RoomPreview } from '../online/rooms';
 import { loadNickname, normalizeNickname, NICKNAME_MAX_LENGTH } from '../online/nickname';
+import { t } from '../i18n';
 import HelpDialog from './HelpDialog';
 
 interface Props {
@@ -45,20 +46,20 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
   };
 
   const watching = Boolean(preview?.full);
-  const host = preview?.hostName ?? 'Jogador X';
-  const guest = preview?.guestName ?? 'Jogador O';
+  const host = preview?.hostName ?? t.player('X');
+  const guest = preview?.guestName ?? t.player('O');
 
-  let title = 'Jogar online';
-  let subtitle = 'Como você quer ser chamado na partida?';
-  let action = 'Criar sala';
+  let title = t.nickname.playOnline;
+  let subtitle = t.nickname.ask;
+  let action = t.nickname.create;
 
   if (roomId && watching) {
-    title = `${host} vs ${guest} 👀`;
-    subtitle = 'A partida já tem dois jogadores, mas você pode assistir. Como quer ser chamado?';
-    action = 'Assistir partida';
+    title = t.nickname.watchTitle(host, guest);
+    subtitle = t.nickname.watchAsk;
+    action = t.nickname.watch;
   } else if (roomId) {
-    title = preview?.hostName ? `${preview.hostName} te desafiou! 🎮` : 'Você foi convidado! 🎮';
-    action = 'Entrar na partida';
+    title = preview?.hostName ? t.nickname.challenged(preview.hostName) : t.nickname.invited;
+    action = t.nickname.join;
   }
 
   return (
@@ -71,8 +72,8 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
           value={value}
           onChange={event => setValue(event.target.value)}
           maxLength={NICKNAME_MAX_LENGTH}
-          placeholder="Seu apelido"
-          aria-label="Seu apelido"
+          placeholder={t.nickname.placeholder}
+          aria-label={t.nickname.placeholder}
           autoComplete="nickname"
           enterKeyHint="go"
           autoFocus
@@ -82,10 +83,10 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
         </button>
         <div className="form-links">
           <button className="link-button" type="button" onClick={() => setHelpOpen(true)}>
-            ❔ Como jogar?
+            {t.nickname.howToPlay}
           </button>
           <button className="link-button" type="button" onClick={onCancel}>
-            Voltar
+            {t.nickname.back}
           </button>
         </div>
       </form>

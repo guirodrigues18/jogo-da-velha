@@ -14,11 +14,7 @@ import {
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
-export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
-  easy: 'Fácil',
-  medium: 'Médio',
-  hard: 'Difícil'
-};
+export const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard'];
 
 /** Tempo de "pensamento" do nível difícil (simulações de Monte Carlo) */
 const HARD_THINK_MS = 600;

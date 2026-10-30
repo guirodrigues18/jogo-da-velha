@@ -1,6 +1,7 @@
 import { useEffect, type ComponentProps, type RefObject } from 'react';
 import type { Player, Result } from '../game/logic';
-import { useOnlineGame, type OnlineError } from '../hooks/useOnlineGame';
+import { useOnlineGame } from '../hooks/useOnlineGame';
+import { t } from '../i18n';
 import GameView from './GameView';
 import OnlinePanel from './OnlinePanel';
 import OnlineMessage from './OnlineMessage';
@@ -22,25 +23,6 @@ type Online = ReturnType<typeof useOnlineGame>;
 type ModalProps = ComponentProps<typeof GameView>['modal'];
 type NameOf = (player: Player) => string;
 
-const ERRORS: Record<OnlineError, { title: string; text: string }> = {
-  'not-found': {
-    title: 'Sala não encontrada',
-    text: 'O link pode estar errado ou a sala não existe mais.'
-  },
-  full: {
-    title: 'Sala lotada',
-    text: 'Essa partida já tem o máximo de pessoas assistindo.'
-  },
-  closed: {
-    title: 'Sala encerrada',
-    text: 'Essa partida já terminou. Crie uma nova sala para jogar.'
-  },
-  unavailable: {
-    title: 'Não foi possível conectar',
-    text: 'Verifique sua internet e tente novamente.'
-  }
-};
-
 const noop = () => {};
 
 export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreated, onLeave }: Props) {
@@ -59,11 +41,11 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
   });
 
   if (online.status === 'error' && online.error) {
-    return <OnlineMessage {...ERRORS[online.error]} actionLabel="Jogar no modo local" onAction={onLeave} />;
+    return <OnlineMessage {...t.online.errors[online.error]} actionLabel={t.online.playLocal} onAction={onLeave} />;
   }
 
   if (online.status === 'connecting' || !roomId) {
-    return <OnlineMessage title={roomId ? 'Entrando na sala…' : 'Criando sala…'} />;
+    return <OnlineMessage title={roomId ? t.online.joining : t.online.creating} />;
   }
 
   const leave = () => {
@@ -97,7 +79,7 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
         shake={online.shake}
         score={score}
         overlay={overlay}
-        turnLabel={leftPlayer ? 'Partida encerrada' : `Vez de ${nameOf(current)} (${symbol})`}
+        turnLabel={leftPlayer ? t.online.matchOver : t.online.turnOfSymbol(nameOf(current), symbol)}
         onCellClick={noop}
         panel={(
           <>
@@ -111,10 +93,10 @@ export default function OnlineRoom({ roomId, nickname, leaveRoomRef, onRoomCreat
 
   }
 
-  let turnLabel = role === current ? `Sua vez (${symbol})` : `Vez de ${nameOf(current)} (${symbol})`;
+  let turnLabel = role === current ? t.online.yourTurnSymbol(symbol) : t.online.turnOfSymbol(nameOf(current), symbol);
 
-  if (!online.opponentJoined) turnLabel = 'Aguardando adversário…';
-  else if (online.opponentLeft) turnLabel = 'Partida encerrada';
+  if (!online.opponentJoined) turnLabel = t.online.waitingOpponent;
+  else if (online.opponentLeft) turnLabel = t.online.matchOver;
 
   return (
     <GameView
@@ -171,22 +153,22 @@ function playerModal(online: Online, role: Player, leave: () => void): ModalProp
     return {
       ...common,
       open: true,
-      title: game.winner ? resultTitle(game.winner, role, nameOf) : `🏆 ${opponentName} saiu, você venceu!`,
-      subtitle: game.winner ? `${opponentName} saiu da sala.` : 'A partida foi encerrada.',
-      restartLabel: 'Voltar ao início',
+      title: game.winner ? resultTitle(game.winner, role, nameOf) : t.online.opponentLeftWon(opponentName),
+      subtitle: game.winner ? t.online.leftRoom(opponentName) : t.online.matchEnded,
+      restartLabel: t.online.backHome,
       onRestart: leave
     };
   }
 
   let subtitle: string | undefined;
-  let restartLabel = 'Revanche';
+  let restartLabel = t.online.rematch;
 
   if (online.rematchRequested) {
-    subtitle = `Aguardando ${opponentName} aceitar a revanche…`;
-    restartLabel = 'Aguardando…';
+    subtitle = t.online.waitingRematch(opponentName);
+    restartLabel = t.online.waiting;
   } else if (online.opponentWantsRematch) {
-    subtitle = `🔁 ${opponentName} quer revanche!`;
-    restartLabel = 'Aceitar revanche';
+    subtitle = t.online.wantsRematch(opponentName);
+    restartLabel = t.online.acceptRematch;
   }
 
   return {
@@ -196,7 +178,7 @@ function playerModal(online: Online, role: Player, leave: () => void): ModalProp
     restartLabel,
     restartDisabled: online.rematchRequested,
     onRestart: online.rematch,
-    secondaryLabel: 'Sair da sala',
+    secondaryLabel: t.online.leaveRoom,
     onSecondary: leave
   };
 
@@ -206,16 +188,16 @@ function spectatorModal(winner: Result, leftPlayer: Player | null, nameOf: NameO
 
   let title: string | undefined;
 
-  if (winner === 'draw') title = 'Empate!';
-  else if (winner) title = `🏆 ${nameOf(winner)} venceu!`;
-  else if (leftPlayer) title = `${nameOf(leftPlayer)} saiu da partida`;
+  if (winner === 'draw') title = t.result.draw;
+  else if (winner) title = t.result.someoneWon(nameOf(winner));
+  else if (leftPlayer) title = t.online.playerLeft(nameOf(leftPlayer));
 
   return {
     open: Boolean(winner || leftPlayer),
     title,
-    subtitle: leftPlayer ? 'A partida foi encerrada.' : 'Se rolar revanche, a próxima partida aparece aqui.',
+    subtitle: leftPlayer ? t.online.matchEnded : t.online.nextMatchHere,
     autoRestart: false,
-    restartLabel: 'Sair',
+    restartLabel: t.online.leave,
     showShare: false,
     onShare: noop,
     onRestart: leave
@@ -227,6 +209,6 @@ function resultTitle(winner: Result, role: Player, nameOf: NameOf): string | und
 
   if (!winner || winner === 'draw') return undefined;
 
-  return winner === role ? '🏆 Você venceu!' : `😢 ${nameOf(winner)} venceu`;
+  return winner === role ? t.result.youWon : t.result.otherWon(nameOf(winner));
 
 }
