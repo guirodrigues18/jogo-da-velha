@@ -4,6 +4,7 @@ import { loadDailyStreak } from '../game/daily';
 import { useProfile } from '../shop/wallet';
 import { symbolGlyph } from '../shop/catalog';
 import { shareLink } from '../share/shareLink';
+import { trackMission } from '../stats/missions';
 import { t } from '../i18n';
 import GameView from './GameView';
 import ModeSwitch from './ModeSwitch';
@@ -40,6 +41,7 @@ export default function LocalGame({ onPlayOnline }: Props) {
     const { number } = local.challenge;
     const { attempts, moves } = local.dailyProgress;
     const result = await shareLink(`${window.location.origin}${window.location.pathname}`, t.daily.shareText(number, attempts, moves));
+    if (result !== 'cancelled') trackMission({ kind: 'share' });
     if (result === 'copied') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

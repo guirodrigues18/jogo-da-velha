@@ -43,7 +43,7 @@ const en: Messages = {
   },
 
   actions: {
-    achievements: 'Shop and achievements',
+    achievements: 'Missions, shop and achievements',
     help: 'How to play',
     language: 'Language',
     soundOn: 'Turn on sound and vibration',
@@ -82,7 +82,7 @@ const en: Messages = {
   },
 
   shop: {
-    tabs: { shop: '🛒 Shop', achievements: '🏅 Achievements' },
+    tabs: { missions: '🎯 Missions', shop: '🛒 Shop', achievements: '🏅 Achievements' },
     types: { symbol: 'Symbols', theme: 'Themes', effect: 'Victory effects' },
     hints: {
       symbol: 'Shown instead of your X/O. Online, your opponent sees it too.',
@@ -91,7 +91,7 @@ const en: Messages = {
     },
     use: 'Use',
     inUse: 'In use',
-    howToEarn: 'Earn 🪙 by winning games (more on Hard and online), the daily challenge and achievements.',
+    howToEarn: 'Earn 🪙 by winning games (more on Hard and online), with missions, the daily reward, invites and achievements.',
     items: {
       'symbol-classic': 'Classic',
       'symbol-star': 'Star',
@@ -101,6 +101,11 @@ const en: Messages = {
       'symbol-skull': 'Skull',
       'symbol-alien': 'Alien',
       'symbol-crown': 'Crown',
+      'symbol-pumpkin': 'Pumpkin',
+      'symbol-ghost': 'Ghost',
+      'symbol-zombie': 'Zombie',
+      'symbol-coffin': 'Coffin',
+      'symbol-christmas': 'Christmas tree',
       'theme-neon': 'Neon',
       'theme-retro': 'Retro',
       'theme-ocean': 'Ocean',
@@ -210,6 +215,73 @@ const en: Messages = {
     retroactive: 'For your previous games'
   },
 
+  dailyReward: {
+    welcome: 'Welcome back!',
+    title: '🎁 Daily reward',
+    day: n => `Day ${n}`,
+    claim: coins => `Claim +${coins} 🪙`,
+    streak: n => `🔥 ${n}-day streak`,
+    tomorrow: coins => `tomorrow: +${coins} 🪙`,
+    hint: 'Come back every day: the reward grows until day 7. Skip a day and it goes back to day 1.',
+    toast: 'Daily reward',
+    play: "Let's play!"
+  },
+
+  missions: {
+    title: "🎯 Today's missions",
+    renews: hours => `new in ${hours}h`,
+    completed: coins => `Mission complete! +${coins} 🪙`,
+    allDone: "Bonus: all of today's missions!",
+    bonus: coins => `Complete all 3 for a +${coins} 🪙 bonus`,
+    bonusDone: coins => `✓ +${coins} 🪙 bonus earned. See you tomorrow!`,
+    swap: 'Swap mission',
+    swapHint: '🔄 swap 1 mission per day',
+    note: 'Games against the AI, the daily challenge and online count.',
+    items: {
+      'play-2': 'Play 2 games',
+      'win-1': 'Win 1 game',
+      'boards-5': 'Win 5 mini-boards',
+      'daily-play': "Play today's challenge",
+      'ai-medium': 'Play the AI on Medium',
+      'win-3': 'Win 3 games',
+      'win-medium': 'Beat the AI on Medium',
+      'win-as-o': 'Win playing as ◯',
+      'boards-12': 'Win 12 mini-boards',
+      'daily-win': "Beat today's challenge",
+      'play-online': 'Play 1 online game',
+      'quick-40': 'Win in 40 moves or fewer',
+      'react-3': 'Send 3 reactions online',
+      share: 'Share a win',
+      'win-hard': 'Beat the AI on Hard',
+      'win-online': 'Win 1 online game',
+      flawless: 'Win without losing a mini-board',
+      'streak-3': 'Win 3 games in a row',
+      'win-5': 'Win 5 games',
+      'conquer-5': 'Win 5 mini-boards in one game'
+    }
+  },
+
+  invite: {
+    title: '🎁 Invite friends',
+    text: coins => `When a friend joins through your link and finishes their first game, you both get ${coins} 🪙.`,
+    button: 'Invite friends',
+    loading: 'Getting your link…',
+    count: n => `${n} ${n === 1 ? 'friend has' : 'friends have'} joined through you 🙌`,
+    message: coins => `Play Tic-Tac-Toe 2.0 with me? 🎮 Join through my link and get ${coins} coins to spend in the shop!`,
+    acceptedLabel: "You've been invited!",
+    accepted: coins => `Finish 1 game (AI or online): +${coins} 🪙`,
+    welcomeBonus: 'Invite bonus',
+    friendJoinedLabel: coins => `Invite accepted · +${coins} 🪙`,
+    friendJoined: name => `${name} joined through your invite!`,
+    someone: 'A friend',
+    roomHint: coins => `🎁 If it's their first game, you both get ${coins} 🪙.`
+  },
+
+  pages: {
+    rules: '/en/rules/',
+    strategy: '/en/strategy/'
+  },
+
   help: {
     title: 'How to play',
     steps: [
@@ -219,10 +291,12 @@ const en: Messages = {
       { icon: '🔓', strong: 'Board closed?', text: 'If the target board is already decided, your opponent can play in any open board.' },
       { icon: '⏱', strong: '20 seconds', text: "per move. If time runs out, it's your opponent's turn." },
       { icon: '🌐', strong: 'Online:', text: 'create a room, pick ✕ or ◯ and send the link. Whoever opens it plays the other symbol; if the room already has two players, they watch. Leaving mid-match counts as giving up.' },
-      { icon: '🪙', strong: 'Coins:', text: 'win games, the daily challenge and achievements to earn coins and trade them for symbols, themes and effects in the shop (🏅).' }
+      { icon: '🪙', strong: 'Coins:', text: "win games, complete today's missions, claim the daily reward and invite friends to earn coins and trade them for symbols, themes and effects in the shop (🏅)." }
     ],
     caption: 'Played in the top-right corner? Your opponent plays in the top-right board.',
-    ok: "Got it, let's play!"
+    ok: "Got it, let's play!",
+    rulesLink: '📖 Full rules',
+    strategyLink: '🧠 Winning strategies'
   },
 
   language: {
@@ -230,7 +304,7 @@ const en: Messages = {
   },
 
   stats: {
-    title: 'Shop and achievements',
+    title: 'Your progress',
     played: 'Games',
     wins: 'Wins',
     losses: 'Losses',

@@ -1,0 +1,270 @@
+/* ===========================
+   Páginas de conteúdo (regras e estratégias): texto para ler e para o Google
+   =========================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --text: #e8ebff;
+  --muted: #96a0d4;
+  --cyan: #00e5ff;
+  --pink: #ff4fd8;
+  --purple: #8b5cf6;
+  --border: rgba(255, 255, 255, .08);
+  --card: rgba(18, 24, 52, .72);
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(93, 76, 255, .22), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(0, 229, 255, .12), transparent 30%),
+    linear-gradient(145deg, #040612 0%, #081122 45%, #02040d 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.7;
+}
+
+a {
+  color: var(--cyan);
+}
+
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+.page-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.brand {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.brand span {
+  background: linear-gradient(90deg, var(--cyan), var(--pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.page-nav nav {
+  display: flex;
+  gap: 14px;
+  font-size: .9rem;
+}
+
+.page-nav nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.page-nav nav a:hover,
+.page-nav nav a[aria-current] {
+  color: #fff;
+}
+
+h1 {
+  margin-bottom: 14px;
+  color: #fff;
+  font-size: clamp(1.8rem, 6vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.lead {
+  margin-bottom: 26px;
+  color: #c9cff0;
+  font-size: 1.08rem;
+}
+
+h2 {
+  margin: 34px 0 10px;
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+h3 {
+  margin: 0 0 6px;
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+p,
+ul,
+ol {
+  margin-bottom: 14px;
+}
+
+ul,
+ol {
+  padding-left: 22px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+strong {
+  color: #fff;
+}
+
+.cta {
+  display: inline-block;
+  margin: 6px 0 10px;
+  padding: 14px 26px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, var(--purple), #00d9ff);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(139, 92, 246, .35);
+}
+
+.cta:hover {
+  filter: brightness(1.1);
+}
+
+.card {
+  margin: 16px 0;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.tips {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: tip;
+}
+
+.tips li {
+  position: relative;
+  margin: 0;
+  padding: 16px 16px 16px 58px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  counter-increment: tip;
+}
+
+.tips li::before {
+  content: counter(tip);
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: rgba(139, 92, 246, .25);
+  color: #fff;
+  font-weight: 800;
+}
+
+.tips p {
+  margin: 0;
+  color: #c9cff0;
+}
+
+/* Exemplo da regra principal: casa jogada → tabuleiro do adversário */
+.rule-example {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 18px 0 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 34px);
+  gap: 5px;
+}
+
+.grid.big {
+  grid-template-columns: repeat(3, 46px);
+  gap: 7px;
+}
+
+.grid span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .07);
+  font-weight: 800;
+}
+
+.grid .played {
+  background: rgba(0, 229, 255, .18);
+  color: var(--cyan);
+}
+
+.grid .target {
+  background: rgba(255, 79, 216, .35);
+  box-shadow: 0 0 14px rgba(255, 79, 216, .6);
+}
+
+.arrow {
+  color: var(--muted);
+  font-size: 1.6rem;
+}
+
+.caption {
+  color: var(--muted);
+  font-size: .9rem;
+  text-align: center;
+}
+
+.faq dt {
+  margin-top: 16px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.faq dd {
+  color: #c9cff0;
+}
+
+.page-footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: .85rem;
+  text-align: center;
+}
+
+.page-footer a {
+  color: var(--muted);
+}
+
+.page-footer p {
+  margin-bottom: 6px;
+}

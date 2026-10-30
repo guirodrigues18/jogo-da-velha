@@ -22,9 +22,11 @@ import {
   type Seat
 } from '../online/rooms';
 import { markJoined } from '../online/nickname';
+import { acceptInvite, markInviteSent } from '../online/invite';
 import { getProfile } from '../shop/wallet';
 import { playSound } from '../audio/sounds';
-import { recordFromGame, recordGame, unlockAchievement } from '../stats/achievements';
+import { loadStats, recordFromGame, recordGame, unlockAchievement } from '../stats/achievements';
+import { trackMission } from '../stats/missions';
 import type { FloatingReaction } from '../components/ReactionLayer';
 import { t } from '../i18n';
 import { TURN_SECONDS, useTurnTimer } from './useTurnTimer';
@@ -101,18 +103,24 @@ export function useOnlineGame(
 
         if (!roomId) {
           const createdId = await withTimeout(createRoom(uid, hostRole));
+          markInviteSent();
           if (!cancelled) onRoomCreatedRef.current(createdId);
           return;
         }
 
-        const result = await withTimeout(joinRoom(roomId, uid));
+        const joined = await withTimeout(joinRoom(roomId, uid));
 
         if (cancelled) return;
 
-        if (result !== 'x' && result !== 'o' && result !== 'spectator') {
-          setError(result);
+        if (typeof joined === 'string') {
+          setError(joined);
           return;
         }
+
+        const result = joined.seat;
+
+        // Primeira vez no jogo, convidado por quem criou a sala: os dois ganham o bônus de convite
+        if (joined.inviter) acceptInvite(joined.inviter, loadStats().played === 0);
 
         setUid(uid);
         setSeat(result);
@@ -311,6 +319,7 @@ export function useOnlineGame(
 
     lastReactionAt.current = now;
     sendReaction(roomId, uid, emoji, nickname).catch(() => {});
+    trackMission({ kind: 'reaction' });
 
     // A própria reação aparece na hora (o eco que volta do banco é ignorado abaixo)
     setFloatingReactions(current => [...current, { id: `me-${now}`, emoji, name: t.online.you }]);

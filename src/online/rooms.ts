@@ -79,6 +79,12 @@ export type Seat = Player | 'spectator';
 
 export type JoinError = 'not-found' | 'full' | 'closed';
 
+export interface Joined {
+  seat: Seat;
+  /** Quem criou a sala, quando você acabou de ocupar o lugar livre (foi convidado) */
+  inviter?: string;
+}
+
 export interface RoomPreview {
   names: PerPlayer<string>;
   /** Lugar de quem criou a sala, enquanto ele ainda espera o convidado */
@@ -133,7 +139,7 @@ export async function createRoom(uid: string, role: Player): Promise<string> {
 }
 
 /** Entra na sala: devolve o lugar (X, O ou espectador) ou o motivo de não conseguir entrar */
-export async function joinRoom(roomId: string, uid: string): Promise<Seat | JoinError> {
+export async function joinRoom(roomId: string, uid: string): Promise<Joined | JoinError> {
 
   const snapshot = await get(roomRef(roomId));
 
@@ -143,18 +149,20 @@ export async function joinRoom(roomId: string, uid: string): Promise<Seat | Join
 
   // Quem já faz parte da sala (ex.: recarregou a página) volta para o mesmo papel,
   // a menos que tenha saído dela
-  if (players.x === uid) return left.x ? 'closed' : 'x';
-  if (players.o === uid) return left.o ? 'closed' : 'o';
+  if (players.x === uid) return left.x ? 'closed' : { seat: 'x' };
+  if (players.o === uid) return left.o ? 'closed' : { seat: 'o' };
 
   const openSeat: Player | null = !players.x ? 'x' : !players.o ? 'o' : null;
 
   if (!openSeat) {
     const watching = Object.keys(spectators).filter(id => id !== uid).length;
-    return watching < MAX_SPECTATORS ? 'spectator' : 'full';
+    return watching < MAX_SPECTATORS ? { seat: 'spectator' } : 'full';
   }
 
+  const host: Player = openSeat === 'x' ? 'o' : 'x';
+
   // Quem criou a sala desistiu antes de alguém entrar
-  if (left[openSeat === 'x' ? 'o' : 'x']) return 'closed';
+  if (left[host]) return 'closed';
 
   // Transação: se duas pessoas abrirem o convite ao mesmo tempo, só uma entra (a outra assiste)
   const result = await runTransaction(
@@ -162,7 +170,7 @@ export async function joinRoom(roomId: string, uid: string): Promise<Seat | Join
     current => (current === null ? uid : undefined)
   );
 
-  return result.snapshot.val() === uid ? openSeat : 'spectator';
+  return result.snapshot.val() === uid ? { seat: openSeat, inviter: players[host] } : { seat: 'spectator' };
 
 }
 

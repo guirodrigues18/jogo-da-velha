@@ -107,7 +107,7 @@ export function takeRetroactiveBonus(): number {
 }
 
 const listeners = new Set<() => void>();
-const coinListeners = new Set<(amount: number) => void>();
+const coinListeners = new Set<(amount: number, label?: string) => void>();
 
 function update(next: Profile) {
 
@@ -146,17 +146,25 @@ export function useProfile(): Profile {
 
 }
 
-export function addCoins(amount: number) {
+interface CoinOptions {
+  /** Motivo mostrado no aviso (padrão: "Moedas ganhas") */
+  label?: string;
+  /** Sem aviso de moedas (quem chamou já mostrou o próprio aviso) */
+  quiet?: boolean;
+}
+
+export function addCoins(amount: number, { label, quiet = false }: CoinOptions = {}) {
 
   if (amount <= 0) return;
 
   update({ ...profile, coins: profile.coins + amount });
-  coinListeners.forEach(listener => listener(amount));
+
+  if (!quiet) coinListeners.forEach(listener => listener(amount, label));
 
 }
 
 /** Avisa quando moedas são ganhas (para mostrar "+10 🪙") */
-export function onCoinsEarned(listener: (amount: number) => void): () => void {
+export function onCoinsEarned(listener: (amount: number, label?: string) => void): () => void {
 
   coinListeners.add(listener);
 

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Ultimate Tic-Tac-Toe Rules – How to Play Tic-Tac-Toe 2.0</title>
+  <meta name="description" content="Learn the rules of Ultimate Tic-Tac-Toe, the tic-tac-toe with 9 boards: the goal, the golden rule, closed boards, draws and the move timer. With examples.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#060816">
+
+  <link rel="canonical" href="https://jogo-da-velha-2-one.vercel.app/en/rules/">
+  <link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/regras/">
+  <link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/rules/">
+  <link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/reglas/">
+  <link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/regras/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Tic-Tac-Toe 2.0">
+  <meta property="og:title" content="Ultimate Tic-Tac-Toe Rules">
+  <meta property="og:description" content="Tic-tac-toe with 9 boards, explained in 2 minutes, with examples.">
+  <meta property="og:url" content="https://jogo-da-velha-2-one.vercel.app/en/rules/">
+  <meta property="og:image" content="https://jogo-da-velha-2-one.vercel.app/og-image.jpg">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Ultimate Tic-Tac-Toe Rules",
+      "description": "The goal, the golden rule, closed boards, draws and the move timer in tic-tac-toe with 9 boards.",
+      "inLanguage": "en",
+      "image": "https://jogo-da-velha-2-one.vercel.app/og-image.jpg",
+      "author": { "@type": "Organization", "name": "TchêTec" },
+      "mainEntityOfPage": "https://jogo-da-velha-2-one.vercel.app/en/rules/"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Who goes first in Ultimate Tic-Tac-Toe?", "acceptedAnswer": { "@type": "Answer", "text": "✕ always goes first, and the first move can be on any square of any board." } },
+        { "@type": "Question", "name": "What happens if I'm sent to a closed board?", "acceptedAnswer": { "@type": "Answer", "text": "If the target board has already been won or drawn, you can play on any board that is still open." } },
+        { "@type": "Question", "name": "Does a drawn mini-board count for anyone?", "acceptedAnswer": { "@type": "Answer", "text": "No. It is closed and doesn't count for either player when making a line on the big board." } },
+        { "@type": "Question", "name": "Do I need to sign up to play?", "acceptedAnswer": { "@type": "Answer", "text": "No. The game is free and runs in the browser, without sign-up, against the AI, with a friend on the same device or online via link." } }
+      ]
+    }
+  ]
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/pages/content.css">
+</head>
+
+<body>
+
+  <div class="page">
+
+    <header class="page-nav">
+      <a class="brand" href="/en/">Tic-Tac-Toe <span>2.0</span></a>
+      <nav>
+        <a href="/en/rules/" aria-current="page">Rules</a>
+        <a href="/en/strategy/">Strategy</a>
+        <a href="/en/">Play</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <h1>Ultimate Tic-Tac-Toe Rules</h1>
+
+      <p class="lead">
+        <strong>Ultimate Tic-Tac-Toe</strong>, also called <strong>Tic-Tac-Toe 2.0</strong> or Super Tic-Tac-Toe, is
+        tic-tac-toe with <strong>9 boards inside one big board</strong>. The rules take two minutes to learn,
+        but every move becomes a strategic decision.
+      </p>
+
+      <a class="cta" href="/en/">▶ Play now, free</a>
+
+      <h2>The board</h2>
+      <p>
+        The big board has 3 × 3 squares, and each square is a regular tic-tac-toe <strong>mini-board</strong>.
+        That makes 81 squares in total. One player is ✕, the other is ◯, and <strong>✕ always goes first</strong>.
+      </p>
+
+      <h2>Goal</h2>
+      <p>
+        Win <strong>3 mini-boards in a row</strong> on the big board: horizontally, vertically or diagonally.
+        It's classic tic-tac-toe, except each big square has to be won first.
+      </p>
+
+      <h2>How to win a mini-board</h2>
+      <p>
+        Get 3 in a row inside it, exactly like regular tic-tac-toe. The mini-board becomes yours and is
+        <strong>closed</strong>: nobody plays on it again.
+      </p>
+
+      <h2>The golden rule: your move picks your opponent's board</h2>
+      <p>
+        The <strong>square</strong> you play inside a mini-board decides <strong>which mini-board</strong> your opponent
+        must play on next. Played in the top-right square? Your opponent has to play on the top-right mini-board.
+      </p>
+
+      <div class="card">
+        <div class="rule-example" aria-hidden="true">
+          <div class="grid">
+            <span></span><span></span><span class="played">✕</span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+          <span class="arrow">→</span>
+          <div class="grid big">
+            <span></span><span></span><span class="target"></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <p class="caption">✕ played in the top-right square of a mini-board → ◯ plays on the top-right mini-board.</p>
+      </div>
+
+      <p>
+        That's what makes the game so interesting: every move is both an attack on your board and a choice of where
+        your opponent plays.
+      </p>
+
+      <h2>What if the target board is closed?</h2>
+      <p>
+        If your move sends the opponent to a mini-board that has already been <strong>won or drawn</strong>,
+        they get a <strong>free move</strong>: they can play on any mini-board that is still open.
+        The first move of the game is also free.
+      </p>
+
+      <h2>Draws</h2>
+      <ul>
+        <li>A full mini-board without 3 in a row is <strong>drawn</strong> and counts for nobody.</li>
+        <li>If every mini-board closes and nobody makes the big line, the <strong>game is a draw</strong>.</li>
+      </ul>
+
+      <h2>Move timer</h2>
+      <p>
+        Each player has <strong>20 seconds</strong> per move. If time runs out, the turn passes to the opponent,
+        who plays on the same board you were supposed to play on. The clock warns you in the last 5 seconds.
+      </p>
+
+      <h2>Game modes</h2>
+      <ul>
+        <li><strong>2 players</strong> on the same phone or computer.</li>
+        <li><strong>Against the AI</strong>, on three levels: Easy, Medium and Hard. You choose to play as ✕ or ◯.</li>
+        <li><strong>Daily challenge</strong>: a new position every day, the same for everyone.</li>
+        <li><strong>Online</strong>: create a room and send the link to a friend. Other people can watch.</li>
+      </ul>
+      <p>
+        Wins, daily missions and invites earn coins to trade for symbols, themes and effects in the shop.
+      </p>
+
+      <h2>FAQ</h2>
+      <dl class="faq">
+        <dt>Who goes first?</dt>
+        <dd>✕ always goes first, and the first move can be on any square of any board.</dd>
+        <dt>Can I play on a mini-board that has already been won?</dt>
+        <dd>No. Won or drawn boards stay closed until the end of the game.</dd>
+        <dt>Does a drawn mini-board count for anyone?</dt>
+        <dd>No. It doesn't count for either player when making a line on the big board.</dd>
+        <dt>Do I need to sign up?</dt>
+        <dd>No. It's free and runs right in the browser, on your phone or computer.</dd>
+      </dl>
+
+      <p>Got the rules? Check out the <a href="/en/strategy/">winning strategies</a> or jump straight into the game.</p>
+
+      <a class="cta" href="/en/">▶ Play Ultimate Tic-Tac-Toe</a>
+
+    </main>
+
+    <footer class="page-footer">
+      <p><a href="/en/">Play</a> · <a href="/en/rules/">Rules</a> · <a href="/en/strategy/">Strategy</a></p>
+      <p><a href="/regras/" hreflang="pt-BR">Português</a> · <a href="/es/reglas/" hreflang="es">Español</a></p>
+    </footer>
+
+  </div>
+
+</body>
+
+</html>

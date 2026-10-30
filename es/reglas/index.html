@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Reglas del Tres en Raya 2.0 (Ultimate Tic-Tac-Toe) – Cómo Jugar</title>
+  <meta name="description" content="Aprende las reglas del Tres en Raya 2.0, el tres en raya con 9 tableros: objetivo, la regla de oro, tableros cerrados, empates y tiempo por jugada. Con ejemplos.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#060816">
+
+  <link rel="canonical" href="https://jogo-da-velha-2-one.vercel.app/es/reglas/">
+  <link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/regras/">
+  <link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/rules/">
+  <link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/reglas/">
+  <link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/regras/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Tres en Raya 2.0">
+  <meta property="og:title" content="Reglas del Tres en Raya 2.0 (Ultimate Tic-Tac-Toe)">
+  <meta property="og:description" content="El tres en raya con 9 tableros explicado en 2 minutos, con ejemplos.">
+  <meta property="og:url" content="https://jogo-da-velha-2-one.vercel.app/es/reglas/">
+  <meta property="og:image" content="https://jogo-da-velha-2-one.vercel.app/og-image.jpg">
+  <meta property="og:locale" content="es_ES">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Reglas del Tres en Raya 2.0 (Ultimate Tic-Tac-Toe)",
+      "description": "Objetivo, la regla de oro, tableros cerrados, empates y tiempo por jugada en el tres en raya con 9 tableros.",
+      "inLanguage": "es",
+      "image": "https://jogo-da-velha-2-one.vercel.app/og-image.jpg",
+      "author": { "@type": "Organization", "name": "TchêTec" },
+      "mainEntityOfPage": "https://jogo-da-velha-2-one.vercel.app/es/reglas/"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "¿Quién empieza en el Tres en Raya 2.0?", "acceptedAnswer": { "@type": "Answer", "text": "La ✕ siempre empieza, y la primera jugada puede ser en cualquier casilla de cualquier tablero." } },
+        { "@type": "Question", "name": "¿Qué pasa si me envían a un tablero cerrado?", "acceptedAnswer": { "@type": "Answer", "text": "Si el tablero de destino ya fue ganado o empatado, puedes jugar en cualquier tablero que siga abierto." } },
+        { "@type": "Question", "name": "¿Un mini-tablero empatado cuenta para alguien?", "acceptedAnswer": { "@type": "Answer", "text": "No. Queda cerrado y no cuenta para ningún jugador a la hora de formar la línea en el tablero grande." } },
+        { "@type": "Question", "name": "¿Hace falta registrarse para jugar?", "acceptedAnswer": { "@type": "Answer", "text": "No. El juego es gratis y funciona en el navegador, sin registro, contra la IA, con un amigo en el mismo dispositivo o en línea por enlace." } }
+      ]
+    }
+  ]
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/pages/content.css">
+</head>
+
+<body>
+
+  <div class="page">
+
+    <header class="page-nav">
+      <a class="brand" href="/es/">Tres en Raya <span>2.0</span></a>
+      <nav>
+        <a href="/es/reglas/" aria-current="page">Reglas</a>
+        <a href="/es/estrategias/">Estrategias</a>
+        <a href="/es/">Jugar</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <h1>Reglas del Tres en Raya 2.0</h1>
+
+      <p class="lead">
+        El <strong>Tres en Raya 2.0</strong>, también llamado <strong>Ultimate Tic-Tac-Toe</strong> o súper tres en raya,
+        es el tres en raya con <strong>9 tableros dentro de un tablero más grande</strong>. Las reglas se aprenden en dos
+        minutos, pero cada jugada se convierte en una decisión estratégica.
+      </p>
+
+      <a class="cta" href="/es/">▶ Jugar ahora, gratis</a>
+
+      <h2>El tablero</h2>
+      <p>
+        El tablero grande tiene 3 × 3 casillas, y cada casilla es un <strong>mini-tablero</strong> de tres en raya normal.
+        Son 81 casillas en total. Un jugador usa ✕, el otro usa ◯, y la <strong>✕ siempre empieza</strong>.
+      </p>
+
+      <h2>Objetivo</h2>
+      <p>
+        Gana <strong>3 mini-tableros en línea</strong> en el tablero grande: en horizontal, en vertical o en diagonal.
+        Es el tres en raya de siempre, solo que cada casilla grande hay que ganarla antes.
+      </p>
+
+      <h2>Cómo ganar un mini-tablero</h2>
+      <p>
+        Haz 3 en línea dentro de él, igual que en el tres en raya normal. El mini-tablero pasa a ser tuyo y queda
+        <strong>cerrado</strong>: nadie vuelve a jugar en él.
+      </p>
+
+      <h2>La regla de oro: tu jugada elige el tablero de tu rival</h2>
+      <p>
+        La <strong>casilla</strong> en la que juegas dentro de un mini-tablero decide en <strong>qué mini-tablero</strong>
+        jugará tu rival a continuación. ¿Jugaste en la casilla de la esquina superior derecha? Tu rival tiene que jugar en
+        el mini-tablero de la esquina superior derecha.
+      </p>
+
+      <div class="card">
+        <div class="rule-example" aria-hidden="true">
+          <div class="grid">
+            <span></span><span></span><span class="played">✕</span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+          <span class="arrow">→</span>
+          <div class="grid big">
+            <span></span><span></span><span class="target"></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <p class="caption">✕ jugó en la esquina superior derecha de un mini-tablero → ◯ juega en el mini-tablero de la esquina superior derecha.</p>
+      </div>
+
+      <p>
+        Eso es lo que hace el juego tan interesante: cada jugada es, a la vez, un ataque en tu tablero y una elección de
+        dónde jugará tu rival.
+      </p>
+
+      <h2>¿Y si el tablero de destino está cerrado?</h2>
+      <p>
+        Si tu jugada envía al rival a un mini-tablero que ya fue <strong>ganado o empatado</strong>, recibe una
+        <strong>jugada libre</strong>: puede jugar en cualquier mini-tablero que siga abierto.
+        La primera jugada de la partida también es libre.
+      </p>
+
+      <h2>Empates</h2>
+      <ul>
+        <li>Un mini-tablero lleno sin 3 en línea queda <strong>empatado</strong> y no cuenta para nadie.</li>
+        <li>Si todos los mini-tableros se cierran sin que nadie forme la línea grande, la <strong>partida termina en empate</strong>.</li>
+      </ul>
+
+      <h2>Tiempo por jugada</h2>
+      <p>
+        Cada jugador tiene <strong>20 segundos</strong> por jugada. Si se acaba el tiempo, el turno pasa al rival,
+        que juega en el mismo tablero en el que debías jugar tú. En los últimos 5 segundos el reloj te avisa.
+      </p>
+
+      <h2>Modos de juego</h2>
+      <ul>
+        <li><strong>2 jugadores</strong> en el mismo móvil u ordenador.</li>
+        <li><strong>Contra la IA</strong>, en tres niveles: Fácil, Medio y Difícil. Eliges jugar con ✕ o ◯.</li>
+        <li><strong>Desafío diario</strong>: una posición nueva cada día, la misma para todos.</li>
+        <li><strong>En línea</strong>: crea una sala y envía el enlace a un amigo. Otras personas pueden mirar.</li>
+      </ul>
+      <p>
+        Las victorias, las misiones diarias y las invitaciones dan monedas para cambiar por símbolos, temas y efectos en la tienda.
+      </p>
+
+      <h2>Preguntas frecuentes</h2>
+      <dl class="faq">
+        <dt>¿Quién empieza?</dt>
+        <dd>La ✕ siempre empieza, y la primera jugada puede ser en cualquier casilla de cualquier tablero.</dd>
+        <dt>¿Puedo jugar en un mini-tablero que ya fue ganado?</dt>
+        <dd>No. Los tableros ganados o empatados quedan cerrados hasta el final de la partida.</dd>
+        <dt>¿Un mini-tablero empatado cuenta para alguien?</dt>
+        <dd>No. No cuenta para ningún jugador a la hora de formar la línea en el tablero grande.</dd>
+        <dt>¿Hace falta registrarse?</dt>
+        <dd>No. Es gratis y funciona directamente en el navegador, en el móvil o en el ordenador.</dd>
+      </dl>
+
+      <p>¿Ya entendiste las reglas? Mira las <a href="/es/estrategias/">estrategias para ganar</a> o ve directo al juego.</p>
+
+      <a class="cta" href="/es/">▶ Jugar Tres en Raya 2.0</a>
+
+    </main>
+
+    <footer class="page-footer">
+      <p><a href="/es/">Jugar</a> · <a href="/es/reglas/">Reglas</a> · <a href="/es/estrategias/">Estrategias</a></p>
+      <p><a href="/regras/" hreflang="pt-BR">Português</a> · <a href="/en/rules/" hreflang="en">English</a></p>
+    </footer>
+
+  </div>
+
+</body>
+
+</html>

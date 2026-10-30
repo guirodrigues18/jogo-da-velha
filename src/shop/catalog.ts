@@ -23,6 +23,11 @@ export const ITEMS: ShopItem[] = [
   { id: 'symbol-skull', type: 'symbol', price: 120, preview: '💀' },
   { id: 'symbol-alien', type: 'symbol', price: 150, preview: '👽' },
   { id: 'symbol-crown', type: 'symbol', price: 200, preview: '👑' },
+  { id: 'symbol-pumpkin', type: 'symbol', price: 100, preview: '🎃' },
+  { id: 'symbol-ghost', type: 'symbol', price: 100, preview: '👻' },
+  { id: 'symbol-zombie', type: 'symbol', price: 100, preview: '🧟' },
+  { id: 'symbol-coffin', type: 'symbol', price: 100, preview: '⚰️' },
+  { id: 'symbol-christmas', type: 'symbol', price: 100, preview: '🎄' },
 
   { id: 'theme-neon', type: 'theme', price: 0, preview: '#8b5cf6' },
   { id: 'theme-retro', type: 'theme', price: 150, preview: '#39ff14' },

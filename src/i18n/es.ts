@@ -43,7 +43,7 @@ const es: Messages = {
   },
 
   actions: {
-    achievements: 'Tienda y logros',
+    achievements: 'Misiones, tienda y logros',
     help: 'Cómo jugar',
     language: 'Idioma',
     soundOn: 'Activar sonido y vibración',
@@ -82,7 +82,7 @@ const es: Messages = {
   },
 
   shop: {
-    tabs: { shop: '🛒 Tienda', achievements: '🏅 Logros' },
+    tabs: { missions: '🎯 Misiones', shop: '🛒 Tienda', achievements: '🏅 Logros' },
     types: { symbol: 'Símbolos', theme: 'Temas', effect: 'Efectos de victoria' },
     hints: {
       symbol: 'Aparecen en lugar de tu X/O. En línea, tu rival también los ve.',
@@ -91,7 +91,7 @@ const es: Messages = {
     },
     use: 'Usar',
     inUse: 'En uso',
-    howToEarn: 'Gana 🪙 venciendo partidas (más en Difícil y en línea), el desafío diario y logros.',
+    howToEarn: 'Gana 🪙 venciendo partidas (más en Difícil y en línea), con misiones, la recompensa diaria, invitaciones y logros.',
     items: {
       'symbol-classic': 'Clásico',
       'symbol-star': 'Estrella',
@@ -101,6 +101,11 @@ const es: Messages = {
       'symbol-skull': 'Calavera',
       'symbol-alien': 'Alien',
       'symbol-crown': 'Corona',
+      'symbol-pumpkin': 'Calabaza',
+      'symbol-ghost': 'Fantasma',
+      'symbol-zombie': 'Zombi',
+      'symbol-coffin': 'Ataúd',
+      'symbol-christmas': 'Árbol de Navidad',
       'theme-neon': 'Neón',
       'theme-retro': 'Retro',
       'theme-ocean': 'Océano',
@@ -210,6 +215,73 @@ const es: Messages = {
     retroactive: 'Por tus partidas anteriores'
   },
 
+  dailyReward: {
+    welcome: '¡Qué bueno verte!',
+    title: '🎁 Recompensa diaria',
+    day: n => `Día ${n}`,
+    claim: coins => `Recoger +${coins} 🪙`,
+    streak: n => `🔥 ${n} ${n === 1 ? 'día seguido' : 'días seguidos'}`,
+    tomorrow: coins => `mañana: +${coins} 🪙`,
+    hint: 'Vuelve cada día: la recompensa crece hasta el día 7. Si te saltas un día, vuelve al día 1.',
+    toast: 'Recompensa diaria',
+    play: '¡A jugar!'
+  },
+
+  missions: {
+    title: '🎯 Misiones de hoy',
+    renews: hours => `nuevas en ${hours} h`,
+    completed: coins => `¡Misión cumplida! +${coins} 🪙`,
+    allDone: 'Bonus: ¡todas las misiones de hoy!',
+    bonus: coins => `Completa las 3 y gana +${coins} 🪙 de bonus`,
+    bonusDone: coins => `✓ Bonus de +${coins} 🪙 conseguido. ¡Vuelve mañana!`,
+    swap: 'Cambiar misión',
+    swapHint: '🔄 cambia 1 misión por día',
+    note: 'Cuentan las partidas contra la IA, el desafío diario y en línea.',
+    items: {
+      'play-2': 'Juega 2 partidas',
+      'win-1': 'Gana 1 partida',
+      'boards-5': 'Gana 5 mini-tableros',
+      'daily-play': 'Juega el desafío de hoy',
+      'ai-medium': 'Juega contra la IA en Medio',
+      'win-3': 'Gana 3 partidas',
+      'win-medium': 'Vence a la IA en Medio',
+      'win-as-o': 'Gana jugando con ◯',
+      'boards-12': 'Gana 12 mini-tableros',
+      'daily-win': 'Supera el desafío de hoy',
+      'play-online': 'Juega 1 partida en línea',
+      'quick-40': 'Gana en 40 jugadas o menos',
+      'react-3': 'Envía 3 reacciones en línea',
+      share: 'Comparte una victoria',
+      'win-hard': 'Vence a la IA en Difícil',
+      'win-online': 'Gana 1 partida en línea',
+      flawless: 'Gana sin perder ningún mini-tablero',
+      'streak-3': 'Gana 3 partidas seguidas',
+      'win-5': 'Gana 5 partidas',
+      'conquer-5': 'Gana 5 mini-tableros en una partida'
+    }
+  },
+
+  invite: {
+    title: '🎁 Invita a amigos',
+    text: coins => `Cuando un amigo entre con tu enlace y termine su primera partida, los dos ganan ${coins} 🪙.`,
+    button: 'Invitar amigos',
+    loading: 'Preparando el enlace…',
+    count: n => `${n} ${n === 1 ? 'amigo ya llegó' : 'amigos ya llegaron'} con tu invitación 🙌`,
+    message: coins => `¿Jugamos Tres en Raya 2.0? 🎮 Entra con mi enlace y gana ${coins} monedas para gastar en la tienda.`,
+    acceptedLabel: '¡Te invitaron!',
+    accepted: coins => `Termina 1 partida (IA o en línea): +${coins} 🪙`,
+    welcomeBonus: 'Bonus de invitación',
+    friendJoinedLabel: coins => `Invitación aceptada · +${coins} 🪙`,
+    friendJoined: name => `¡${name} entró con tu invitación!`,
+    someone: 'Un amigo',
+    roomHint: coins => `🎁 Si es su primera partida, los dos ganan ${coins} 🪙.`
+  },
+
+  pages: {
+    rules: '/es/reglas/',
+    strategy: '/es/estrategias/'
+  },
+
   help: {
     title: 'Cómo jugar',
     steps: [
@@ -219,10 +291,12 @@ const es: Messages = {
       { icon: '🔓', strong: '¿Tablero cerrado?', text: 'Si el tablero de destino ya está decidido, tu rival puede jugar en cualquiera abierto.' },
       { icon: '⏱', strong: '20 segundos', text: 'por jugada. Si se acaba el tiempo, el turno pasa a tu rival.' },
       { icon: '🌐', strong: 'En línea:', text: 'crea una sala, elige ✕ o ◯ y envía el enlace. Quien lo abra juega con el otro símbolo; si la sala ya tiene dos jugadores, mira la partida. Salir a mitad de partida cuenta como rendirse.' },
-      { icon: '🪙', strong: 'Monedas:', text: 'gana partidas, el desafío diario y logros para conseguir monedas y cambiarlas por símbolos, temas y efectos en la tienda (🏅).' }
+      { icon: '🪙', strong: 'Monedas:', text: 'gana partidas, completa las misiones del día, recoge la recompensa diaria e invita a amigos para conseguir monedas y cambiarlas por símbolos, temas y efectos en la tienda (🏅).' }
     ],
     caption: '¿Jugaste en la esquina superior derecha? Tu rival juega en el tablero de la esquina superior derecha.',
-    ok: '¡Entendido, a jugar!'
+    ok: '¡Entendido, a jugar!',
+    rulesLink: '📖 Reglas completas',
+    strategyLink: '🧠 Estrategias para ganar'
   },
 
   language: {
@@ -230,7 +304,7 @@ const es: Messages = {
   },
 
   stats: {
-    title: 'Tienda y logros',
+    title: 'Tu progreso',
     played: 'Partidas',
     wins: 'Victorias',
     losses: 'Derrotas',

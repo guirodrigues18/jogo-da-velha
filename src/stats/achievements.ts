@@ -2,6 +2,8 @@ import type { Difficulty } from '../game/ai';
 import type { GameState, Player } from '../game/logic';
 import { addCoins } from '../shop/wallet';
 import { COINS, coinsForGame } from '../shop/rewards';
+import { trackMission } from './missions';
+import { rewardInvitedPlayer } from '../online/invite';
 
 /* ===========================
    Estatísticas e conquistas (salvas no navegador; com login, também na nuvem)
@@ -29,6 +31,8 @@ export interface GameRecord {
   boardsLost: number;
   /** Total de jogadas da partida (dos dois jogadores) */
   moves: number;
+  /** Com qual símbolo você jogou */
+  symbol?: Player;
 }
 
 export type AchievementId =
@@ -126,7 +130,8 @@ export function recordFromGame(game: GameState, me: Player, mode: GameRecord['mo
     result,
     boardsWon: game.boards.filter(b => b.winner === me).length,
     boardsLost: game.boards.filter(b => b.winner === opponent).length,
-    moves: game.boards.reduce((total, b) => total + b.cells.filter(Boolean).length, 0)
+    moves: game.boards.reduce((total, b) => total + b.cells.filter(Boolean).length, 0),
+    symbol: me
   };
 
 }
@@ -171,7 +176,7 @@ function notify(unlocked: Achievement[]) {
 
 }
 
-/** Registra uma partida terminada, paga as moedas e avisa as conquistas novas */
+/** Registra uma partida terminada, paga as moedas, avisa as conquistas novas e avança as missões */
 export function recordGame(record: GameRecord) {
 
   const { stats, unlocked } = applyRecord(loadStats(), record);
@@ -179,6 +184,8 @@ export function recordGame(record: GameRecord) {
   save(stats);
   notify(unlocked);
   addCoins(coinsForGame(record) + unlocked.length * COINS.achievement);
+  trackMission({ kind: 'game', record });
+  rewardInvitedPlayer();
 
 }
 

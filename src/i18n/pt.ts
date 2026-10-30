@@ -43,7 +43,7 @@ const pt = {
   },
 
   actions: {
-    achievements: 'Loja e conquistas',
+    achievements: 'Missões, loja e conquistas',
     help: 'Como jogar',
     language: 'Idioma',
     soundOn: 'Ativar sons e vibração',
@@ -82,7 +82,7 @@ const pt = {
   },
 
   shop: {
-    tabs: { shop: '🛒 Loja', achievements: '🏅 Conquistas' },
+    tabs: { missions: '🎯 Missões', shop: '🛒 Loja', achievements: '🏅 Conquistas' },
     types: { symbol: 'Símbolos', theme: 'Temas', effect: 'Efeitos de vitória' },
     hints: {
       symbol: 'Aparecem no lugar do seu X/O. No online, o adversário também vê.',
@@ -91,7 +91,7 @@ const pt = {
     },
     use: 'Usar',
     inUse: 'Em uso',
-    howToEarn: 'Ganhe 🪙 vencendo partidas (mais no Difícil e no online), no desafio diário e com conquistas.',
+    howToEarn: 'Ganhe 🪙 vencendo partidas (mais no Difícil e no online), com missões, recompensa diária, convites e conquistas.',
     items: {
       'symbol-classic': 'Clássico',
       'symbol-star': 'Estrela',
@@ -101,6 +101,11 @@ const pt = {
       'symbol-skull': 'Caveira',
       'symbol-alien': 'Alien',
       'symbol-crown': 'Coroa',
+      'symbol-pumpkin': 'Abóbora',
+      'symbol-ghost': 'Fantasma',
+      'symbol-zombie': 'Zumbi',
+      'symbol-coffin': 'Caixão',
+      'symbol-christmas': 'Árvore de Natal',
       'theme-neon': 'Neon',
       'theme-retro': 'Retrô',
       'theme-ocean': 'Oceano',
@@ -210,6 +215,73 @@ const pt = {
     retroactive: 'Pelas suas partidas anteriores'
   },
 
+  dailyReward: {
+    welcome: 'Que bom te ver!',
+    title: '🎁 Recompensa diária',
+    day: (n: number) => `Dia ${n}`,
+    claim: (coins: number) => `Pegar +${coins} 🪙`,
+    streak: (n: number) => `🔥 ${n} ${n === 1 ? 'dia seguido' : 'dias seguidos'}`,
+    tomorrow: (coins: number) => `amanhã: +${coins} 🪙`,
+    hint: 'Volte todo dia: a recompensa cresce até o dia 7. Se pular um dia, volta para o dia 1.',
+    toast: 'Recompensa diária',
+    play: 'Bora jogar!'
+  },
+
+  missions: {
+    title: '🎯 Missões de hoje',
+    renews: (hours: number) => `novas em ${hours}h`,
+    completed: (coins: number) => `Missão concluída! +${coins} 🪙`,
+    allDone: 'Bônus: todas as missões de hoje!',
+    bonus: (coins: number) => `Complete as 3 e ganhe +${coins} 🪙 de bônus`,
+    bonusDone: (coins: number) => `✓ Bônus de +${coins} 🪙 garantido. Volte amanhã!`,
+    swap: 'Trocar missão',
+    swapHint: '🔄 troca 1 missão por dia',
+    note: 'Contam partidas contra a IA, o desafio diário e online.',
+    items: {
+      'play-2': 'Jogue 2 partidas',
+      'win-1': 'Vença 1 partida',
+      'boards-5': 'Conquiste 5 mini-tabuleiros',
+      'daily-play': 'Jogue o desafio do dia',
+      'ai-medium': 'Jogue contra a IA no Médio',
+      'win-3': 'Vença 3 partidas',
+      'win-medium': 'Vença a IA no Médio',
+      'win-as-o': 'Vença jogando com ◯',
+      'boards-12': 'Conquiste 12 mini-tabuleiros',
+      'daily-win': 'Vença o desafio do dia',
+      'play-online': 'Jogue 1 partida online',
+      'quick-40': 'Vença com até 40 jogadas no total',
+      'react-3': 'Mande 3 reações no online',
+      share: 'Compartilhe uma vitória',
+      'win-hard': 'Vença a IA no Difícil',
+      'win-online': 'Vença 1 partida online',
+      flawless: 'Vença sem perder nenhum mini-tabuleiro',
+      'streak-3': 'Vença 3 partidas seguidas',
+      'win-5': 'Vença 5 partidas',
+      'conquer-5': 'Conquiste 5 mini-tabuleiros numa partida'
+    }
+  },
+
+  invite: {
+    title: '🎁 Convide amigos',
+    text: (coins: number) => `Quando um amigo entrar pelo seu link e terminar a primeira partida, vocês dois ganham ${coins} 🪙.`,
+    button: 'Convidar amigos',
+    loading: 'Preparando o link…',
+    count: (n: number) => `${n} ${n === 1 ? 'amigo já veio' : 'amigos já vieram'} pelo seu convite 🙌`,
+    message: (coins: number) => `Bora jogar Jogo da Velha 2.0 comigo? 🎮 Entra pelo meu link e ganha ${coins} moedas pra gastar na loja!`,
+    acceptedLabel: 'Você foi convidado!',
+    accepted: (coins: number) => `Termine 1 partida (IA ou online): +${coins} 🪙`,
+    welcomeBonus: 'Bônus de convite',
+    friendJoinedLabel: (coins: number) => `Convite aceito · +${coins} 🪙`,
+    friendJoined: (name: string) => `${name} entrou pelo seu convite!`,
+    someone: 'Um amigo',
+    roomHint: (coins: number) => `🎁 Se for a primeira partida dele no jogo, vocês dois ganham ${coins} 🪙.`
+  },
+
+  pages: {
+    rules: '/regras/',
+    strategy: '/estrategias/'
+  },
+
   help: {
     title: 'Como jogar',
     steps: [
@@ -219,10 +291,12 @@ const pt = {
       { icon: '🔓', strong: 'Tabuleiro fechado?', text: 'Se o tabuleiro de destino já estiver fechado, o adversário pode jogar em qualquer um aberto.' },
       { icon: '⏱', strong: '20 segundos', text: 'por jogada. Se o tempo acabar, a vez passa para o adversário.' },
       { icon: '🌐', strong: 'Online:', text: 'crie uma sala, escolha ✕ ou ◯ e envie o link. Quem abrir joga com o outro símbolo; se a sala já tiver dois jogadores, a pessoa assiste. Sair no meio da partida conta como desistência.' },
-      { icon: '🪙', strong: 'Moedas:', text: 'vença partidas, o desafio diário e conquistas para ganhar moedas e trocar por símbolos, temas e efeitos na loja (🏅).' }
+      { icon: '🪙', strong: 'Moedas:', text: 'vença partidas, complete as missões do dia, pegue a recompensa diária e convide amigos para ganhar moedas e trocar por símbolos, temas e efeitos na loja (🏅).' }
     ],
     caption: 'Jogou no canto de cima à direita? O adversário joga no tabuleiro do canto de cima à direita.',
-    ok: 'Entendi, bora jogar!'
+    ok: 'Entendi, bora jogar!',
+    rulesLink: '📖 Regras completas',
+    strategyLink: '🧠 Estratégias para vencer'
   },
 
   language: {
@@ -230,7 +304,7 @@ const pt = {
   },
 
   stats: {
-    title: 'Loja e conquistas',
+    title: 'Seu progresso',
     played: 'Partidas',
     wins: 'Vitórias',
     losses: 'Derrotas',

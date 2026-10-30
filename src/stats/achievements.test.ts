@@ -70,7 +70,7 @@ describe('recordFromGame', () => {
 
     const record = recordFromGame({ ...game, winner: 'o' }, 'o', 'online');
 
-    expect(record).toEqual({ mode: 'online', difficulty: undefined, result: 'win', boardsWon: 1, boardsLost: 1, moves: 2 });
+    expect(record).toEqual({ mode: 'online', difficulty: undefined, result: 'win', boardsWon: 1, boardsLost: 1, moves: 2, symbol: 'o' });
 
   });
 

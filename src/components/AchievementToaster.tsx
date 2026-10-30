@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { onAchievementsUnlocked } from '../stats/achievements';
 import { onCoinsEarned, takeRetroactiveBonus } from '../shop/wallet';
+import { onToast } from '../effects/toasts';
 import { playSound } from '../audio/sounds';
 import { t } from '../i18n';
 
@@ -15,7 +16,7 @@ interface Toast {
   sound: boolean;
 }
 
-/** Avisos de conquistas desbloqueadas e moedas ganhas, um de cada vez */
+/** Avisos de conquistas, missões, convites e moedas ganhas, um de cada vez */
 export default function AchievementToaster() {
 
   const [queue, setQueue] = useState<Toast[]>([]);
@@ -38,17 +39,22 @@ export default function AchievementToaster() {
       sound: true
     })));
 
-    const stopCoins = onCoinsEarned(amount => add({
+    const stopCoins = onCoinsEarned((amount, label) => add({
       id: `coins-${Date.now()}`,
       icon: '🪙',
-      label: t.coins.earned,
+      label: label ?? t.coins.earned,
       title: `+${amount}`,
       sound: false
     }));
 
+    // Missões concluídas, convites...
+    let count = 0;
+    const stopToasts = onToast(toast => add({ ...toast, id: `toast-${++count}`, sound: Boolean(toast.sound) }));
+
     return () => {
       stopAchievements();
       stopCoins();
+      stopToasts();
     };
 
   }, []);

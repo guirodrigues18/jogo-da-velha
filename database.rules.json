@@ -7,6 +7,16 @@
       }
     },
 
+    "referrals": {
+      "$owner": {
+        ".read": "auth != null && auth.uid === $owner",
+        "$friend": {
+          ".write": "auth != null && ((auth.uid === $friend && $friend !== $owner && !data.exists() && newData.exists()) || (auth.uid === $owner && !newData.exists()))",
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16"
+        }
+      }
+    },
+
     "rooms": {
       ".read": "auth != null && query.orderByChild == 'createdAt' && query.limitToFirst <= 20",
       ".indexOn": ["createdAt"],

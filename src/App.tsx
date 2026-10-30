@@ -3,8 +3,13 @@ import { isOnlineConfigured, ROOM_PARAM, roomIdFromUrl } from './online/config';
 import LocalGame from './components/LocalGame';
 import OnlineMessage from './components/OnlineMessage';
 import AchievementToaster from './components/AchievementToaster';
+import DailyDialog from './components/DailyDialog';
 import { t } from './i18n';
 import { getAccountInfo } from './online/accountInfo';
+import { acceptInviteFromUrl, REFERRAL_COINS, startReferralWatch } from './online/invite';
+import { shouldGreet } from './shop/dailyReward';
+import { loadStats } from './stats/achievements';
+import { showToast } from './effects/toasts';
 
 // O SDK do Firebase só é baixado por quem entra no modo online
 const OnlineGame = lazy(() => import('./components/OnlineGame'));
@@ -25,6 +30,9 @@ export default function App() {
 
   const [mode, setMode] = useState<Mode>(modeFromUrl);
 
+  // Quem volta ao jogo (fora de uma sala online) recebe a recompensa do dia e vê as missões
+  const [greeting, setGreeting] = useState(() => mode.kind === 'local' && shouldGreet(loadStats().played > 0));
+
   // Desistência da sala atual, registrada pela partida online enquanto ela está aberta
   const leaveRoomRef = useRef<(() => void) | null>(null);
 
@@ -34,6 +42,17 @@ export default function App() {
     if (!isOnlineConfigured || !getAccountInfo()) return;
 
     import('./online/account').then(account => account.resumeAccount()).catch(() => {});
+
+  }, []);
+
+  // Convites: quem chegou por um link de amigo e quem já convidou alguém
+  useEffect(() => {
+
+    if (acceptInviteFromUrl(loadStats().played === 0)) {
+      showToast({ icon: '🎁', label: t.invite.acceptedLabel, title: t.invite.accepted(REFERRAL_COINS), sound: true });
+    }
+
+    startReferralWatch();
 
   }, []);
 
@@ -79,6 +98,7 @@ export default function App() {
   return (
     <>
       {screen}
+      {greeting && <DailyDialog onClose={() => setGreeting(false)} />}
       <AchievementToaster />
     </>
   );

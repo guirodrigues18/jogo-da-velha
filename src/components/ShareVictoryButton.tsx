@@ -3,6 +3,7 @@ import type { MiniBoard, Player } from '../game/logic';
 import { renderVictoryImage } from '../share/renderVictoryImage';
 import { shareImage } from '../share/shareImage';
 import { unlockAchievement } from '../stats/achievements';
+import { trackMission } from '../stats/missions';
 import { t } from '../i18n';
 
 interface Props {
@@ -38,6 +39,7 @@ export default function ShareVictoryButton({ boards, winner, winnerName, onShare
 
     onShare();
     unlockAchievement('sharer');
+    trackMission({ kind: 'share' });
     shareImage(image, 'jogo-da-velha-vitoria.png');
 
   };

@@ -1132,7 +1132,8 @@ body::after {
   border-radius: 18px;
   background: linear-gradient(90deg, rgba(139, 92, 246, .95), rgba(0, 150, 200, .95));
   box-shadow: 0 10px 40px rgba(139, 92, 246, .45);
-  white-space: nowrap;
+  width: max-content;
+  max-width: calc(100vw - 24px);
   animation: toast 3.2s ease both;
 }
 
@@ -1333,6 +1334,7 @@ body::after {
   color: #ffd166;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .segmented.tabs {
@@ -1490,6 +1492,284 @@ body::after {
 .account-error {
   margin: 10px 0 0 !important;
   color: var(--red) !important;
+}
+
+/* ===========================
+   Recompensa diária, missões e convites
+   =========================== */
+
+.icon-button {
+  position: relative;
+}
+
+.icon-button .badge-dot {
+  top: 3px;
+  right: 3px;
+}
+
+.daily-panel {
+  display: grid;
+  gap: 14px;
+  margin: 14px 0;
+}
+
+.daily-section {
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .04);
+}
+
+.daily-section h3 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.daily-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.daily-section-header small,
+.daily-hint {
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+.daily-hint {
+  margin-top: 8px;
+  line-height: 1.45;
+}
+
+.daily-note {
+  margin-top: 10px;
+  color: #ffd166;
+  font-size: .85rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.reward-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 12px;
+  list-style: none;
+}
+
+.reward-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 7px 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .04);
+}
+
+.reward-day small {
+  color: var(--muted);
+  font-size: .62rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.reward-day strong {
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.reward-icon {
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.reward-day.taken {
+  border-color: rgba(0, 255, 179, .35);
+  background: rgba(0, 255, 179, .08);
+}
+
+.reward-day.taken .reward-icon {
+  color: var(--green);
+  font-weight: 800;
+}
+
+.reward-day.jackpot:not(.taken) {
+  border-color: rgba(255, 209, 102, .45);
+  background: rgba(255, 209, 102, .1);
+}
+
+.reward-day.today {
+  border-color: #ffd166;
+  background: rgba(255, 209, 102, .16);
+  box-shadow: 0 0 14px rgba(255, 209, 102, .35);
+  animation: pulse 1.6s ease infinite;
+}
+
+.missions {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.mission {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid var(--border);
+}
+
+.mission.done {
+  border-color: rgba(0, 255, 179, .35);
+  background: rgba(0, 255, 179, .07);
+}
+
+.mission-icon {
+  width: 28px;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.mission-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mission-body strong {
+  display: block;
+  font-size: .86rem;
+  line-height: 1.3;
+}
+
+.mission-bar {
+  display: block;
+  height: 6px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .08);
+}
+
+.mission-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8b5cf6, #00d9ff);
+  transition: width .4s ease;
+}
+
+.mission.done .mission-bar span {
+  background: var(--green);
+}
+
+.mission-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.mission-reward {
+  color: #ffd166;
+  font-size: .8rem;
+  font-weight: 800;
+}
+
+.mission.done .mission-reward {
+  color: var(--green);
+  font-size: 1rem;
+}
+
+.mission-side small {
+  color: var(--muted);
+  font-size: .72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.mission-swap {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .05);
+  font-size: .85rem;
+  cursor: pointer;
+}
+
+.mission-swap:hover {
+  border-color: rgba(255, 255, 255, .25);
+}
+
+.invite-card {
+  border-color: rgba(255, 79, 216, .3);
+  background: linear-gradient(135deg, rgba(255, 79, 216, .1), rgba(139, 92, 246, .08));
+}
+
+.invite-text {
+  margin-bottom: 12px;
+  color: #d6dbf5;
+  font-size: .86rem;
+  line-height: 1.5;
+}
+
+.btn-invite {
+  background: linear-gradient(90deg, #ff4fd8, #8b5cf6);
+}
+
+.btn-invite:disabled {
+  cursor: progress;
+}
+
+.invite-bonus {
+  margin-top: 12px;
+  color: #ffd166;
+  font-size: .8rem;
+  line-height: 1.45;
+}
+
+.help-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  margin-top: 14px;
+}
+
+.help-links a {
+  color: var(--muted);
+  font-size: .88rem;
+  font-weight: 600;
+}
+
+.help-links a:hover {
+  color: var(--text);
+}
+
+/* Links para as páginas de regras e estratégias (fora do React, para o Google achar) */
+.site-footer {
+  position: relative;
+  z-index: 1;
+  margin: 28px auto 4px;
+  color: var(--muted);
+  font-size: .8rem;
+  text-align: center;
+}
+
+.site-footer a {
+  color: var(--muted);
+}
+
+.site-footer a:hover {
+  color: var(--text);
 }
 
 /* ===========================

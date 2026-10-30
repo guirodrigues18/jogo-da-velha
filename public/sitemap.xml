@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://jogo-da-velha-2-one.vercel.app/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/"/>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://jogo-da-velha-2-one.vercel.app/en/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/"/>
@@ -18,10 +18,58 @@
   </url>
   <url>
     <loc>https://jogo-da-velha-2-one.vercel.app/es/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/"/>
+  </url>
+  <url>
+    <loc>https://jogo-da-velha-2-one.vercel.app/regras/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/regras/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/rules/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/reglas/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/regras/"/>
+  </url>
+  <url>
+    <loc>https://jogo-da-velha-2-one.vercel.app/en/rules/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/regras/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/rules/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/reglas/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/regras/"/>
+  </url>
+  <url>
+    <loc>https://jogo-da-velha-2-one.vercel.app/es/reglas/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/regras/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/rules/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/reglas/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/regras/"/>
+  </url>
+  <url>
+    <loc>https://jogo-da-velha-2-one.vercel.app/estrategias/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/estrategias/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/strategy/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/estrategias/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/estrategias/"/>
+  </url>
+  <url>
+    <loc>https://jogo-da-velha-2-one.vercel.app/en/strategy/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/estrategias/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/strategy/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/estrategias/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/estrategias/"/>
+  </url>
+  <url>
+    <loc>https://jogo-da-velha-2-one.vercel.app/es/estrategias/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/estrategias/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/strategy/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/estrategias/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/estrategias/"/>
   </url>
 </urlset>

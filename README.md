@@ -28,6 +28,16 @@ rendem 🪙, trocadas na loja (botão 🏅) por símbolos (o adversário online 
 e efeitos de vitória. Tudo fica no navegador; com **login com Google** (opcional), o progresso é salvo
 na nuvem (`users/{uid}`) e acompanha a pessoa em qualquer aparelho.
 
+**Para voltar todo dia e chamar amigos** (botão 🏅, aba Missões):
+
+- **Recompensa diária:** dias seguidos rendem 10, 15, 20, 25, 30, 40 e 80 🪙 (depois recomeça);
+  pular um dia volta ao dia 1. Quem já jogou antes vê a recompensa sozinha ao abrir o jogo.
+- **Missões diárias:** três por dia (fácil, média e difícil, de uma lista de 20), sorteadas pela data e iguais
+  para todo mundo. Dá para trocar uma por dia; completar as três rende um bônus.
+- **Convide e ganhe:** quando um amigo chega pelo seu link (`?amigo=id`) ou pela sua sala online e termina
+  a primeira partida, os dois ganham 50 🪙. O amigo grava um aviso em `referrals/{quem convidou}` e quem
+  convidou recebe as moedas ao ver o aviso (e o apaga).
+
 Disponível em **português** (`/`), **inglês** (`/en/`) e **espanhol** (`/es/`).
 
 ## Idiomas e SEO
@@ -39,8 +49,11 @@ Disponível em **português** (`/`), **inglês** (`/en/`) e **espanhol** (`/es/`
   então o TypeScript acusa qualquer texto faltando).
 - A escolha de idioma fica salva no navegador; quem volta é levado direto à página escolhida
   (o idioma do navegador nunca é usado sozinho, para o Google sempre ver cada página no idioma dela).
-- `public/robots.txt` e `public/sitemap.xml` apontam as três páginas. Ao mudar de domínio,
-  atualize o endereço nesses arquivos e nos três HTML.
+- Páginas de conteúdo, só HTML e CSS (`src/pages/content.css`), para quem pesquisa no Google:
+  regras (`/regras/`, `/en/rules/`, `/es/reglas/`) e estratégias (`/estrategias/`, `/en/strategy/`,
+  `/es/estrategias/`). As páginas do jogo têm links para elas no rodapé.
+- `public/robots.txt` e `public/sitemap.xml` apontam todas as páginas. Ao mudar de domínio,
+  atualize o endereço nesses arquivos e nos HTML.
 
 Feito com React, TypeScript e Vite. Modo online com Firebase Realtime Database.
 
@@ -97,12 +110,15 @@ src/
 ├── shop/
 │   ├── catalog.ts           # Itens da loja
 │   ├── wallet.ts            # Moedas, itens comprados e em uso (+ moedas retroativas)
-│   └── rewards.ts           # Quantas moedas cada partida rende
+│   ├── rewards.ts           # Quantas moedas cada partida rende
+│   └── dailyReward.ts       # Recompensa diária (dias seguidos)
 ├── stats/
 │   ├── achievements.ts      # Estatísticas e conquistas (localStorage)
+│   ├── missions.ts          # Missões diárias
 │   └── progress.ts          # Junta o progresso do aparelho com o da nuvem
 ├── effects/
-│   └── confetti.ts          # Confete da vitória (carregado sob demanda)
+│   ├── confetti.ts          # Confete da vitória (carregado sob demanda)
+│   └── toasts.ts            # Avisos no topo da tela (missões, convites)
 ├── hooks/
 │   ├── useLocalGame.ts      # Partida no mesmo aparelho (2 jogadores ou computador)
 │   ├── useOnlineGame.ts     # Partida online: sala, sincronização e presença
@@ -113,6 +129,8 @@ src/
 │   ├── firebase.ts          # Inicialização e login anônimo
 │   ├── account.ts           # Login com Google e sincronização do progresso
 │   ├── accountInfo.ts       # Nome e foto da conta (sem precisar do Firebase)
+│   ├── invite.ts            # Convide e ganhe (sem Firebase; carrega referrals.ts quando precisa)
+│   ├── referrals.ts         # Avisos de convite no banco
 │   ├── nickname.ts          # Apelido provisório (lembrado no navegador)
 │   ├── rooms.ts             # Criar, entrar e sincronizar salas
 │   └── serialization.ts     # Estado do jogo ⇄ formato do banco
@@ -124,7 +142,9 @@ src/
 │   ├── LocalGame.tsx        # 2 jogadores e contra o computador
 │   ├── ModeSwitch.tsx       # Escolha do modo, do nível, do desafio diário e do símbolo
 │   ├── SymbolPicker.tsx     # "Você joga com ✕ ◯"
-│   ├── StatsDialog.tsx      # Loja e conquistas (botão 🏅)
+│   ├── StatsDialog.tsx      # Missões, loja e conquistas (botão 🏅)
+│   ├── DailyPanel.tsx       # Recompensa diária, missões e convite
+│   ├── DailyDialog.tsx      # Boas-vindas do dia (abre sozinha para quem volta)
 │   ├── ShopPanel.tsx        # Loja
 │   ├── AccountBox.tsx       # Entrar com Google
 │   ├── Scoreboard.tsx       # Placar da série
@@ -149,9 +169,12 @@ src/
 │   ├── shareImage.ts          # Compartilhar imagem (menu nativo ou download)
 │   └── shareLink.ts           # Compartilhar link (menu nativo ou copiar)
 ├── i18n/                    # Textos em pt, en e es
+├── pages/
+│   └── content.css          # Estilo das páginas de regras e estratégias
 ├── App.tsx                  # Alterna entre modo local e online (?sala=código)
 ├── main.tsx
 └── style.css
+regras/, estrategias/        # Páginas de conteúdo (e en/rules/, en/strategy/, es/reglas/, es/estrategias/)
 database.rules.json          # Regras de segurança do Realtime Database
 public/                      # Arquivos servidos como estão (ícone, imagem de compartilhamento)
 ```

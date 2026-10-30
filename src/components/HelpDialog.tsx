@@ -23,6 +23,11 @@ export default function HelpDialog({ onClose }: Props) {
 
       <button className="btn" onClick={onClose}>{t.help.ok}</button>
 
+      <nav className="help-links">
+        <a href={t.pages.rules}>{t.help.rulesLink}</a>
+        <a href={t.pages.strategy}>{t.help.strategyLink}</a>
+      </nav>
+
     </Dialog>
   );
 

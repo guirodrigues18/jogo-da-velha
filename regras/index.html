@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Regras do Jogo da Velha 2.0 (Super Jogo da Velha) – Como Jogar</title>
+  <meta name="description" content="Aprenda as regras do Jogo da Velha 2.0, o super jogo da velha com 9 tabuleiros: objetivo, a regra de ouro, tabuleiros fechados, empates e tempo por jogada. Com exemplos.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#060816">
+
+  <link rel="canonical" href="https://jogo-da-velha-2-one.vercel.app/regras/">
+  <link rel="alternate" hreflang="pt-BR" href="https://jogo-da-velha-2-one.vercel.app/regras/">
+  <link rel="alternate" hreflang="en" href="https://jogo-da-velha-2-one.vercel.app/en/rules/">
+  <link rel="alternate" hreflang="es" href="https://jogo-da-velha-2-one.vercel.app/es/reglas/">
+  <link rel="alternate" hreflang="x-default" href="https://jogo-da-velha-2-one.vercel.app/regras/">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Jogo da Velha 2.0">
+  <meta property="og:title" content="Regras do Jogo da Velha 2.0 (Super Jogo da Velha)">
+  <meta property="og:description" content="O jogo da velha com 9 tabuleiros explicado em 2 minutos, com exemplos.">
+  <meta property="og:url" content="https://jogo-da-velha-2-one.vercel.app/regras/">
+  <meta property="og:image" content="https://jogo-da-velha-2-one.vercel.app/og-image.jpg">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Regras do Jogo da Velha 2.0 (Super Jogo da Velha)",
+      "description": "Objetivo, a regra de ouro, tabuleiros fechados, empates e tempo por jogada no jogo da velha com 9 tabuleiros.",
+      "inLanguage": "pt-BR",
+      "image": "https://jogo-da-velha-2-one.vercel.app/og-image.jpg",
+      "author": { "@type": "Organization", "name": "TchêTec" },
+      "mainEntityOfPage": "https://jogo-da-velha-2-one.vercel.app/regras/"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Quem começa no Jogo da Velha 2.0?", "acceptedAnswer": { "@type": "Answer", "text": "O ✕ sempre começa, e a primeira jogada pode ser em qualquer casa de qualquer tabuleiro." } },
+        { "@type": "Question", "name": "O que acontece se eu for mandado para um tabuleiro fechado?", "acceptedAnswer": { "@type": "Answer", "text": "Se o tabuleiro de destino já foi conquistado ou empatou, você pode jogar em qualquer tabuleiro que ainda esteja aberto." } },
+        { "@type": "Question", "name": "Um mini-tabuleiro empatado conta para alguém?", "acceptedAnswer": { "@type": "Answer", "text": "Não. Ele fica fechado e não conta para nenhum dos jogadores na hora de formar a linha no tabuleiro grande." } },
+        { "@type": "Question", "name": "Precisa de cadastro para jogar?", "acceptedAnswer": { "@type": "Answer", "text": "Não. O jogo é grátis e funciona no navegador, sem cadastro, contra a IA, com um amigo no mesmo aparelho ou online por link." } }
+      ]
+    }
+  ]
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/pages/content.css">
+</head>
+
+<body>
+
+  <div class="page">
+
+    <header class="page-nav">
+      <a class="brand" href="/">Jogo da Velha <span>2.0</span></a>
+      <nav>
+        <a href="/regras/" aria-current="page">Regras</a>
+        <a href="/estrategias/">Estratégias</a>
+        <a href="/">Jogar</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <h1>Regras do Jogo da Velha 2.0</h1>
+
+      <p class="lead">
+        O <strong>Jogo da Velha 2.0</strong>, também chamado de <strong>Super Jogo da Velha</strong> ou
+        <em>Ultimate Tic-Tac-Toe</em>, é o jogo da velha com <strong>9 tabuleiros dentro de um tabuleiro maior</strong>.
+        As regras cabem em dois minutos, mas cada jogada vira uma decisão de estratégia.
+      </p>
+
+      <a class="cta" href="/">▶ Jogar agora, grátis</a>
+
+      <h2>O tabuleiro</h2>
+      <p>
+        O tabuleiro grande tem 3 × 3 casas, e cada casa é um <strong>mini-tabuleiro</strong> de jogo da velha comum.
+        São 81 casas no total. Um jogador usa ✕, o outro usa ◯, e o <strong>✕ sempre começa</strong>.
+      </p>
+
+      <h2>Objetivo</h2>
+      <p>
+        Conquiste <strong>3 mini-tabuleiros em linha</strong> no tabuleiro grande: na horizontal, na vertical ou na diagonal.
+        É o jogo da velha de sempre, só que cada "casa" grande precisa ser vencida antes.
+      </p>
+
+      <h2>Como conquistar um mini-tabuleiro</h2>
+      <p>
+        Faça 3 em linha dentro dele, exatamente como no jogo da velha comum. O mini-tabuleiro passa a ser seu e fica
+        <strong>fechado</strong>: ninguém joga mais nele.
+      </p>
+
+      <h2>A regra de ouro: sua jogada escolhe o tabuleiro do adversário</h2>
+      <p>
+        A <strong>casa</strong> em que você joga dentro de um mini-tabuleiro decide em <strong>qual mini-tabuleiro</strong>
+        o adversário vai jogar em seguida. Jogou na casa do canto de cima à direita? O adversário é obrigado a jogar no
+        mini-tabuleiro do canto de cima à direita.
+      </p>
+
+      <div class="card">
+        <div class="rule-example" aria-hidden="true">
+          <div class="grid">
+            <span></span><span></span><span class="played">✕</span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+          <span class="arrow">→</span>
+          <div class="grid big">
+            <span></span><span></span><span class="target"></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <p class="caption">✕ jogou no canto de cima à direita de um mini-tabuleiro → ◯ joga no mini-tabuleiro do canto de cima à direita.</p>
+      </div>
+
+      <p>
+        É isso que torna o jogo tão interessante: toda jogada é, ao mesmo tempo, um ataque no seu tabuleiro e uma
+        escolha de onde o adversário vai jogar.
+      </p>
+
+      <h2>E se o tabuleiro de destino estiver fechado?</h2>
+      <p>
+        Se a jogada mandar o adversário para um mini-tabuleiro que já foi <strong>conquistado ou empatou</strong>,
+        ele ganha uma <strong>jogada livre</strong>: pode jogar em qualquer mini-tabuleiro que ainda esteja aberto.
+        A primeira jogada da partida também é livre.
+      </p>
+
+      <h2>Empates</h2>
+      <ul>
+        <li>Um mini-tabuleiro cheio sem 3 em linha fica <strong>empatado</strong> e não conta para ninguém.</li>
+        <li>Se todos os mini-tabuleiros fecharem sem ninguém formar a linha grande, a <strong>partida empata</strong>.</li>
+      </ul>
+
+      <h2>Tempo por jogada</h2>
+      <p>
+        Cada jogador tem <strong>20 segundos</strong> por jogada. Se o tempo acabar, a vez passa para o adversário,
+        que joga no mesmo tabuleiro em que você deveria ter jogado. Nos últimos 5 segundos o relógio avisa.
+      </p>
+
+      <h2>Modos de jogo</h2>
+      <ul>
+        <li><strong>2 jogadores</strong> no mesmo celular ou computador.</li>
+        <li><strong>Contra a IA</strong>, em três níveis: Fácil, Médio e Difícil. Você escolhe jogar com ✕ ou ◯.</li>
+        <li><strong>Desafio diário</strong>: uma posição nova por dia, igual para todo mundo.</li>
+        <li><strong>Online</strong>: crie uma sala e mande o link para um amigo. Outras pessoas podem assistir.</li>
+      </ul>
+      <p>
+        Vitórias, missões diárias e convites rendem moedas para trocar por símbolos, temas e efeitos na loja.
+      </p>
+
+      <h2>Perguntas frequentes</h2>
+      <dl class="faq">
+        <dt>Quem começa?</dt>
+        <dd>O ✕ sempre começa, e a primeira jogada pode ser em qualquer casa de qualquer tabuleiro.</dd>
+        <dt>Posso jogar num mini-tabuleiro que já foi conquistado?</dt>
+        <dd>Não. Tabuleiros conquistados ou empatados ficam fechados até o fim da partida.</dd>
+        <dt>Um mini-tabuleiro empatado conta para alguém?</dt>
+        <dd>Não. Ele não conta para nenhum dos jogadores na hora de formar a linha no tabuleiro grande.</dd>
+        <dt>Precisa de cadastro?</dt>
+        <dd>Não. É grátis e funciona direto no navegador, no celular ou no computador.</dd>
+      </dl>
+
+      <p>Já entendeu as regras? Veja as <a href="/estrategias/">estratégias para vencer</a> ou vá direto para o jogo.</p>
+
+      <a class="cta" href="/">▶ Jogar Jogo da Velha 2.0</a>
+
+    </main>
+
+    <footer class="page-footer">
+      <p><a href="/">Jogar</a> · <a href="/regras/">Regras</a> · <a href="/estrategias/">Estratégias</a></p>
+      <p><a href="/en/rules/" hreflang="en">English</a> · <a href="/es/reglas/" hreflang="es">Español</a></p>
+    </footer>
+
+  </div>
+
+</body>
+
+</html>

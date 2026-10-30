@@ -3,6 +3,7 @@ import { ACHIEVEMENTS, loadStats } from '../stats/achievements';
 import { useProfile } from '../shop/wallet';
 import { t } from '../i18n';
 import Dialog from './Dialog';
+import DailyPanel from './DailyPanel';
 import ShopPanel from './ShopPanel';
 import AccountBox from './AccountBox';
 
@@ -10,12 +11,14 @@ interface Props {
   onClose: () => void;
 }
 
-type Tab = 'shop' | 'achievements';
+type Tab = 'missions' | 'shop' | 'achievements';
 
-/** Loja e conquistas (botão 🏅), com o saldo de moedas e o login */
+const TABS: Tab[] = ['missions', 'shop', 'achievements'];
+
+/** Missões, loja e conquistas (botão 🏅), com o saldo de moedas e o login */
 export default function StatsDialog({ onClose }: Props) {
 
-  const [tab, setTab] = useState<Tab>('shop');
+  const [tab, setTab] = useState<Tab>('missions');
   const profile = useProfile();
 
   return (
@@ -24,14 +27,16 @@ export default function StatsDialog({ onClose }: Props) {
       <AccountBox />
 
       <div className="segmented tabs" role="tablist">
-        {(['shop', 'achievements'] as Tab[]).map(id => (
+        {TABS.map(id => (
           <button key={id} role="tab" aria-selected={tab === id} className={tab === id ? 'active' : ''} onClick={() => setTab(id)}>
             {t.shop.tabs[id]}
           </button>
         ))}
       </div>
 
-      {tab === 'shop' ? <ShopPanel /> : <AchievementsPanel />}
+      {tab === 'missions' && <DailyPanel />}
+      {tab === 'shop' && <ShopPanel />}
+      {tab === 'achievements' && <AchievementsPanel />}
 
     </Dialog>
   );

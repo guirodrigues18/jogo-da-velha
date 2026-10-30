@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 interface Props {
   title: string;
@@ -23,7 +24,8 @@ export default function Dialog({ title, onClose, headerExtra, children }: Props)
 
   }, [onClose]);
 
-  return (
+  // Direto no <body>: fica por cima de tudo, inclusive do rodapé fora do app
+  return createPortal(
     <div className="dialog-backdrop" onClick={onClose}>
       <div className="dialog" role="dialog" aria-modal="true" aria-label={title} onClick={event => event.stopPropagation()}>
         <div className="dialog-header">
@@ -33,7 +35,8 @@ export default function Dialog({ title, onClose, headerExtra, children }: Props)
         </div>
         <div className="dialog-body">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 
 }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Player } from '../game/logic';
 import { copyText, shareLink } from '../share/shareLink';
 import { ROOM_PARAM } from '../online/config';
+import { REFERRAL_COINS } from '../online/invite';
 import { t } from '../i18n';
 
 interface Props {
@@ -72,6 +73,7 @@ export default function OnlinePanel({
         <button className="btn btn-ghost" onClick={copy}>
           {copied ? t.online.copied : t.online.copyLink}
         </button>
+        <p className="invite-bonus">{t.invite.roomHint(REFERRAL_COINS)}</p>
         <button className="link-button" onClick={onLeave}>{t.online.leaveRoom}</button>
       </div>
     );
