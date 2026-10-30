@@ -43,7 +43,7 @@ const es: Messages = {
   },
 
   actions: {
-    achievements: 'Misiones, tienda y logros',
+    achievements: 'Perfil y logros',
     help: 'Cómo jugar',
     language: 'Idioma',
     soundOn: 'Activar sonido y vibración',
@@ -63,7 +63,13 @@ const es: Messages = {
     ai: { title: 'Contra la IA', text: 'Fácil, medio o difícil' },
     daily: { title: n => `Desafío diario #${n}`, text: 'La misma posición para todos' },
     online: { title: 'En línea', text: 'Reta a un amigo con un enlace' },
-    wins: n => `🏆 ${n} ${n === 1 ? 'victoria' : 'victorias'}`,
+    missions: {
+      title: 'Misiones de hoy',
+      progress: (done, total) => `${done} de ${total} completadas`,
+      reward: '🎁 ¡Recompensa del día disponible!',
+      dialogTitle: '🎯 Misiones y recompensas'
+    },
+    shop: { title: 'Tienda', text: 'Símbolos, temas y efectos' },
     ready: '¿Listo?',
     readyHint: 'El cronómetro solo empieza cuando tocas Empezar.',
     start: '▶ Empezar'
@@ -90,7 +96,7 @@ const es: Messages = {
   },
 
   shop: {
-    tabs: { missions: '🎯 Misiones', shop: '🛒 Tienda', achievements: '🏅 Logros', rivals: '⚔️ Rivales' },
+    title: '🛒 Tienda',
     types: { symbol: 'Símbolos', theme: 'Temas', team: '⚽ Equipos', effect: 'Efectos de victoria' },
     hints: {
       symbol: 'Aparecen en lugar de tu X/O. En línea, tu rival también los ve.',
@@ -349,7 +355,7 @@ const es: Messages = {
       { icon: '🔓', strong: '¿Tablero cerrado?', text: 'Si el tablero de destino ya está decidido, tu rival puede jugar en cualquiera abierto.' },
       { icon: '⏱', strong: '20 segundos', text: 'por jugada. Si se acaba el tiempo, el turno pasa a tu rival.' },
       { icon: '🌐', strong: 'En línea:', text: 'crea una sala, elige ✕ o ◯ y envía el enlace. Quien lo abra juega con el otro símbolo; si la sala ya tiene dos jugadores, mira la partida. Salir a mitad de partida cuenta como rendirse.' },
-      { icon: '🪙', strong: 'Monedas:', text: 'gana partidas, completa las misiones del día, recoge la recompensa diaria e invita a amigos para conseguir monedas y cambiarlas por símbolos, temas y efectos en la tienda (🏅).' }
+      { icon: '🪙', strong: 'Monedas:', text: 'gana partidas, completa las misiones del día, recoge la recompensa diaria e invita a amigos para conseguir monedas y cambiarlas por símbolos, temas y efectos en la tienda (🛒, en la pantalla de inicio).' }
     ],
     caption: '¿Jugaste en la esquina superior derecha? Tu rival juega en el tablero de la esquina superior derecha.',
     ok: '¡Entendido, a jugar!',
@@ -363,6 +369,7 @@ const es: Messages = {
 
   stats: {
     title: 'Tu progreso',
+    tabs: { achievements: '🏅 Logros', rivals: '⚔️ Rivales' },
     played: 'Partidas',
     wins: 'Victorias',
     losses: 'Derrotas',

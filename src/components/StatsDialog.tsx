@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { ACHIEVEMENTS, loadStats } from '../stats/achievements';
-import { useProfile } from '../shop/wallet';
 import { t } from '../i18n';
 import Dialog from './Dialog';
-import DailyPanel from './DailyPanel';
-import ShopPanel from './ShopPanel';
 import RivalsPanel from './RivalsPanel';
 import AccountBox from './AccountBox';
 
@@ -12,31 +9,28 @@ interface Props {
   onClose: () => void;
 }
 
-type Tab = 'missions' | 'shop' | 'achievements' | 'rivals';
+type Tab = 'achievements' | 'rivals';
 
-const TABS: Tab[] = ['missions', 'shop', 'achievements', 'rivals'];
+const TABS: Tab[] = ['achievements', 'rivals'];
 
-/** Missões, loja, conquistas e rivais (botão 🏅), com o saldo de moedas e o login */
+/** Perfil (botão 🏅): conta, números, conquistas e rivais. Loja e missões ficam no início */
 export default function StatsDialog({ onClose }: Props) {
 
-  const [tab, setTab] = useState<Tab>('missions');
-  const profile = useProfile();
+  const [tab, setTab] = useState<Tab>('achievements');
 
   return (
-    <Dialog title={t.stats.title} onClose={onClose} headerExtra={<span className="coin-balance">🪙 {profile.coins}</span>}>
+    <Dialog title={t.stats.title} onClose={onClose}>
 
       <AccountBox />
 
       <div className="segmented tabs" role="tablist">
         {TABS.map(id => (
           <button key={id} role="tab" aria-selected={tab === id} className={tab === id ? 'active' : ''} onClick={() => setTab(id)}>
-            {t.shop.tabs[id]}
+            {t.stats.tabs[id]}
           </button>
         ))}
       </div>
 
-      {tab === 'missions' && <DailyPanel />}
-      {tab === 'shop' && <ShopPanel />}
       {tab === 'achievements' && <AchievementsPanel />}
       {tab === 'rivals' && <RivalsPanel onChallenge={onClose} />}
 

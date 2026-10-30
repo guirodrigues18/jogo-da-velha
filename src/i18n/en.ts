@@ -43,7 +43,7 @@ const en: Messages = {
   },
 
   actions: {
-    achievements: 'Missions, shop and achievements',
+    achievements: 'Profile and achievements',
     help: 'How to play',
     language: 'Language',
     soundOn: 'Turn on sound and vibration',
@@ -63,7 +63,13 @@ const en: Messages = {
     ai: { title: 'Versus AI', text: 'Easy, medium or hard' },
     daily: { title: n => `Daily challenge #${n}`, text: 'The same position for everyone' },
     online: { title: 'Online', text: 'Challenge a friend with a link' },
-    wins: n => `🏆 ${n} ${n === 1 ? 'win' : 'wins'}`,
+    missions: {
+      title: "Today's missions",
+      progress: (done, total) => `${done} of ${total} done`,
+      reward: "🎁 Today's reward is ready!",
+      dialogTitle: '🎯 Missions and rewards'
+    },
+    shop: { title: 'Shop', text: 'Symbols, themes and effects' },
     ready: 'Ready?',
     readyHint: 'The timer only starts when you tap Start.',
     start: '▶ Start'
@@ -90,7 +96,7 @@ const en: Messages = {
   },
 
   shop: {
-    tabs: { missions: '🎯 Missions', shop: '🛒 Shop', achievements: '🏅 Achievements', rivals: '⚔️ Rivals' },
+    title: '🛒 Shop',
     types: { symbol: 'Symbols', theme: 'Themes', team: '⚽ Teams', effect: 'Victory effects' },
     hints: {
       symbol: 'Shown instead of your X/O. Online, your opponent sees it too.',
@@ -349,7 +355,7 @@ const en: Messages = {
       { icon: '🔓', strong: 'Board closed?', text: 'If the target board is already decided, your opponent can play in any open board.' },
       { icon: '⏱', strong: '20 seconds', text: "per move. If time runs out, it's your opponent's turn." },
       { icon: '🌐', strong: 'Online:', text: 'create a room, pick ✕ or ◯ and send the link. Whoever opens it plays the other symbol; if the room already has two players, they watch. Leaving mid-match counts as giving up.' },
-      { icon: '🪙', strong: 'Coins:', text: "win games, complete today's missions, claim the daily reward and invite friends to earn coins and trade them for symbols, themes and effects in the shop (🏅)." }
+      { icon: '🪙', strong: 'Coins:', text: "win games, complete today's missions, claim the daily reward and invite friends to earn coins and trade them for symbols, themes and effects in the shop (🛒, on the home screen)." }
     ],
     caption: 'Played in the top-right corner? Your opponent plays in the top-right board.',
     ok: "Got it, let's play!",
@@ -363,6 +369,7 @@ const en: Messages = {
 
   stats: {
     title: 'Your progress',
+    tabs: { achievements: '🏅 Achievements', rivals: '⚔️ Rivals' },
     played: 'Games',
     wins: 'Wins',
     losses: 'Losses',

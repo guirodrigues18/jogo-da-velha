@@ -8,7 +8,10 @@
   box-sizing: border-box;
 }
 
-:root {
+/* [data-theme]: as prévias da loja recomeçam do padrão e recebem só o próprio tema,
+   sem herdar o tema em uso na página */
+:root,
+[data-theme] {
   --bg: #060816;
   --card: rgba(18, 24, 52, .72);
   --border: rgba(255, 255, 255, .08);
@@ -1522,58 +1525,50 @@ body::after {
   max-width: 520px;
 }
 
-/* Mini tabuleiro decorativo, nas cores do tema */
-.hero-board {
+/* Mini tabuleiro nas cores de um tema (início e loja). Tudo em em: o tamanho vem do font-size */
+.board-preview {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-  width: 96px;
-  margin-bottom: 20px;
-  padding: 6px;
-  border-radius: 18px;
+  gap: .3em;
+  padding: .36em;
+  border-radius: 1.1em;
   background: var(--board-bg);
   border: 2px solid var(--frame);
-  box-shadow: 0 0 34px var(--frame-glow);
-  transform: rotate(-6deg);
+  box-shadow: 0 0 2em var(--frame-glow);
+  font-size: 16px;
 }
 
-.hero-board span {
+.board-preview span {
   display: flex;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  border-radius: 7px;
+  border-radius: .45em;
   background: var(--cell-bg);
-  font-size: .9rem;
+  box-shadow: var(--cell-shadow);
+  font-size: .9em;
   font-weight: 800;
+  line-height: 1;
 }
 
-.hero-board .x {
+.board-preview .x {
+  background: var(--x-cell-bg);
+  box-shadow: var(--filled-shadow);
   color: var(--x-mark);
   text-shadow: 0 0 8px var(--x-glow);
 }
 
-.hero-board .o {
+.board-preview .o {
+  background: var(--o-cell-bg);
+  box-shadow: var(--filled-shadow);
   color: var(--o-mark);
   text-shadow: 0 0 8px var(--o-glow);
 }
 
-.home-stats {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.home-stat {
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  font-size: .85rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
+.hero-board {
+  width: 96px;
+  margin-bottom: 20px;
+  transform: rotate(-6deg);
 }
 
 .mode-grid {
@@ -1600,23 +1595,27 @@ body::after {
   transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
 
-.mode-card:hover {
+.mode-card:hover,
+.extra-card:hover {
   transform: translateY(-3px);
   border-color: var(--frame);
   box-shadow: 0 10px 30px var(--frame-glow);
 }
 
-.mode-card:active {
+.mode-card:active,
+.extra-card:active {
   transform: scale(.97);
 }
 
-.mode-card:focus-visible {
+.mode-card:focus-visible,
+.extra-card:focus-visible {
   outline: 2px solid var(--frame);
   outline-offset: 2px;
 }
 
-/* Desafio de hoje ainda não vencido */
-.mode-card.pending {
+/* Desafio de hoje ainda não vencido, recompensa do dia ainda não pega */
+.mode-card.pending,
+.extra-card.pending {
   border-color: rgba(255, 184, 77, .4);
 }
 
@@ -1645,6 +1644,77 @@ body::after {
   color: var(--muted);
   font-size: .85rem;
   line-height: 1.4;
+}
+
+/* Missões e loja, abaixo dos modos */
+.home-extras {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.extra-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.extra-card .badge-dot {
+  top: 10px;
+  right: 10px;
+}
+
+.extra-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.extra-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.extra-body strong {
+  font-size: .95rem;
+  font-weight: 800;
+}
+
+.extra-body small {
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.35;
+}
+
+.extra-card.pending small {
+  color: #ffd166;
+  font-weight: 700;
+}
+
+.extra-coins {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 209, 102, .12);
+  color: #ffd166;
+  font-size: .85rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 /* ===========================
@@ -1830,6 +1900,10 @@ body::after {
   background: linear-gradient(180deg, #111936, #0a1024);
   border: 1px solid rgba(255, 255, 255, .08);
   animation: dialog-in .3s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+
+.dialog.wide {
+  max-width: 720px;
 }
 
 .dialog-header {
@@ -2302,11 +2376,10 @@ body::after {
   line-height: 1.2;
 }
 
-.shop-swatch {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  box-shadow: 0 0 14px currentColor;
+/* Prévia do tema: um mini tabuleiro com as cores dele */
+.shop-theme {
+  width: 64px;
+  font-size: 10px;
 }
 
 .shop-name {
@@ -3046,10 +3119,13 @@ body::after {
   .hero-board {
     width: 80px;
     margin-bottom: 16px;
+    font-size: 13px;
   }
 
-  .hero-board span {
-    font-size: .75rem;
+  .home-extras {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 10px;
   }
 
   .mode-grid {

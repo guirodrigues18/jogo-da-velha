@@ -6,11 +6,13 @@ interface Props {
   onClose: () => void;
   /** Ao lado do título (ex.: saldo de moedas) */
   headerExtra?: ReactNode;
+  /** Mais larga, para conteúdos em grade (loja) */
+  wide?: boolean;
   children: ReactNode;
 }
 
 /** Janela sobre o jogo (fecha no ✕, no Esc ou tocando fora) */
-export default function Dialog({ title, onClose, headerExtra, children }: Props) {
+export default function Dialog({ title, onClose, headerExtra, wide = false, children }: Props) {
 
   useEffect(() => {
 
@@ -27,7 +29,7 @@ export default function Dialog({ title, onClose, headerExtra, children }: Props)
   // Direto no <body>: fica por cima de tudo, inclusive do rodapé fora do app
   return createPortal(
     <div className="dialog-backdrop" onClick={onClose}>
-      <div className="dialog" role="dialog" aria-modal="true" aria-label={title} onClick={event => event.stopPropagation()}>
+      <div className={wide ? 'dialog wide' : 'dialog'} role="dialog" aria-modal="true" aria-label={title} onClick={event => event.stopPropagation()}>
         <div className="dialog-header">
           <h2>{title}</h2>
           {headerExtra}

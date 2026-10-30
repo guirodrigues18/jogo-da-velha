@@ -1,11 +1,15 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { dailyChallenge, loadDailyProgress, loadDailyStreak } from '../game/daily';
 import type { LocalMode } from '../game/preferences';
 import { useProfile } from '../shop/wallet';
-import { loadStats } from '../stats/achievements';
+import { useDailyReward } from '../shop/dailyReward';
+import { isDone, useMissions } from '../stats/missions';
 import { t } from '../i18n';
 import Logo from './Logo';
 import TopActions from './TopActions';
+import BoardPreview from './BoardPreview';
+import DailyDialog from './DailyDialog';
+import ShopDialog from './ShopDialog';
 
 interface Props {
   onPlay: (mode: LocalMode) => void;
@@ -13,16 +17,16 @@ interface Props {
   onPlayOnline?: () => void;
 }
 
-/** Mini tabuleiro decorativo acima do logo */
-const HERO_CELLS = ['x', 'o', '', '', 'x', 'o', 'o', '', 'x'];
-
-const MARKS: Record<string, string> = { x: '✕', o: '◯' };
-
-/** Tela de início: escolha do modo de jogo */
+/** Tela de início: escolha do modo de jogo, missões do dia e loja */
 export default function HomeScreen({ onPlay, onPlayOnline }: Props) {
 
+  const [dialog, setDialog] = useState<'missions' | 'shop' | null>(null);
+  const close = () => setDialog(null);
+
   const profile = useProfile();
-  const stats = useMemo(loadStats, []);
+  const reward = useDailyReward();
+  const missions = useMissions();
+  const missionsDone = missions.ids.filter(id => isDone(missions, id)).length;
 
   const challenge = useMemo(() => dailyChallenge(), []);
   const dailyWon = loadDailyProgress(challenge.number).won;
@@ -41,20 +45,9 @@ export default function HomeScreen({ onPlay, onPlayOnline }: Props) {
       </div>
 
       <header className="home-hero">
-        <div className="hero-board" aria-hidden="true">
-          {HERO_CELLS.map((mark, i) => (
-            <span key={i} className={mark}>{MARKS[mark]}</span>
-          ))}
-        </div>
-
+        <BoardPreview className="hero-board" />
         <Logo hero />
-
         <p className="subtitle">{t.subtitle}</p>
-
-        <div className="home-stats">
-          <span className="home-stat">🪙 {profile.coins}</span>
-          {stats.wins > 0 && <span className="home-stat">{t.home.wins(stats.wins)}</span>}
-        </div>
       </header>
 
       <nav className="mode-grid" aria-label={t.home.label}>
@@ -71,6 +64,29 @@ export default function HomeScreen({ onPlay, onPlayOnline }: Props) {
           <ModeCard icon="🌐" title={t.home.online.title} text={t.home.online.text} onClick={onPlayOnline} />
         )}
       </nav>
+
+      <div className="home-extras">
+        <button className={reward.claimed ? 'extra-card' : 'extra-card pending'} onClick={() => setDialog('missions')}>
+          <span className="extra-icon" aria-hidden="true">🎯</span>
+          <span className="extra-body">
+            <strong>{t.home.missions.title}</strong>
+            <small>{reward.claimed ? t.home.missions.progress(missionsDone, missions.ids.length) : t.home.missions.reward}</small>
+          </span>
+          {!reward.claimed && <span className="badge-dot" aria-hidden="true" />}
+        </button>
+
+        <button className="extra-card" onClick={() => setDialog('shop')}>
+          <span className="extra-icon" aria-hidden="true">🛒</span>
+          <span className="extra-body">
+            <strong>{t.home.shop.title}</strong>
+            <small>{t.home.shop.text}</small>
+          </span>
+          <span className="extra-coins">🪙 {profile.coins}</span>
+        </button>
+      </div>
+
+      {dialog === 'missions' && <DailyDialog title={t.home.missions.dialogTitle} onClose={close} />}
+      {dialog === 'shop' && <ShopDialog onClose={close} />}
 
     </div>
   );

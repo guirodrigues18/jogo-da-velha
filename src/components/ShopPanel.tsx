@@ -3,6 +3,7 @@ import { buyItem, equipItem, useProfile } from '../shop/wallet';
 import { playSound } from '../audio/sounds';
 import { track } from '../online/consent';
 import { t } from '../i18n';
+import BoardPreview from './BoardPreview';
 
 /** Loja: comprar e usar símbolos, temas e efeitos de vitória */
 export default function ShopPanel() {
@@ -48,7 +49,7 @@ export default function ShopPanel() {
               return (
                 <div key={item.id} className={inUse ? 'shop-item in-use' : 'shop-item'}>
                   {type === 'theme'
-                    ? <span className="shop-swatch" style={{ background: item.preview }} />
+                    ? <BoardPreview theme={item.id.replace('theme-', '')} className="shop-theme" />
                     : <span className="shop-preview">{item.preview}</span>}
                   <span className="shop-name">{t.shop.items[item.id]}</span>
                   {action}

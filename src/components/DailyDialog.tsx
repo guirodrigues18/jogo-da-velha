@@ -4,16 +4,21 @@ import Dialog from './Dialog';
 import DailyPanel from './DailyPanel';
 
 interface Props {
+  /** Padrão: boas-vindas do dia */
+  title?: string;
   onClose: () => void;
 }
 
-/** Boas-vindas do dia: aparece sozinha para quem volta e ainda não pegou a recompensa */
-export default function DailyDialog({ onClose }: Props) {
+/**
+ * Recompensa diária, missões e convites. Aparece sozinha para quem volta e
+ * ainda não pegou a recompensa, e pelo card de missões no início
+ */
+export default function DailyDialog({ title = t.dailyReward.welcome, onClose }: Props) {
 
   const profile = useProfile();
 
   return (
-    <Dialog title={t.dailyReward.welcome} onClose={onClose} headerExtra={<span className="coin-balance">🪙 {profile.coins}</span>}>
+    <Dialog title={title} onClose={onClose} headerExtra={<span className="coin-balance">🪙 {profile.coins}</span>}>
       <DailyPanel />
       <button className="btn btn-ghost" onClick={onClose}>{t.dailyReward.play}</button>
     </Dialog>
