@@ -2,6 +2,7 @@ import { addCoins } from '../shop/wallet';
 import { showToast } from '../effects/toasts';
 import { t } from '../i18n';
 import { isOnlineConfigured } from './config';
+import { track } from './consent';
 import { loadNickname, normalizeNickname } from './nickname';
 import { firstName, getAccountInfo } from './accountInfo';
 
@@ -66,6 +67,7 @@ export function acceptInvite(by: string, newPlayer: boolean): boolean {
   if (!isOnlineConfigured || !newPlayer || !VALID_ID.test(by) || invitation()) return false;
 
   write(INVITED_KEY, JSON.stringify({ by, done: false }));
+  track('invite_accepted');
 
   return true;
 
@@ -105,7 +107,10 @@ export async function rewardInvitedPlayer() {
 
     write(INVITED_KEY, JSON.stringify({ ...pending, done: true }));
 
-    if (result === 'sent') addCoins(REFERRAL_COINS, { label: t.invite.welcomeBonus });
+    if (result === 'sent') {
+      addCoins(REFERRAL_COINS, { label: t.invite.welcomeBonus });
+      track('referral_reward', { side: 'invited' });
+    }
 
   } catch {
     // Sem conexão: tenta de novo ao fim da próxima partida
@@ -136,6 +141,7 @@ export function startReferralWatch() {
     .then(({ watchReferrals }) => watchReferrals(name => {
       write(INVITER_KEY, String(invitedFriends() + 1));
       addCoins(REFERRAL_COINS, { quiet: true });
+      track('referral_reward', { side: 'inviter' });
       showToast({
         icon: '🎁',
         label: t.invite.friendJoinedLabel(REFERRAL_COINS),

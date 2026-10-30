@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { dateKey } from '../game/daily';
 import { addCoins } from './wallet';
+import { track } from '../online/consent';
 
 /* ===========================
    Recompensa diária
@@ -139,6 +140,7 @@ export function claimDailyReward(label?: string): number {
 
   addCoins(info.coins, { label });
   listeners.forEach(listener => listener());
+  track('daily_reward', { day: info.day, streak: info.streak, coins: info.coins });
 
   return info.coins;
 

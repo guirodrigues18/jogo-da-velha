@@ -3,6 +3,7 @@ import type { Player } from '../game/logic';
 import { copyText, shareLink } from '../share/shareLink';
 import { ROOM_PARAM } from '../online/config';
 import { REFERRAL_COINS } from '../online/invite';
+import { track } from '../online/consent';
 import { t } from '../i18n';
 
 interface Props {
@@ -49,11 +50,14 @@ export default function OnlinePanel({
   };
 
   const invite = async () => {
-    if (await shareLink(inviteUrl, inviteText) === 'copied') showCopied();
+    const result = await shareLink(inviteUrl, inviteText);
+    if (result !== 'cancelled') track('share', { content_type: 'room_invite', method: result });
+    if (result === 'copied') showCopied();
   };
 
   const copy = async () => {
     await copyText(inviteUrl);
+    track('share', { content_type: 'room_invite', method: 'copied' });
     showCopied();
   };
 

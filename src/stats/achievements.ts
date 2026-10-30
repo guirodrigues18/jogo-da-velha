@@ -4,6 +4,7 @@ import { addCoins } from '../shop/wallet';
 import { COINS, coinsForGame } from '../shop/rewards';
 import { trackMission } from './missions';
 import { rewardInvitedPlayer } from '../online/invite';
+import { track } from '../online/consent';
 
 /* ===========================
    Estatísticas e conquistas (salvas no navegador; com login, também na nuvem)
@@ -174,6 +175,8 @@ function notify(unlocked: Achievement[]) {
 
   if (unlocked.length) listeners.forEach(listener => listener(unlocked));
 
+  unlocked.forEach(achievement => track('unlock_achievement', { achievement_id: achievement.id }));
+
 }
 
 /** Registra uma partida terminada, paga as moedas, avisa as conquistas novas e avança as missões */
@@ -186,6 +189,14 @@ export function recordGame(record: GameRecord) {
   addCoins(coinsForGame(record) + unlocked.length * COINS.achievement);
   trackMission({ kind: 'game', record });
   rewardInvitedPlayer();
+
+  track('game_end', {
+    mode: record.mode,
+    difficulty: record.difficulty,
+    result: record.result,
+    boards_won: record.boardsWon,
+    moves: record.moves
+  });
 
 }
 

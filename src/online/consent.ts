@@ -1,8 +1,8 @@
 import { isOnlineConfigured, measurementId } from './config';
 
 /* ===========================
-   Aviso de cookies: o Google Analytics só é carregado depois que a pessoa aceita.
-   (O Vercel Analytics não usa cookies e funciona sempre.)
+   Aviso de cookies: o Google Analytics (visitas e eventos do jogo) só é carregado
+   depois que a pessoa aceita. (O Vercel Analytics não usa cookies e funciona sempre.)
    =========================== */
 
 export type Consent = 'accepted' | 'declined';
@@ -27,11 +27,34 @@ export function needsConsent(): boolean {
 
 }
 
+function analyticsAllowed(): boolean {
+
+  return isOnlineConfigured && Boolean(measurementId) && getConsent() === 'accepted';
+
+}
+
 export function startAnalyticsIfAllowed() {
 
-  if (!isOnlineConfigured || !measurementId || getConsent() !== 'accepted') return;
+  if (!analyticsAllowed()) return;
 
   import('./analytics').then(analytics => analytics.startAnalytics()).catch(() => {});
+
+}
+
+type EventParams = Record<string, string | number | undefined>;
+
+/**
+ * Registra um evento do jogo no Google Analytics (partida, compra, missão...).
+ * Só para quem aceitou os cookies; sem isso, não faz nada.
+ */
+export function track(name: string, params: EventParams = {}) {
+
+  if (!analyticsAllowed()) return;
+
+  // O Analytics não aceita valores vazios
+  const defined = Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined)) as Record<string, string | number>;
+
+  import('./analytics').then(analytics => analytics.logAnalyticsEvent(name, defined)).catch(() => {});
 
 }
 

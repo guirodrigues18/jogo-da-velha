@@ -21,8 +21,9 @@ import {
   type Room,
   type Seat
 } from '../online/rooms';
-import { markJoined } from '../online/nickname';
+import { hasJoined, markJoined } from '../online/nickname';
 import { acceptInvite, markInviteSent } from '../online/invite';
+import { track } from '../online/consent';
 import { getProfile } from '../shop/wallet';
 import { playSound } from '../audio/sounds';
 import { loadStats, recordFromGame, recordGame, unlockAchievement } from '../stats/achievements';
@@ -104,6 +105,7 @@ export function useOnlineGame(
         if (!roomId) {
           const createdId = await withTimeout(createRoom(uid, hostRole));
           markInviteSent();
+          track('room_created', { symbol: hostRole });
           if (!cancelled) onRoomCreatedRef.current(createdId);
           return;
         }
@@ -124,6 +126,10 @@ export function useOnlineGame(
 
         setUid(uid);
         setSeat(result);
+
+        // Entrada nova (recarregar a página não conta de novo)
+        if (!hasJoined(roomId)) track('room_joined', { seat: result === 'spectator' ? result : joined.inviter ? 'guest' : 'host' });
+
         markJoined(roomId);
 
         // Falhar ao salvar o apelido ou a skin não impede a partida

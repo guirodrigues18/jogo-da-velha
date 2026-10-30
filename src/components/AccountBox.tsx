@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { isOnlineConfigured } from '../online/config';
 import { useAccountInfo } from '../online/accountInfo';
+import { track } from '../online/consent';
 import { t } from '../i18n';
 
 /** Entrar com Google para salvar o progresso na nuvem (opcional) */
@@ -21,6 +22,7 @@ export default function AccountBox() {
       // O Firebase só é baixado quando a pessoa decide entrar
       const { signInWithGoogle } = await import('../online/account');
       await signInWithGoogle();
+      track('login', { method: 'Google' });
     } catch (reason) {
       const code = (reason as { code?: string }).code ?? '';
       // Fechar a janela do Google não é erro

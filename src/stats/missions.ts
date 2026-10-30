@@ -3,6 +3,7 @@ import { dateKey } from '../game/daily';
 import { hashString, seededRandom } from '../game/random';
 import { addCoins } from '../shop/wallet';
 import { showToast } from '../effects/toasts';
+import { track } from '../online/consent';
 import { t } from '../i18n';
 import type { GameRecord } from './achievements';
 
@@ -284,9 +285,13 @@ export function trackMission(event: MissionEvent) {
     const coins = MISSION_COINS[mission.tier];
     addCoins(coins, { quiet: true });
     showToast({ icon: mission.icon, label: t.missions.completed(coins), title: t.missions.items[mission.id], sound: true });
+    track('mission_complete', { mission_id: mission.id, tier: mission.tier });
   }
 
-  if (completed.length && allDone(next)) addCoins(ALL_DONE_BONUS, { label: t.missions.allDone });
+  if (completed.length && allDone(next)) {
+    addCoins(ALL_DONE_BONUS, { label: t.missions.allDone });
+    track('missions_all_done');
+  }
 
 }
 
@@ -294,6 +299,9 @@ export function swapTodayMission(id: MissionId) {
 
   const next = swapMission(getMissions(), id);
 
-  if (next) save(next);
+  if (next) {
+    save(next);
+    track('mission_swap', { mission_id: id });
+  }
 
 }

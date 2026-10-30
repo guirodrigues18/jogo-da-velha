@@ -1,6 +1,7 @@
 import { ITEMS, sectionOf, SHOP_SECTIONS, type ShopItem } from '../shop/catalog';
 import { buyItem, equipItem, useProfile } from '../shop/wallet';
 import { playSound } from '../audio/sounds';
+import { track } from '../online/consent';
 import { t } from '../i18n';
 
 /** Loja: comprar e usar símbolos, temas e efeitos de vitória */
@@ -12,7 +13,13 @@ export default function ShopPanel() {
     if (buyItem(item.id)) {
       playSound('achievement');
       equipItem(item.id);
+      track('spend_virtual_currency', { virtual_currency_name: 'coins', value: item.price, item_name: item.id });
     }
+  };
+
+  const use = (item: ShopItem) => {
+    equipItem(item.id);
+    track('equip_item', { item_id: item.id, item_type: item.type });
   };
 
   return (
@@ -36,7 +43,7 @@ export default function ShopPanel() {
               let action = <button className="shop-action" disabled={!affordable} onClick={() => buy(item)}>🪙 {item.price}</button>;
 
               if (inUse) action = <span className="shop-action in-use">{t.shop.inUse}</span>;
-              else if (owned) action = <button className="shop-action" onClick={() => equipItem(item.id)}>{t.shop.use}</button>;
+              else if (owned) action = <button className="shop-action" onClick={() => use(item)}>{t.shop.use}</button>;
 
               return (
                 <div key={item.id} className={inUse ? 'shop-item in-use' : 'shop-item'}>

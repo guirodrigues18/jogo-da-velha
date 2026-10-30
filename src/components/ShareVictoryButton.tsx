@@ -4,6 +4,7 @@ import { renderVictoryImage } from '../share/renderVictoryImage';
 import { shareImage } from '../share/shareImage';
 import { unlockAchievement } from '../stats/achievements';
 import { trackMission } from '../stats/missions';
+import { track } from '../online/consent';
 import { t } from '../i18n';
 
 interface Props {
@@ -40,6 +41,7 @@ export default function ShareVictoryButton({ boards, winner, winnerName, onShare
     onShare();
     unlockAchievement('sharer');
     trackMission({ kind: 'share' });
+    track('share', { content_type: 'victory_image' });
     shareImage(image, 'jogo-da-velha-vitoria.png');
 
   };

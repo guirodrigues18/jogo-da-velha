@@ -10,6 +10,7 @@ import {
 } from '../game/daily';
 import { loadPreferences, savePreferences, type LocalMode, type Preferences } from '../game/preferences';
 import { recordFromGame, recordGame } from '../stats/achievements';
+import { track } from '../online/consent';
 import { t } from '../i18n';
 import { useTurnTimer } from './useTurnTimer';
 import { useGameFeedback } from './useGameFeedback';
@@ -66,6 +67,9 @@ export function useLocalGame() {
       const winner = finished.winner;
 
       if (winner === 'x' || winner === 'o') setScore(s => ({ ...s, [winner]: s[winner] + 1 }));
+
+      // 2 jogadores não entra nas estatísticas (não tem um "você"), mas conta no Analytics
+      if (mode === 'pvp') track('game_end', { mode, result: winner === 'draw' ? 'draw' : `${winner}_won` });
 
       if (mode === 'ai') recordGame(recordFromGame(finished, human, 'ai', difficulty));
 

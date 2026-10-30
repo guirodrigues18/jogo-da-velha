@@ -11,6 +11,7 @@ import {
 } from '../stats/missions';
 import { invitedFriends, inviteLink, markInviteSent, REFERRAL_COINS } from '../online/invite';
 import { isOnlineConfigured } from '../online/config';
+import { track } from '../online/consent';
 import { shareLink } from '../share/shareLink';
 import { playSound } from '../audio/sounds';
 import { t } from '../i18n';
@@ -173,7 +174,11 @@ function InviteCard() {
 
     markInviteSent();
 
-    if (await shareLink(link, t.invite.message(REFERRAL_COINS)) === 'copied') {
+    const result = await shareLink(link, t.invite.message(REFERRAL_COINS));
+
+    if (result !== 'cancelled') track('share', { content_type: 'invite_link', method: result });
+
+    if (result === 'copied') {
       setCopied(true);
       setTimeout(() => setCopied(false), COPIED_FEEDBACK_MS);
     }

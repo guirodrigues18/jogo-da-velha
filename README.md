@@ -95,7 +95,20 @@ Sem configuração, o jogo funciona só no modo local. Para ativar o online (pla
 
 **Google Analytics (opcional):** com `VITE_FIREBASE_MEASUREMENT_ID` no `.env` (Firebase → Analytics),
 o jogo envia as visitas para o Google Analytics. Ele é carregado depois que a página abre, num pedaço separado,
-sem atrasar o jogo. O Vercel Analytics continua funcionando em paralelo.
+sem atrasar o jogo, e **só para quem aceita o aviso de cookies**. O Vercel Analytics (sem cookies) continua
+funcionando em paralelo. Eventos do jogo, enviados com `track()` (`src/online/consent.ts`):
+
+| Evento | Quando | Detalhes |
+| --- | --- | --- |
+| `game_end` | fim de partida | `mode`, `difficulty`, `result`, `boards_won`, `moves` |
+| `share` | compartilhar | `content_type` (victory_image, daily_result, invite_link, room_invite), `method` |
+| `room_created` / `room_joined` | modo online | `symbol` / `seat` (host, guest, spectator) |
+| `invite_accepted` / `referral_reward` | convide e ganhe | `side` (invited, inviter) |
+| `spend_virtual_currency` / `equip_item` | loja | `item_name`, `value` / `item_id`, `item_type` |
+| `mission_complete` / `missions_all_done` / `mission_swap` | missões | `mission_id`, `tier` |
+| `daily_reward` | recompensa diária | `day`, `streak`, `coins` |
+| `unlock_achievement` | conquista | `achievement_id` |
+| `login` | entrar com Google | `method` |
 
 Salas com mais de 7 dias são apagadas aos poucos pelo próprio jogo (até 20 por vez, quando alguém
 cria uma sala nova); as regras do banco só permitem apagar salas antigas. Sem Cloud Functions,
