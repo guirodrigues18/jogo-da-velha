@@ -29,7 +29,8 @@ e efeitos de vitória. Tudo fica no navegador; com **login com Google** (opciona
 na nuvem (`users/{uid}`) e acompanha a pessoa em qualquer aparelho.
 
 **Temas:** além dos neon (Neon, Retrô, Oceano, Pôr do sol e Dourado), há temas sem neon que mudam a tela
-inteira, peças incluídas: Caderno, Gelo, Blocos, Madeira, Militar, Pitaya e Donuts.
+inteira, peças incluídas: Caderno, Gelo, Blocos, Madeira, Militar, Pitaya e Donuts. A seção **⚽ Times** tem os
+20 times da Série A, pelo apelido e só com cores, listras e detalhes genéricos (sem escudos nem marcas).
 Cada tema é um bloco de variáveis CSS em `src/style.css` (`[data-theme="..."]`). No online, se os dois
 jogadores usam o mesmo símbolo, cada um vê o seu e o adversário aparece com o ✕/◯ clássico.
 

@@ -1,4 +1,4 @@
-import { ITEM_TYPES, ITEMS, type ShopItem } from '../shop/catalog';
+import { ITEMS, sectionOf, SHOP_SECTIONS, type ShopItem } from '../shop/catalog';
 import { buyItem, equipItem, useProfile } from '../shop/wallet';
 import { playSound } from '../audio/sounds';
 import { t } from '../i18n';
@@ -20,14 +20,15 @@ export default function ShopPanel() {
 
       <p className="stats-note">{t.shop.howToEarn}</p>
 
-      {ITEM_TYPES.map(type => (
-        <section key={type} className="shop-section">
-          <h3>{t.shop.types[type]}</h3>
-          <p className="shop-hint">{t.shop.hints[type]}</p>
+      {SHOP_SECTIONS.map(section => (
+        <section key={section} className="shop-section">
+          <h3>{t.shop.types[section]}</h3>
+          <p className="shop-hint">{t.shop.hints[section]}</p>
 
           <div className="shop-grid">
-            {ITEMS.filter(item => item.type === type).map(item => {
+            {ITEMS.filter(item => sectionOf(item) === section).map(item => {
 
+              const { type } = item;
               const owned = profile.owned.includes(item.id);
               const inUse = profile.equipped[type] === item.id;
               const affordable = profile.coins >= item.price;

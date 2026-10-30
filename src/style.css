@@ -382,9 +382,362 @@
   box-shadow: none;
 }
 
+/* ---------- Times: só cores, listras e detalhes genéricos (sem escudos) ---------- */
+
+[data-theme^="team-"] {
+  --orb-opacity: 0;
+  --panel: rgba(10, 10, 14, .8);
+  --muted: #c9ccd6;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay-shadow: 0 3px 0 rgba(0, 0, 0, .25);
+  --o-overlay-shadow: 0 3px 0 rgba(0, 0, 0, .25);
+  --overlay-bg: rgba(255, 255, 255, .45);
+  --board-border: #fff;
+  --board-shadow: 0 4px 0 rgba(0, 0, 0, .35);
+  --cell-bg: linear-gradient(180deg, #fff, #ececec);
+  --cell-border: rgba(0, 0, 0, .12);
+  --cell-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14), inset 0 2px 0 rgba(255, 255, 255, .3);
+  --frame: #fff;
+  --frame-glow: rgba(255, 255, 255, .22);
+
+  /* Detalhes desenhados (estrelas e mascotes genéricos), discretos no fundo */
+  --stars: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cpath fill='white' fill-opacity='.2' d='M20 8l3.5 7.6 8.3.9-6.2 5.6 1.8 8.2-7.4-4.3-7.4 4.3 1.8-8.2-6.2-5.6 8.3-.9z'/%3E%3Cpath fill='white' fill-opacity='.13' transform='translate(50 46) scale(.7)' d='M20 8l3.5 7.6 8.3.9-6.2 5.6 1.8 8.2-7.4-4.3-7.4 4.3 1.8-8.2-6.2-5.6 8.3-.9z'/%3E%3C/svg%3E");
+  --rooster: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%90%93%3C/text%3E%3C/svg%3E");
+  --whale: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%90%8B%3C/text%3E%3C/svg%3E");
+  --bull: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%90%82%3C/text%3E%3C/svg%3E");
+  --lion: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%A6%81%3C/text%3E%3C/svg%3E");
+}
+
+[data-theme="team-mengao"] {
+  --accent: linear-gradient(90deg, #a50d24, #e01b38);
+  --page-bg:
+    linear-gradient(rgba(0, 0, 0, .35), rgba(0, 0, 0, .35)),
+    repeating-linear-gradient(180deg, #c8102e 0 46px, #111 46px 92px);
+  --board-bg: #121212;
+  --board-border: #c8102e;
+  --cell-bg: linear-gradient(180deg, #e01b38, #b30e27);
+  --cyan: #ff5a6e;
+  --pink: #fff;
+  --x-mark: #111;
+  --o-mark: #fff;
+  --x-overlay: rgba(17, 17, 17, .85);
+  --o-overlay: rgba(255, 255, 255, .92);
+  --overlay-bg: rgba(200, 16, 46, .45);
+  --frame: #ff3a52;
+  --frame-glow: rgba(255, 58, 82, .25);
+}
+
+[data-theme="team-verdao"] {
+  --accent: linear-gradient(90deg, #0b6b3a, #16a05a);
+  --page-bg:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 26px),
+    linear-gradient(180deg, #0b5d34, #063d22);
+  --board-bg: #0a4f2c;
+  --cell-bg: linear-gradient(180deg, #149152, #0f7a44);
+  --cell-border: rgba(255, 255, 255, .08);
+  --cyan: #fff;
+  --pink: #9ee6bb;
+  --x-mark: #fff;
+  --o-mark: #b9f0cf;
+  --x-overlay: rgba(255, 255, 255, .92);
+  --o-overlay: rgba(185, 240, 207, .92);
+  --overlay-bg: rgba(10, 79, 44, .5);
+}
+
+[data-theme="team-raposa"] {
+  --accent: linear-gradient(90deg, #0b3aa8, #2a62e6);
+  --page-bg: var(--stars), linear-gradient(180deg, #0d3aa8, #061c57);
+  --board-bg: #0a2c80;
+  --cell-bg: linear-gradient(180deg, #1c4fd0, #1440ae);
+  --cell-border: rgba(255, 255, 255, .08);
+  --cyan: #fff;
+  --pink: #9cc2ff;
+  --x-mark: #fff;
+  --o-mark: #9cc2ff;
+  --x-overlay: rgba(255, 255, 255, .92);
+  --o-overlay: rgba(156, 194, 255, .92);
+  --overlay-bg: rgba(10, 44, 128, .5);
+}
+
+[data-theme="team-flu"] {
+  --accent: linear-gradient(90deg, #7a1f3d, #0a6b3a);
+  --page-bg:
+    linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)),
+    repeating-linear-gradient(90deg, #7a1f3d 0 40px, #f4f4f4 40px 48px, #0a6b3a 48px 88px, #f4f4f4 88px 96px);
+  --board-bg: #f4f4f4;
+  --board-border: #7a1f3d;
+  --cyan: #e889a8;
+  --pink: #6fd39b;
+  --x-mark: #7a1f3d;
+  --o-mark: #0a6b3a;
+  --x-overlay: rgba(122, 31, 61, .85);
+  --o-overlay: rgba(10, 107, 58, .85);
+  --frame: #e889a8;
+}
+
+[data-theme="team-furacao"] {
+  --accent: linear-gradient(90deg, #111, #d0021b);
+  --page-bg:
+    linear-gradient(rgba(0, 0, 0, .4), rgba(0, 0, 0, .4)),
+    repeating-linear-gradient(135deg, #111 0 34px, #d0021b 34px 68px);
+  --board-bg: #c4021a;
+  --board-border: #111;
+  --cell-bg: linear-gradient(180deg, #232323, #161616);
+  --cell-border: rgba(255, 255, 255, .06);
+  --cyan: #ff5a68;
+  --pink: #fff;
+  --x-mark: #ff2a3d;
+  --o-mark: #fff;
+  --x-overlay: rgba(255, 42, 61, .9);
+  --o-overlay: rgba(255, 255, 255, .92);
+  --overlay-bg: rgba(17, 17, 17, .5);
+}
+
+[data-theme="team-esquadrao"] {
+  --accent: linear-gradient(90deg, #0b4ea2, #d71920);
+  --page-bg: linear-gradient(180deg, #0b4ea2 0 22%, #fff 22% 23.5%, #d71920 23.5% 26%, #fff 26% 27.5%, #0b4ea2 27.5% 70%, #083a7a 100%);
+  --panel: rgba(6, 30, 70, .8);
+  --board-bg: #fff;
+  --board-border: #d71920;
+  --cell-bg: linear-gradient(180deg, #fff, #eef2f8);
+  --cyan: #7fb0ff;
+  --pink: #ff6b70;
+  --x-mark: #0b4ea2;
+  --o-mark: #d71920;
+  --x-overlay: rgba(11, 78, 162, .85);
+  --o-overlay: rgba(215, 25, 32, .85);
+  --frame: #ff6b70;
+}
+
+[data-theme="team-galo"] {
+  --accent: linear-gradient(90deg, #2b2b2b, #555);
+  --page-bg:
+    var(--rooster) left -30px bottom 10px / 300px 300px no-repeat,
+    linear-gradient(rgba(0, 0, 0, .62), rgba(0, 0, 0, .62)),
+    repeating-linear-gradient(90deg, #111 0 36px, #ededed 36px 72px);
+  --board-bg: #141414;
+  --cell-bg: linear-gradient(180deg, #2a2a2a, #1d1d1d);
+  --cell-border: rgba(255, 255, 255, .06);
+  --cell-shadow: inset 0 2px 0 rgba(255, 255, 255, .06), inset 0 -3px 0 rgba(0, 0, 0, .3);
+  --cyan: #fff;
+  --pink: #e0b23a;
+  --x-mark: #fff;
+  --o-mark: #e0b23a;
+  --x-overlay: rgba(255, 255, 255, .92);
+  --o-overlay: rgba(224, 178, 58, .92);
+  --overlay-bg: rgba(17, 17, 17, .5);
+  --frame: #e0b23a;
+  --frame-glow: rgba(224, 178, 58, .22);
+}
+
+[data-theme="team-peixe"] {
+  --accent: linear-gradient(90deg, #111, #444);
+  --page-bg:
+    var(--whale) left -30px bottom 10px / 300px 300px no-repeat,
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .05) 0 2px, transparent 2px 30px),
+    linear-gradient(180deg, #2a2a2a, #111);
+  --board-bg: #f5f5f5;
+  --board-border: #111;
+  --cyan: #fff;
+  --pink: #b5b5b5;
+  --x-mark: #111;
+  --o-mark: #8a8a8a;
+  --x-overlay: rgba(17, 17, 17, .85);
+  --o-overlay: rgba(110, 110, 110, .85);
+}
+
+[data-theme="team-massa-bruta"] {
+  --accent: linear-gradient(90deg, #d7182a, #ff4a5a);
+  --page-bg:
+    var(--bull) left -30px bottom 10px / 300px 300px no-repeat,
+    linear-gradient(160deg, #d7182a, #8f0d1a);
+  --panel: rgba(60, 6, 12, .75);
+  --board-bg: #fff;
+  --board-border: #1b2a4a;
+  --cyan: #ff8a94;
+  --pink: #a9b8d8;
+  --x-mark: #d7182a;
+  --o-mark: #1b2a4a;
+  --x-overlay: rgba(215, 24, 42, .85);
+  --o-overlay: rgba(27, 42, 74, .85);
+}
+
+[data-theme="team-tricolor-paulista"] {
+  --accent: linear-gradient(90deg, #d0021b, #111);
+  --page-bg:
+    linear-gradient(rgba(0, 0, 0, .45), rgba(0, 0, 0, .45)),
+    repeating-linear-gradient(180deg, #d0021b 0 26px, #f4f4f4 26px 52px, #111 52px 78px);
+  --board-bg: #fff;
+  --board-border: #111;
+  --cyan: #ff6b78;
+  --pink: #fff;
+  --x-mark: #d0021b;
+  --o-mark: #111;
+  --x-overlay: rgba(208, 2, 27, .85);
+  --o-overlay: rgba(17, 17, 17, .85);
+  --frame: #ff6b78;
+}
+
+[data-theme="team-fogao"] {
+  --accent: linear-gradient(90deg, #222, #555);
+  --page-bg: var(--stars), linear-gradient(180deg, #1a1a1a, #050505);
+  --board-bg: #111;
+  --cell-bg: linear-gradient(180deg, #1f1f1f, #171717);
+  --cell-border: rgba(255, 255, 255, .07);
+  --cell-shadow: inset 0 2px 0 rgba(255, 255, 255, .05), inset 0 -3px 0 rgba(0, 0, 0, .3);
+  --cyan: #fff;
+  --pink: #bdbdbd;
+  --x-mark: #fff;
+  --o-mark: #a9a9a9;
+  --x-overlay: rgba(255, 255, 255, .92);
+  --o-overlay: rgba(190, 190, 190, .92);
+  --overlay-bg: rgba(0, 0, 0, .5);
+}
+
+[data-theme="team-coxa"] {
+  --accent: linear-gradient(90deg, #00693e, #13a462);
+  --page-bg: linear-gradient(180deg, #004d2c 0 24%, #f4f4f4 24% 27%, #00693e 27% 75%, #004d2c 100%);
+  --panel: rgba(0, 35, 20, .8);
+  --board-bg: #fff;
+  --board-border: #00693e;
+  --cyan: #6fd39b;
+  --pink: #fff;
+  --x-mark: #00693e;
+  --o-mark: #111;
+  --x-overlay: rgba(0, 105, 62, .85);
+  --o-overlay: rgba(17, 17, 17, .85);
+}
+
+[data-theme="team-vascao"] {
+  --accent: linear-gradient(90deg, #111, #444);
+  --page-bg: linear-gradient(135deg, #111 0 38%, #ededed 38% 46%, #111 46% 100%);
+  --board-bg: #141414;
+  --cell-bg: linear-gradient(180deg, #262626, #1b1b1b);
+  --cell-border: rgba(255, 255, 255, .07);
+  --cell-shadow: inset 0 2px 0 rgba(255, 255, 255, .05), inset 0 -3px 0 rgba(0, 0, 0, .3);
+  --cyan: #fff;
+  --pink: #ff5a68;
+  --x-mark: #fff;
+  --o-mark: #e3172c;
+  --x-overlay: rgba(255, 255, 255, .92);
+  --o-overlay: rgba(227, 23, 44, .92);
+  --overlay-bg: rgba(17, 17, 17, .5);
+}
+
+[data-theme="team-leao-da-barra"] {
+  --accent: linear-gradient(90deg, #d0021b, #111);
+  --page-bg:
+    var(--lion) left -30px bottom 10px / 300px 300px no-repeat,
+    linear-gradient(rgba(0, 0, 0, .4), rgba(0, 0, 0, .4)),
+    repeating-linear-gradient(180deg, #d0021b 0 30px, #111 30px 60px);
+  --board-bg: repeating-linear-gradient(180deg, #d0021b 0 10px, #111 10px 20px);
+  --board-border: #111;
+  --cyan: #ff6b78;
+  --pink: #fff;
+  --x-mark: #d0021b;
+  --o-mark: #111;
+  --x-overlay: rgba(208, 2, 27, .85);
+  --o-overlay: rgba(17, 17, 17, .85);
+}
+
+[data-theme="team-imortal"] {
+  --accent: linear-gradient(90deg, #0d80bf, #111);
+  --page-bg:
+    linear-gradient(rgba(0, 0, 0, .42), rgba(0, 0, 0, .42)),
+    repeating-linear-gradient(90deg, #0d80bf 0 36px, #111 36px 72px, #f2f2f2 72px 78px);
+  --board-bg: #0d80bf;
+  --board-border: #111;
+  --cyan: #6cc4f5;
+  --pink: #fff;
+  --x-mark: #0d80bf;
+  --o-mark: #111;
+  --x-overlay: rgba(13, 128, 191, .85);
+  --o-overlay: rgba(17, 17, 17, .85);
+}
+
+[data-theme="team-colorado"] {
+  --accent: linear-gradient(90deg, #c8102e, #ff3a52);
+  --page-bg: linear-gradient(160deg, #d0142f, #8a0a1f);
+  --panel: rgba(60, 5, 15, .75);
+  --board-bg: #fff;
+  --board-border: #8a0a1f;
+  --cyan: #ff8a96;
+  --pink: #fff;
+  --x-mark: #d0142f;
+  --o-mark: #333;
+  --x-overlay: rgba(208, 20, 47, .85);
+  --o-overlay: rgba(51, 51, 51, .85);
+}
+
+[data-theme="team-timao"] {
+  --accent: linear-gradient(90deg, #111, #3a3a3a);
+  --page-bg:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, .05) 0 2px, transparent 2px 22px),
+    linear-gradient(180deg, #161616, #050505);
+  --board-bg: #0e0e0e;
+  --cell-bg: linear-gradient(180deg, #f2f2f2, #e2e2e2);
+  --cyan: #fff;
+  --pink: #bdbdbd;
+  --x-mark: #111;
+  --o-mark: #8c8c8c;
+  --x-overlay: rgba(17, 17, 17, .85);
+  --o-overlay: rgba(110, 110, 110, .85);
+}
+
+[data-theme="team-leao-azul"] {
+  --accent: linear-gradient(90deg, #0b1f4b, #2a4f9e);
+  --page-bg:
+    var(--lion) left -30px bottom 10px / 300px 300px no-repeat,
+    linear-gradient(180deg, #102a63, #07173a);
+  --board-bg: #0b1f4b;
+  --cell-bg: linear-gradient(180deg, #1a3878, #142d63);
+  --cell-border: rgba(255, 255, 255, .07);
+  --cyan: #fff;
+  --pink: #7fb2ff;
+  --x-mark: #fff;
+  --o-mark: #7fb2ff;
+  --x-overlay: rgba(255, 255, 255, .92);
+  --o-overlay: rgba(127, 178, 255, .92);
+  --overlay-bg: rgba(11, 31, 75, .5);
+}
+
+[data-theme="team-verdao-do-oeste"] {
+  --accent: linear-gradient(90deg, #0f8a44, #19b85c);
+  --page-bg:
+    linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .3)),
+    repeating-linear-gradient(135deg, #0f8a44 0 40px, #f2f2f2 40px 48px);
+  --board-bg: #0f8a44;
+  --cyan: #7fe0a6;
+  --pink: #fff;
+  --x-mark: #0f8a44;
+  --o-mark: #111;
+  --x-overlay: rgba(15, 138, 68, .85);
+  --o-overlay: rgba(17, 17, 17, .85);
+}
+
+[data-theme="team-leao-caipira"] {
+  --accent: linear-gradient(90deg, #0b6b3a, #139a52);
+  --page-bg:
+    linear-gradient(rgba(0, 0, 0, .45), rgba(0, 0, 0, .45)),
+    repeating-linear-gradient(90deg, #f2c200 0 40px, #0b6b3a 40px 52px);
+  --panel: rgba(10, 30, 15, .8);
+  --board-bg: #0b6b3a;
+  --board-border: #ffd200;
+  --cell-bg: linear-gradient(180deg, #ffe55c, #f5c800);
+  --cyan: #ffd84d;
+  --pink: #fff;
+  --x-mark: #0b6b3a;
+  --o-mark: #111;
+  --x-overlay: rgba(11, 107, 58, .85);
+  --o-overlay: rgba(17, 17, 17, .85);
+  --overlay-bg: rgba(255, 229, 92, .45);
+  --frame: #ffd200;
+  --frame-glow: rgba(255, 210, 0, .25);
+}
+
 /* ===========================
-   Layout base
-   =========================== */
+   Layout base   =========================== */
 
 body {
   min-height: 100vh;
