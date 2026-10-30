@@ -4,6 +4,7 @@ import { useOnlineGame } from '../hooks/useOnlineGame';
 import { t } from '../i18n';
 import { symbolGlyph } from '../shop/catalog';
 import GameView from './GameView';
+import type { Glyphs } from './MiniBoard';
 import OnlinePanel from './OnlinePanel';
 import OnlineMessage from './OnlineMessage';
 import SpectatorPanel from './SpectatorPanel';
@@ -27,6 +28,19 @@ type ModalProps = ComponentProps<typeof GameView>['modal'];
 type NameOf = (player: Player) => string;
 
 const noop = () => {};
+
+/**
+ * Cada jogador aparece com o símbolo que escolheu na loja. Se os dois escolheram o mesmo,
+ * na tela de cada um o próprio símbolo tem prioridade e o adversário aparece com o X/O
+ * clássico (para o espectador, quem fica com o símbolo é o X).
+ */
+function playerGlyphs(x: string | null, o: string | null, role: Player | null): Glyphs {
+
+  if (!x || x !== o) return { x, o };
+
+  return (role ?? 'x') === 'x' ? { x } : { o };
+
+}
 
 export default function OnlineRoom({ roomId, nickname, hostRole, leaveRoomRef, onRoomCreated, onLeave }: Props) {
 
@@ -65,8 +79,7 @@ export default function OnlineRoom({ roomId, nickname, hostRole, leaveRoomRef, o
 
   const reactionBar = online.opponentJoined && !online.opponentLeft && <ReactionBar onReact={online.react} />;
 
-  // Cada jogador aparece com o símbolo que escolheu na loja
-  const glyphs = { x: symbolGlyph(online.skins.x), o: symbolGlyph(online.skins.o) };
+  const glyphs = playerGlyphs(symbolGlyph(online.skins.x), symbolGlyph(online.skins.o), role);
   const overlay = <ReactionLayer reactions={online.floatingReactions} onDone={online.dismissReaction} />;
 
   // Espectador: só assiste (sem jogar, sem revanche)

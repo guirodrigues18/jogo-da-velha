@@ -28,6 +28,11 @@ rendem 🪙, trocadas na loja (botão 🏅) por símbolos (o adversário online 
 e efeitos de vitória. Tudo fica no navegador; com **login com Google** (opcional), o progresso é salvo
 na nuvem (`users/{uid}`) e acompanha a pessoa em qualquer aparelho.
 
+**Temas:** além dos neon (Neon, Retrô, Oceano, Pôr do sol e Dourado), há temas sem neon que mudam a tela
+inteira, peças incluídas: Blocos, Madeira, Caderno, Gelo, Jardim, Pizza de calabresa, Pitaya, Donuts e Militar.
+Cada tema é um bloco de variáveis CSS em `src/style.css` (`[data-theme="..."]`). No online, se os dois
+jogadores usam o mesmo símbolo, cada um vê o seu e o adversário aparece com o ✕/◯ clássico.
+
 **Para voltar todo dia e chamar amigos** (botão 🏅, aba Missões):
 
 - **Recompensa diária:** dias seguidos rendem 10, 15, 20, 25, 30, 40 e 80 🪙 (depois recomeça);

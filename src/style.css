@@ -30,6 +30,29 @@
   --cell-bg: linear-gradient(180deg, rgba(20, 27, 57, .95), rgba(13, 20, 43, .95));
   --frame: #8b5cf6;
   --frame-glow: rgba(139, 92, 246, .28);
+
+  /* Peças, casas e painéis (os temas sem neon trocam estas também).
+     --cyan e --pink são as cores do X e do O na interface; --x-mark e --o-mark, nas casas */
+  --x-mark: var(--cyan);
+  --o-mark: var(--pink);
+  --x-glow: rgba(0, 229, 255, .9);
+  --o-glow: rgba(255, 79, 216, .65);
+  --x-overlay: rgba(0, 229, 255, .72);
+  --o-overlay: rgba(255, 79, 216, .72);
+  --x-overlay-shadow: 0 0 40px rgba(0, 229, 255, .95), 0 0 80px rgba(0, 229, 255, .55);
+  --o-overlay-shadow: 0 0 40px rgba(255, 79, 216, .95), 0 0 80px rgba(255, 79, 216, .55);
+  --overlay-bg: transparent;
+  --x-cell-bg: var(--cell-bg);
+  --o-cell-bg: var(--cell-bg);
+  --cell-border: rgba(255, 255, 255, .06);
+  --cell-shadow: none;
+  --filled-shadow: var(--cell-shadow);
+  --board-border: rgba(255, 255, 255, .08);
+  --board-shadow: none;
+  --panel: rgba(13, 19, 41, .7);
+  --orb-opacity: .22;
+  /* Botões principais e opção escolhida */
+  --accent: linear-gradient(90deg, #8b5cf6, #00d9ff);
 }
 
 /* ===========================
@@ -86,6 +109,352 @@
   --frame-glow: rgba(255, 209, 102, .25);
 }
 
+/* ---------- Temas sem neon: peças sólidas e casas com relevo ---------- */
+
+/* Blocos: a casa jogada vira um bloco colorido em relevo */
+[data-theme="blocks"] {
+  --accent: linear-gradient(90deg, #ff9f1c, #ffc23d);
+  --page-bg: linear-gradient(180deg, #2d44a8 0%, #1d2d7c 55%, #142062 100%);
+  --orb-opacity: 0;
+  --panel: rgba(14, 24, 84, .78);
+  --muted: #b4c0f5;
+  --board-bg: #17246b;
+  --board-border: #0e1750;
+  --board-shadow: inset 0 3px 0 rgba(0, 0, 0, .25), 0 4px 0 rgba(6, 12, 48, .55);
+  --cell-bg: #1f2f88;
+  --cell-border: transparent;
+  --cell-shadow: inset 0 3px 6px rgba(0, 0, 0, .35);
+  --cyan: #ff6b6f;
+  --pink: #4cd97b;
+  --x-mark: #fff;
+  --o-mark: #fff;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-cell-bg: linear-gradient(160deg, #ff9a9c 0%, #ff5a5f 45%, #d93a40 100%);
+  --o-cell-bg: linear-gradient(160deg, #8ef0ad 0%, #34c964 45%, #1f9a48 100%);
+  --filled-shadow: inset 0 4px 0 rgba(255, 255, 255, .35), inset 0 -5px 0 rgba(0, 0, 0, .25);
+  --x-overlay: #ff5a5f;
+  --o-overlay: #34c964;
+  --x-overlay-shadow: 0 5px 0 #a82a2f;
+  --o-overlay-shadow: 0 5px 0 #17763a;
+  --overlay-bg: rgba(20, 32, 98, .6);
+  --frame: #ffd84d;
+  --frame-glow: rgba(255, 216, 77, .22);
+}
+
+/* Madeira: tabuleiro com veios e peças de jogo de tabuleiro */
+[data-theme="wood"] {
+  --accent: linear-gradient(90deg, #a85d1c, #d08a3c);
+  --page-bg:
+    repeating-linear-gradient(100deg, rgba(255, 255, 255, .025) 0 2px, transparent 2px 10px),
+    linear-gradient(160deg, #3d2615 0%, #26170c 60%, #170d06 100%);
+  --orb-1: #c8843a;
+  --orb-2: #7a4a22;
+  --orb-opacity: .14;
+  --panel: rgba(46, 28, 15, .8);
+  --muted: #d2b896;
+  --board-bg:
+    repeating-linear-gradient(92deg, rgba(60, 30, 10, .12) 0 2px, transparent 2px 9px, rgba(255, 220, 170, .07) 9px 11px, transparent 11px 17px),
+    linear-gradient(180deg, #b0773f, #8c5a2e);
+  --board-border: #5e3a1c;
+  --board-shadow: 0 4px 0 #3b220f, inset 0 1px 0 rgba(255, 255, 255, .2);
+  --cell-bg: linear-gradient(180deg, #f3dcb2, #e2c08a);
+  --cell-border: rgba(94, 58, 28, .4);
+  --cell-shadow: inset 0 -3px 0 rgba(120, 72, 30, .3), inset 0 2px 0 rgba(255, 255, 255, .45);
+  --cyan: #f5cf96;
+  --pink: #ff8a7a;
+  --x-mark: #3a2314;
+  --o-mark: #b3261e;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: rgba(58, 35, 20, .85);
+  --o-overlay: rgba(179, 38, 30, .85);
+  --x-overlay-shadow: 0 2px 0 rgba(255, 235, 200, .5);
+  --o-overlay-shadow: 0 2px 0 rgba(255, 235, 200, .5);
+  --overlay-bg: rgba(243, 220, 178, .45);
+  --frame: #ffd08a;
+  --frame-glow: rgba(255, 208, 138, .25);
+}
+
+/* Caderno: folha pautada sobre a mesa, caneta azul e vermelha */
+[data-theme="notebook"] {
+  --accent: linear-gradient(90deg, #2f5fd0, #4f86f7);
+  --page-bg: linear-gradient(160deg, #34404f 0%, #232c38 60%, #181e27 100%);
+  --orb-opacity: 0;
+  --panel: rgba(22, 28, 37, .8);
+  --muted: #a9b4c4;
+  --board-bg:
+    repeating-linear-gradient(180deg, transparent 0 19px, rgba(70, 120, 200, .22) 19px 20px),
+    #fbf8ee;
+  --board-border: #e4dcc6;
+  --board-shadow: 0 6px 14px rgba(0, 0, 0, .35);
+  --cell-bg: transparent;
+  --cell-border: rgba(40, 60, 100, .25);
+  --cyan: #86aeff;
+  --pink: #ff8f8f;
+  --x-mark: #1f4fbf;
+  --o-mark: #d23b3b;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: rgba(31, 79, 191, .8);
+  --o-overlay: rgba(210, 59, 59, .8);
+  --x-overlay-shadow: none;
+  --o-overlay-shadow: none;
+  --overlay-bg: rgba(251, 248, 238, .5);
+  --frame: #86aeff;
+  --frame-glow: rgba(134, 174, 255, .2);
+}
+
+/* Traço de caneta: mais fino e meio torto */
+[data-theme="notebook"] .cell.x::before,
+[data-theme="notebook"] .cell.x::after {
+  height: 4px;
+}
+
+[data-theme="notebook"] .cell.x::before {
+  transform: rotate(41deg);
+}
+
+[data-theme="notebook"] .cell.x::after {
+  transform: rotate(-48deg);
+}
+
+[data-theme="notebook"] .cell.o::before {
+  border-width: 4px;
+  border-radius: 46% 54% 50% 48%;
+}
+
+/* Gelo: neve caindo, casas brancas e peças azul-marinho e vermelhas */
+[data-theme="ice"] {
+  --accent: linear-gradient(90deg, #2f86cf, #62bdf2);
+  --page-bg:
+    radial-gradient(circle, rgba(255, 255, 255, .22) 1px, transparent 1.6px) 0 0 / 26px 26px,
+    radial-gradient(circle, rgba(255, 255, 255, .14) 1px, transparent 1.6px) 13px 13px / 26px 26px,
+    linear-gradient(180deg, #3a7fb0 0%, #24597f 55%, #173d5a 100%);
+  --orb-1: #bfe6ff;
+  --orb-2: #ffffff;
+  --orb-opacity: .15;
+  --panel: rgba(14, 44, 70, .72);
+  --muted: #c4def0;
+  --board-bg: linear-gradient(180deg, #d9effb, #b3daf1);
+  --board-border: #eaf7ff;
+  --board-shadow: 0 4px 0 #7fb3d4, inset 0 1px 0 #fff;
+  --cell-bg: linear-gradient(180deg, #ffffff, #e5f4fc);
+  --cell-border: rgba(130, 180, 215, .5);
+  --cell-shadow: inset 0 -3px 0 rgba(120, 170, 210, .3), inset 0 2px 0 #fff;
+  --cyan: #a8d8ff;
+  --pink: #ff8a99;
+  --x-mark: #1b3a6b;
+  --o-mark: #d7263d;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: rgba(27, 58, 107, .8);
+  --o-overlay: rgba(215, 38, 61, .8);
+  --x-overlay-shadow: 0 2px 0 rgba(255, 255, 255, .7);
+  --o-overlay-shadow: 0 2px 0 rgba(255, 255, 255, .7);
+  --overlay-bg: rgba(255, 255, 255, .4);
+  --frame: #ffffff;
+  --frame-glow: rgba(255, 255, 255, .35);
+}
+
+/* Jardim: grama cortada em faixas e peças cor de flor */
+[data-theme="garden"] {
+  --accent: linear-gradient(90deg, #2f9e44, #74c447);
+  --page-bg: linear-gradient(180deg, #2f6b3a 0%, #1d4a26 55%, #112e17 100%);
+  --orb-1: #ffd43b;
+  --orb-2: #8ce99a;
+  --orb-opacity: .12;
+  --panel: rgba(16, 46, 24, .75);
+  --muted: #b9dcb9;
+  --board-bg: repeating-linear-gradient(90deg, #5aa845 0 14px, #64b44e 14px 28px);
+  --board-border: #3d7f2e;
+  --board-shadow: 0 4px 0 #2b5e20;
+  --cell-bg: linear-gradient(180deg, #d4f0b8, #b9e394);
+  --cell-border: rgba(60, 120, 40, .35);
+  --cell-shadow: inset 0 -3px 0 rgba(70, 130, 40, .3), inset 0 2px 0 rgba(255, 255, 255, .5);
+  --cyan: #ff8fa3;
+  --pink: #c3a6ff;
+  --x-mark: #e03157;
+  --o-mark: #7048e8;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: rgba(224, 49, 87, .82);
+  --o-overlay: rgba(112, 72, 232, .82);
+  --x-overlay-shadow: 0 2px 0 rgba(255, 255, 255, .5);
+  --o-overlay-shadow: 0 2px 0 rgba(255, 255, 255, .5);
+  --overlay-bg: rgba(212, 240, 184, .4);
+  --frame: #ffe066;
+  --frame-glow: rgba(255, 224, 102, .25);
+}
+
+/* Pizza de calabresa: toalha xadrez, queijo derretido e o ◯ vira uma rodela de calabresa */
+[data-theme="pizza"] {
+  --accent: linear-gradient(90deg, #c0392b, #e8692e);
+  --page-bg:
+    linear-gradient(rgba(30, 8, 6, .62), rgba(30, 8, 6, .62)),
+    repeating-conic-gradient(#c0392b 0 25%, #f3e6d6 0 50%) 0 0 / 64px 64px;
+  --orb-opacity: 0;
+  --panel: rgba(58, 18, 12, .82);
+  --muted: #f0c9b5;
+  --board-bg: radial-gradient(circle at 50% 50%, #f7c548 0 70%, #e9a93a 100%);
+  --board-border: #c9792b;
+  --board-shadow: 0 4px 0 #8f4f17, inset 0 0 0 3px #e0953c;
+  --cell-bg: radial-gradient(circle at 35% 30%, #ffe59a, #f9cf5c 70%);
+  --cell-border: rgba(200, 120, 30, .35);
+  --cell-shadow: inset 0 -3px 0 rgba(190, 110, 20, .3);
+  --cyan: #8ce99a;
+  --pink: #ff8a7a;
+  --x-mark: #2f8f3e;
+  --o-mark: #b8322a;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: rgba(47, 143, 62, .85);
+  --o-overlay: rgba(184, 50, 42, .85);
+  --x-overlay-shadow: 0 3px 0 rgba(120, 60, 10, .35);
+  --o-overlay-shadow: 0 3px 0 rgba(120, 60, 10, .35);
+  --overlay-bg: rgba(249, 207, 92, .35);
+  --frame: #ffd36b;
+  --frame-glow: rgba(255, 211, 107, .25);
+}
+
+[data-theme="pizza"] .cell.o::before {
+  width: 62%;
+  height: 62%;
+  border: none;
+  background:
+    radial-gradient(circle at 30% 35%, rgba(255, 215, 200, .9) 0 7%, transparent 8%),
+    radial-gradient(circle at 66% 30%, rgba(255, 215, 200, .8) 0 6%, transparent 7%),
+    radial-gradient(circle at 56% 66%, rgba(255, 215, 200, .85) 0 8%, transparent 9%),
+    radial-gradient(circle at 28% 70%, rgba(110, 20, 15, .6) 0 6%, transparent 7%),
+    radial-gradient(circle, #c0392b 0 62%, #8e2219 66% 100%);
+  box-shadow: 0 2px 0 rgba(90, 20, 10, .35);
+}
+
+/* Pitaya: casca rosa com pontas verdes e polpa branca com sementes */
+[data-theme="pitaya"] {
+  --accent: linear-gradient(90deg, #d61f69, #ff5fa2);
+  --page-bg: linear-gradient(160deg, #e0287a 0%, #b0145c 50%, #6e0a3b 100%);
+  --orb-1: #9be15d;
+  --orb-2: #ff7ab8;
+  --orb-opacity: .14;
+  --panel: rgba(70, 8, 40, .7);
+  --muted: #ffc2dd;
+  --board-bg: linear-gradient(180deg, #ee3d8a, #c91f6b);
+  --board-border: #8bc34a;
+  --board-shadow: 0 4px 0 #7a0f42;
+  --cell-bg:
+    radial-gradient(1px 1.6px at 26% 30%, rgba(40, 30, 35, .55) 95%, transparent),
+    radial-gradient(1px 1.6px at 72% 22%, rgba(40, 30, 35, .5) 95%, transparent),
+    radial-gradient(1px 1.6px at 22% 78%, rgba(40, 30, 35, .5) 95%, transparent),
+    radial-gradient(1px 1.6px at 76% 74%, rgba(40, 30, 35, .55) 95%, transparent),
+    #fff8fb;
+  --cell-border: rgba(200, 30, 100, .2);
+  --cell-shadow: inset 0 -3px 0 rgba(220, 120, 160, .25);
+  --cyan: #ff9cc8;
+  --pink: #b5e48c;
+  --x-mark: #d61f69;
+  --o-mark: #5c9e1f;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: rgba(214, 31, 105, .85);
+  --o-overlay: rgba(92, 158, 31, .85);
+  --x-overlay-shadow: 0 2px 0 rgba(255, 255, 255, .6);
+  --o-overlay-shadow: 0 2px 0 rgba(255, 255, 255, .6);
+  --overlay-bg: rgba(255, 248, 251, .45);
+  --frame: #b5e48c;
+  --frame-glow: rgba(181, 228, 140, .3);
+}
+
+/* Donuts: fundo de chocolate, cobertura rosa com granulado e o ◯ vira um donut */
+[data-theme="donut"] {
+  --accent: linear-gradient(90deg, #f0579a, #ff8fbf);
+  --page-bg:
+    radial-gradient(4px 1.5px at 20% 30%, rgba(255, 111, 174, .5) 95%, transparent) 0 0 / 70px 70px,
+    radial-gradient(1.5px 4px at 65% 20%, rgba(255, 224, 102, .45) 95%, transparent) 0 0 / 70px 70px,
+    radial-gradient(4px 1.5px at 80% 70%, rgba(77, 171, 247, .45) 95%, transparent) 0 0 / 70px 70px,
+    radial-gradient(1.5px 4px at 35% 80%, rgba(255, 255, 255, .35) 95%, transparent) 0 0 / 70px 70px,
+    linear-gradient(180deg, #5a3522 0%, #3e2416 55%, #28160c 100%);
+  --orb-opacity: 0;
+  --panel: rgba(46, 24, 12, .8);
+  --muted: #e8c9b0;
+  --board-bg:
+    radial-gradient(4px 1.5px at 25% 20%, #ffe066 95%, transparent) 0 0 / 34px 34px,
+    radial-gradient(1.5px 4px at 70% 40%, #4dabf7 95%, transparent) 0 0 / 34px 34px,
+    radial-gradient(4px 1.5px at 40% 80%, #ffffff 95%, transparent) 0 0 / 34px 34px,
+    radial-gradient(1.5px 4px at 85% 85%, #69db7c 95%, transparent) 0 0 / 34px 34px,
+    #ff8fbf;
+  --board-border: #d99a5b;
+  --board-shadow: 0 4px 0 #a86a33;
+  --cell-bg: linear-gradient(180deg, #ffe9cf, #f7d3a6);
+  --cell-border: rgba(170, 100, 40, .3);
+  --cell-shadow: inset 0 -3px 0 rgba(180, 110, 50, .3), inset 0 2px 0 rgba(255, 255, 255, .5);
+  --cyan: #ffd8a8;
+  --pink: #ff9ec7;
+  --x-mark: #6b3a1f;
+  --o-mark: #ff6fa8;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: rgba(107, 58, 31, .85);
+  --o-overlay: rgba(255, 111, 168, .85);
+  --x-overlay-shadow: 0 2px 0 rgba(255, 255, 255, .5);
+  --o-overlay-shadow: 0 2px 0 rgba(255, 255, 255, .5);
+  --overlay-bg: rgba(255, 233, 207, .4);
+  --frame: #ffe066;
+  --frame-glow: rgba(255, 224, 102, .25);
+}
+
+/* Militar: fundo camuflado, placa verde-oliva com rebites e casas cor de areia */
+[data-theme="military"] {
+  --accent: linear-gradient(90deg, #5f6a34, #8c9450);
+  --page-bg:
+    linear-gradient(rgba(10, 14, 6, .45), rgba(10, 14, 6, .45)),
+    radial-gradient(60px 40px at 20% 30%, #3b4a2a 98%, transparent) 0 0 / 180px 160px,
+    radial-gradient(50px 70px at 70% 60%, #5c4a32 98%, transparent) 0 0 / 180px 160px,
+    radial-gradient(80px 45px at 45% 92%, #6b7a45 98%, transparent) 0 0 / 180px 160px,
+    radial-gradient(45px 35px at 88% 14%, #2a3320 98%, transparent) 0 0 / 180px 160px,
+    #4a5a32;
+  --orb-opacity: 0;
+  --panel: rgba(26, 32, 16, .82);
+  --muted: #c9c2a0;
+  --board-bg:
+    radial-gradient(circle at 9px 9px, #9aa077 2px, transparent 2.6px),
+    radial-gradient(circle at calc(100% - 9px) 9px, #9aa077 2px, transparent 2.6px),
+    radial-gradient(circle at 9px calc(100% - 9px), #9aa077 2px, transparent 2.6px),
+    radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), #9aa077 2px, transparent 2.6px),
+    linear-gradient(180deg, #5f6a34, #4b5320);
+  --board-border: #30361a;
+  --board-shadow: 0 4px 0 #23280f, inset 0 1px 0 rgba(255, 255, 255, .12);
+  --cell-bg: linear-gradient(180deg, #d8ca9d, #c2b280);
+  --cell-border: rgba(60, 50, 20, .35);
+  --cell-shadow: inset 0 -3px 0 rgba(110, 95, 50, .35), inset 0 2px 0 rgba(255, 255, 255, .35);
+  --cyan: #e0d6a6;
+  --pink: #ff9a66;
+  --x-mark: #1f2416;
+  --o-mark: #c4451c;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: rgba(31, 36, 22, .85);
+  --o-overlay: rgba(196, 69, 28, .85);
+  --x-overlay-shadow: 0 2px 0 rgba(255, 245, 210, .4);
+  --o-overlay-shadow: 0 2px 0 rgba(255, 245, 210, .4);
+  --overlay-bg: rgba(216, 202, 157, .4);
+  --frame: #e8cf4f;
+  --frame-glow: rgba(232, 207, 79, .25);
+}
+
+[data-theme="donut"] .cell.o::before {
+  width: 80%;
+  height: 80%;
+  border: none;
+  background:
+    radial-gradient(2.5px 1px at 50% 20%, #fff 95%, transparent),
+    radial-gradient(1px 2.5px at 22% 52%, #ffe066 95%, transparent),
+    radial-gradient(2.5px 1px at 76% 62%, #4dabf7 95%, transparent),
+    radial-gradient(1px 2.5px at 46% 82%, #69db7c 95%, transparent),
+    radial-gradient(circle, transparent 0 22%, #c98a4b 23% 26%, #ff6fa8 27% 58%, #e8a35f 60% 70%, transparent 71%);
+  box-shadow: none;
+}
+
 /* ===========================
    Layout base
    =========================== */
@@ -107,7 +476,7 @@ body::after {
   height: 300px;
   border-radius: 50%;
   filter: blur(100px);
-  opacity: .22;
+  opacity: var(--orb-opacity);
   z-index: 0;
 }
 
@@ -169,7 +538,7 @@ body::after {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: rgba(13, 19, 41, .7);
+  background: var(--panel);
   border: 1px solid var(--border);
   backdrop-filter: blur(10px);
   font-size: 1.25rem;
@@ -256,7 +625,7 @@ body::after {
 }
 
 .info-card {
-  background: rgba(13, 19, 41, .7);
+  background: var(--panel);
   border: 1px solid rgba(255, 255, 255, .08);
   border-radius: 18px;
   padding: 16px 20px;
@@ -293,12 +662,12 @@ body::after {
 
 .turn-symbol.x {
   color: var(--cyan);
-  text-shadow: 0 0 10px rgba(0, 229, 255, .7);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--x-glow) 78%, transparent);
 }
 
 .turn-symbol.o {
   color: var(--pink);
-  text-shadow: 0 0 10px rgba(255, 79, 216, .7);
+  text-shadow: 0 0 10px var(--o-glow);
 }
 
 /* Sua vez: o card brilha na sua cor */
@@ -398,7 +767,8 @@ body::after {
 
 .mini-board {
   background: var(--board-bg);
-  border: 2px solid rgba(255, 255, 255, .08);
+  border: 2px solid var(--board-border);
+  box-shadow: var(--board-shadow);
   border-radius: 22px;
   padding: 10px;
   display: grid;
@@ -413,16 +783,16 @@ body::after {
 .mini-board.active.x-turn {
   border-color: var(--cyan);
   box-shadow:
-    0 0 25px rgba(0, 229, 255, .28),
-    inset 0 0 25px rgba(0, 229, 255, .08);
+    0 0 25px color-mix(in srgb, var(--cyan) 28%, transparent),
+    inset 0 0 25px color-mix(in srgb, var(--cyan) 8%, transparent);
   transform: translateY(-2px);
 }
 
 .mini-board.active.o-turn {
   border-color: var(--pink);
   box-shadow:
-    0 0 25px rgba(255, 79, 216, .28),
-    inset 0 0 25px rgba(255, 79, 216, .08);
+    0 0 25px color-mix(in srgb, var(--pink) 28%, transparent),
+    inset 0 0 25px color-mix(in srgb, var(--pink) 8%, transparent);
   transform: translateY(-2px);
 }
 
@@ -444,7 +814,8 @@ body::after {
 .cell {
   aspect-ratio: 1;
   background: var(--cell-bg);
-  border: 1px solid rgba(255, 255, 255, .06);
+  border: 1px solid var(--cell-border);
+  box-shadow: var(--cell-shadow);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -463,15 +834,26 @@ body::after {
   pointer-events: none;
 }
 
+/* Casa ocupada: no tema Blocos, a casa inteira ganha a cor do jogador */
+.cell.x {
+  background: var(--x-cell-bg);
+  box-shadow: var(--filled-shadow);
+}
+
+.cell.o {
+  background: var(--o-cell-bg);
+  box-shadow: var(--filled-shadow);
+}
+
 .cell.x::before,
 .cell.x::after {
   content: '';
   position: absolute;
   width: 60%;
   height: 6px;
-  background: var(--cyan);
+  background: var(--x-mark);
   border-radius: 999px;
-  box-shadow: 0 0 16px rgba(0, 229, 255, .9);
+  box-shadow: 0 0 16px var(--x-glow);
 }
 
 .cell.x::before {
@@ -487,8 +869,8 @@ body::after {
   width: 54%;
   height: 54%;
   border-radius: 50%;
-  border: 6px solid var(--pink);
-  box-shadow: 0 0 18px rgba(255, 79, 216, .65);
+  border: 6px solid var(--o-mark);
+  box-shadow: 0 0 18px var(--o-glow);
 }
 
 /* ===========================
@@ -504,21 +886,18 @@ body::after {
   font-size: 8rem;
   font-weight: 900;
   z-index: 4;
+  background: var(--overlay-bg);
   backdrop-filter: blur(3px);
 }
 
 .board-overlay.x {
-  color: rgba(0, 229, 255, .72);
-  text-shadow:
-    0 0 40px rgba(0, 229, 255, .95),
-    0 0 80px rgba(0, 229, 255, .55);
+  color: var(--x-overlay);
+  text-shadow: var(--x-overlay-shadow);
 }
 
 .board-overlay.o {
-  color: rgba(255, 79, 216, .72);
-  text-shadow:
-    0 0 40px rgba(255, 79, 216, .95),
-    0 0 80px rgba(255, 79, 216, .55);
+  color: var(--o-overlay);
+  text-shadow: var(--o-overlay-shadow);
 }
 
 .board-overlay.draw {
@@ -583,7 +962,7 @@ body::after {
   border: none;
   padding: 16px;
   border-radius: 18px;
-  background: linear-gradient(90deg, #8b5cf6, #00d9ff);
+  background: var(--accent);
   color: white;
   font-size: 1rem;
   font-weight: 700;
@@ -631,7 +1010,7 @@ body::after {
   margin-top: 16px;
   padding: 20px;
   border-radius: 18px;
-  background: rgba(13, 19, 41, .7);
+  background: var(--panel);
   border: 1px solid rgba(139, 92, 246, .45);
   backdrop-filter: blur(10px);
   text-align: center;
@@ -812,7 +1191,7 @@ body::after {
   gap: 4px;
   padding: 4px;
   border-radius: 16px;
-  background: rgba(13, 19, 41, .7);
+  background: var(--panel);
   border: 1px solid var(--border);
   backdrop-filter: blur(10px);
 }
@@ -838,7 +1217,7 @@ body::after {
 
 .segmented button.active {
   color: var(--text);
-  background: linear-gradient(90deg, #8b5cf6, #00d9ff);
+  background: var(--accent);
   box-shadow: 0 0 16px rgba(139, 92, 246, .35);
 }
 
@@ -1168,7 +1547,7 @@ body::after {
   height: 40px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: rgba(13, 19, 41, .7);
+  background: var(--panel);
   font-size: 1.3rem;
   cursor: pointer;
   transition: transform .15s ease, border-color .2s ease;
@@ -1233,11 +1612,11 @@ body::after {
 }
 
 .cell.x .glyph-mark {
-  filter: drop-shadow(0 0 6px rgba(0, 229, 255, .8));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--x-glow) 89%, transparent));
 }
 
 .cell.o .glyph-mark {
-  filter: drop-shadow(0 0 6px rgba(255, 79, 216, .8));
+  filter: drop-shadow(0 0 6px var(--o-glow));
 }
 
 .board-overlay.glyph {
@@ -1263,7 +1642,7 @@ body::after {
   height: 32px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: rgba(13, 19, 41, .7);
+  background: var(--panel);
   font: inherit;
   font-size: 1rem;
   font-weight: 800;
@@ -1661,7 +2040,7 @@ body::after {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #8b5cf6, #00d9ff);
+  background: var(--accent);
   transition: width .4s ease;
 }
 

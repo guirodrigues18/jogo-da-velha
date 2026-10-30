@@ -34,6 +34,16 @@ export const ITEMS: ShopItem[] = [
   { id: 'theme-ocean', type: 'theme', price: 150, preview: '#2ec4b6' },
   { id: 'theme-sunset', type: 'theme', price: 200, preview: '#ff8c42' },
   { id: 'theme-gold', type: 'theme', price: 300, preview: '#ffd166' },
+  // Temas sem neon (grátis por enquanto, para testar o visual)
+  { id: 'theme-blocks', type: 'theme', price: 0, preview: 'linear-gradient(135deg, #ff5a5f 0 50%, #34c964 50%)' },
+  { id: 'theme-wood', type: 'theme', price: 0, preview: 'linear-gradient(135deg, #f3dcb2 0 50%, #8c5a2e 50%)' },
+  { id: 'theme-notebook', type: 'theme', price: 0, preview: 'repeating-linear-gradient(180deg, #fbf8ee 0 5px, #9db8e8 5px 6px)' },
+  { id: 'theme-ice', type: 'theme', price: 0, preview: 'linear-gradient(135deg, #ffffff 0 50%, #7fb3d4 50%)' },
+  { id: 'theme-garden', type: 'theme', price: 0, preview: 'repeating-linear-gradient(90deg, #5aa845 0 6px, #7cc760 6px 12px)' },
+  { id: 'theme-pizza', type: 'theme', price: 0, preview: 'radial-gradient(circle at 35% 40%, #c0392b 0 18%, transparent 20%), radial-gradient(circle at 68% 64%, #c0392b 0 16%, transparent 18%), #f7c548' },
+  { id: 'theme-pitaya', type: 'theme', price: 0, preview: 'radial-gradient(circle, #fff8fb 0 45%, #e0287a 47%)' },
+  { id: 'theme-donut', type: 'theme', price: 0, preview: 'radial-gradient(circle, transparent 0 22%, #ff6fa8 24% 60%, #e8a35f 62%)' },
+  { id: 'theme-military', type: 'theme', price: 0, preview: 'radial-gradient(circle at 30% 35%, #2a3320 0 22%, transparent 24%), radial-gradient(circle at 70% 70%, #6b5a3a 0 20%, transparent 22%), #5f6a34' },
 
   { id: 'effect-classic', type: 'effect', price: 0, preview: '🎉' },
   { id: 'effect-stars', type: 'effect', price: 100, preview: '⭐' },
