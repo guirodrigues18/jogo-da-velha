@@ -43,7 +43,8 @@ const es: Messages = {
   },
 
   actions: {
-    achievements: 'Perfil y logros',
+    achievements: 'Logros y rivales',
+    account: 'Cuenta y apodo',
     help: 'Cómo jugar',
     language: 'Idioma',
     soundOn: 'Activar sonido y vibración',
@@ -249,7 +250,18 @@ const es: Messages = {
     watch: 'Ver partida',
     placeholder: 'Tu apodo',
     howToPlay: '❔ ¿Cómo jugar?',
+    playingAs: 'Juegas como',
+    change: 'cambiar',
+    watchInfo: 'La partida ya tiene dos jugadores, pero puedes mirar.',
     back: 'Volver'
+  },
+
+  profile: {
+    title: 'Tu perfil',
+    nicknameLabel: 'Apodo en línea',
+    nicknameHint: 'Así te ven los demás jugadores en las partidas en línea.',
+    save: 'Guardar',
+    saved: '✓ Guardado'
   },
 
   coins: {
@@ -321,7 +333,7 @@ const es: Messages = {
 
   rivals: {
     note: 'Ranking entre tú y quienes ya enfrentaste en línea, por el rendimiento en las partidas entre ustedes. Solo cuentan las partidas en que los dos entraron con Google.',
-    needGoogle: 'El marcador contra rivales es solo entre cuentas de Google, para que sea la misma persona en cualquier dispositivo. Entra con Google (arriba) y juega en línea con amigos que también hayan entrado.',
+    needGoogle: 'El marcador contra rivales es solo entre cuentas de Google, para que sea la misma persona en cualquier dispositivo. Entra con Google (botón 👤, arriba) y juega en línea con amigos que también hayan entrado.',
     you: 'Tú',
     yourRecord: (wins, draws, losses) => `${wins}V · ${draws}E · ${losses}D en total`,
     versus: (mine, theirs, draws) =>

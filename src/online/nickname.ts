@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from 'react';
+
 export const NICKNAME_MAX_LENGTH = 16;
 
 const NICKNAME_KEY = 'jogo-da-velha:nickname';
@@ -22,13 +24,34 @@ export function loadNickname(): string {
 
 }
 
+// Sem armazenamento, o último apelido salvo vale só para esta visita
+let current = loadNickname();
+const listeners = new Set<() => void>();
+
 export function saveNickname(nickname: string) {
+
+  current = nickname;
 
   try {
     localStorage.setItem(NICKNAME_KEY, nickname);
   } catch {
     // Vale só para esta visita
   }
+
+  listeners.forEach(listener => listener());
+
+}
+
+/** Apelido atual, atualizado quando é trocado (ex.: na janela do perfil) */
+export function useNickname(): string {
+
+  return useSyncExternalStore(
+    listener => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    () => current
+  );
 
 }
 

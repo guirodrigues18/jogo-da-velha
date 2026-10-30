@@ -104,8 +104,8 @@ export default function GameView({
         <div className="top">
           <div className="top-bar">
             {onHome && (
-              <button className="back-button" onClick={onHome}>
-                <span aria-hidden="true">←</span> {t.home.back}
+              <button className="back-button" onClick={onHome} aria-label={t.home.back}>
+                <span aria-hidden="true">←</span> <span className="back-label">{t.home.back}</span>
               </button>
             )}
             <TopActions />

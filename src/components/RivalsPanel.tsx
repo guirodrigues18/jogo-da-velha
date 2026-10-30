@@ -16,7 +16,7 @@ export default function RivalsPanel({ onChallenge }: Props) {
   const rivals = useRivals();
   const account = useAccountInfo();
 
-  // O placar só vale entre contas Google (o botão de entrar fica no topo da janela)
+  // O placar só vale entre contas Google (o botão de entrar fica no perfil, 👤)
   if (!account) return <p className="rivals-empty">🔒 {t.rivals.needGoogle}</p>;
 
   if (!Object.keys(rivals).length) return <p className="rivals-empty">⚔️ {t.rivals.empty}</p>;

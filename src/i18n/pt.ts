@@ -43,7 +43,8 @@ const pt = {
   },
 
   actions: {
-    achievements: 'Perfil e conquistas',
+    achievements: 'Conquistas e rivais',
+    account: 'Conta e apelido',
     help: 'Como jogar',
     language: 'Idioma',
     soundOn: 'Ativar sons e vibração',
@@ -249,7 +250,18 @@ const pt = {
     watch: 'Assistir partida',
     placeholder: 'Seu apelido',
     howToPlay: '❔ Como jogar?',
+    playingAs: 'Você joga como',
+    change: 'trocar',
+    watchInfo: 'A partida já tem dois jogadores, mas você pode assistir.',
     back: 'Voltar'
+  },
+
+  profile: {
+    title: 'Seu perfil',
+    nicknameLabel: 'Apelido no online',
+    nicknameHint: 'É assim que os outros jogadores te veem nas partidas online.',
+    save: 'Salvar',
+    saved: '✓ Salvo'
   },
 
   coins: {
@@ -321,7 +333,7 @@ const pt = {
 
   rivals: {
     note: 'Ranking entre você e quem você já enfrentou online, pelo aproveitamento nas partidas entre vocês. Só contam partidas em que os dois entraram com Google.',
-    needGoogle: 'O placar contra rivais é só entre contas Google, para ser a mesma pessoa em qualquer aparelho. Entre com Google (acima) e jogue online com amigos que também entraram.',
+    needGoogle: 'O placar contra rivais é só entre contas Google, para ser a mesma pessoa em qualquer aparelho. Entre com Google (no botão 👤, no topo) e jogue online com amigos que também entraram.',
     you: 'Você',
     yourRecord: (wins: number, draws: number, losses: number) => `${wins}V · ${draws}E · ${losses}D no total`,
     versus: (mine: number, theirs: number, draws: number) =>

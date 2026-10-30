@@ -43,7 +43,8 @@ const en: Messages = {
   },
 
   actions: {
-    achievements: 'Profile and achievements',
+    achievements: 'Achievements and rivals',
+    account: 'Account and nickname',
     help: 'How to play',
     language: 'Language',
     soundOn: 'Turn on sound and vibration',
@@ -249,7 +250,18 @@ const en: Messages = {
     watch: 'Watch match',
     placeholder: 'Your nickname',
     howToPlay: '❔ How to play?',
+    playingAs: 'Playing as',
+    change: 'change',
+    watchInfo: 'This match already has two players, but you can watch.',
     back: 'Back'
+  },
+
+  profile: {
+    title: 'Your profile',
+    nicknameLabel: 'Online nickname',
+    nicknameHint: 'This is how other players see you in online matches.',
+    save: 'Save',
+    saved: '✓ Saved'
   },
 
   coins: {
@@ -321,7 +333,7 @@ const en: Messages = {
 
   rivals: {
     note: "Ranking between you and everyone you've played online, by win rate in your games together. Only games where both players signed in with Google count.",
-    needGoogle: 'Rival scores only count between Google accounts, so it is the same person on any device. Sign in with Google (above) and play online with friends who did too.',
+    needGoogle: 'Rival scores only count between Google accounts, so it is the same person on any device. Sign in with Google (👤 button, at the top) and play online with friends who did too.',
     you: 'You',
     yourRecord: (wins, draws, losses) => `${wins}W · ${draws}D · ${losses}L overall`,
     versus: (mine, theirs, draws) =>

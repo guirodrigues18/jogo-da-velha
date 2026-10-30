@@ -22,6 +22,8 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
 
   // Sugere o último apelido usado ou, para quem entrou com Google, o primeiro nome
   const [value, setValue] = useState(() => loadNickname() || firstName(getAccountInfo()));
+  // Quem já escolheu um apelido não precisa digitar de novo (dá para trocar aqui ou no 👤)
+  const [editing, setEditing] = useState(() => !loadNickname());
   const [symbol, setSymbol] = useState(() => loadPreferences().symbol);
   const [preview, setPreview] = useState<RoomPreview | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -61,12 +63,12 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
   const hostName = preview?.hostRole ? preview.names[preview.hostRole] : undefined;
 
   let title = rival && !roomId ? t.rivals.challengeTitle(rival.name) : t.nickname.playOnline;
-  let subtitle = t.nickname.ask;
+  let subtitle: string | null = editing ? t.nickname.ask : null;
   let action = t.nickname.create;
 
   if (roomId && watching) {
     title = t.nickname.watchTitle(preview?.names.x ?? t.player('X'), preview?.names.o ?? t.player('O'));
-    subtitle = t.nickname.watchAsk;
+    subtitle = editing ? t.nickname.watchAsk : t.nickname.watchInfo;
     action = t.nickname.watch;
   } else if (roomId) {
     title = hostName ? t.nickname.challenged(hostName) : t.nickname.invited;
@@ -77,18 +79,27 @@ export default function NicknameForm({ roomId, onSubmit, onCancel }: Props) {
     <div className="container online-message">
       <form className="modal-card" onSubmit={submit}>
         <div className="modal-title">{title}</div>
-        <div className="modal-subtitle">{subtitle}</div>
-        <input
-          className="nickname-input"
-          value={value}
-          onChange={event => setValue(event.target.value)}
-          maxLength={NICKNAME_MAX_LENGTH}
-          placeholder={t.nickname.placeholder}
-          aria-label={t.nickname.placeholder}
-          autoComplete="nickname"
-          enterKeyHint="go"
-          autoFocus
-        />
+        {subtitle && <div className="modal-subtitle">{subtitle}</div>}
+        {editing ? (
+          <input
+            className="nickname-input"
+            value={value}
+            onChange={event => setValue(event.target.value)}
+            maxLength={NICKNAME_MAX_LENGTH}
+            placeholder={t.nickname.placeholder}
+            aria-label={t.nickname.placeholder}
+            autoComplete="nickname"
+            enterKeyHint="go"
+            autoFocus
+          />
+        ) : (
+          <p className="nickname-chip">
+            {t.nickname.playingAs} <strong>{nickname}</strong>
+            <button className="link-button" type="button" onClick={() => setEditing(true)}>
+              ✏️ {t.nickname.change}
+            </button>
+          </p>
+        )}
         {!roomId && <SymbolPicker value={symbol} onChange={setSymbol} />}
         <button className="btn" type="submit" disabled={!nickname}>
           {action}

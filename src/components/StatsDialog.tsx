@@ -3,7 +3,6 @@ import { ACHIEVEMENTS, loadStats } from '../stats/achievements';
 import { t } from '../i18n';
 import Dialog from './Dialog';
 import RivalsPanel from './RivalsPanel';
-import AccountBox from './AccountBox';
 
 interface Props {
   onClose: () => void;
@@ -13,15 +12,13 @@ type Tab = 'achievements' | 'rivals';
 
 const TABS: Tab[] = ['achievements', 'rivals'];
 
-/** Perfil (botão 🏅): conta, números, conquistas e rivais. Loja e missões ficam no início */
+/** Botão 🏅: números, conquistas e rivais. A conta fica no 👤; loja e missões, no início */
 export default function StatsDialog({ onClose }: Props) {
 
   const [tab, setTab] = useState<Tab>('achievements');
 
   return (
     <Dialog title={t.stats.title} onClose={onClose}>
-
-      <AccountBox />
 
       <div className="segmented tabs" role="tablist">
         {TABS.map(id => (

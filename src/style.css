@@ -793,8 +793,9 @@ body::after {
 /* "← Início" à esquerda, botões de ação à direita */
 .top-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px 12px;
   margin-bottom: 16px;
 }
 
@@ -826,6 +827,19 @@ body::after {
 
 .back-button:hover {
   border-color: rgba(255, 255, 255, .2);
+}
+
+/* Perfil: com Google, a foto da conta ocupa o botão */
+.account-button {
+  overflow: hidden;
+}
+
+.account-button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .back-button:active {
@@ -1453,6 +1467,56 @@ body::after {
 .modal-secondary {
   display: inline-block;
   margin-top: 14px;
+}
+
+/* Apelido já escolhido: aparece pronto, sem precisar digitar de novo */
+.nickname-chip {
+  margin-bottom: 18px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.nickname-chip strong {
+  color: var(--text);
+}
+
+.online-message .nickname-chip .link-button {
+  margin: 0 0 0 8px;
+}
+
+/* Apelido na janela do perfil */
+.nickname-section {
+  margin-top: 18px;
+}
+
+.nickname-section label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+
+.nickname-row {
+  display: flex;
+  gap: 8px;
+}
+
+.nickname-row .nickname-input {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+  padding: 12px 14px;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.nickname-row .btn {
+  width: auto;
+  padding: 12px 18px;
+  white-space: nowrap;
+}
+
+.nickname-row .btn:disabled {
+  cursor: default;
 }
 
 .role-chip.x {
@@ -3223,6 +3287,19 @@ body::after {
 
   .cell.o::before {
     border-width: 4px;
+  }
+
+}
+
+/* Celulares bem estreitos: o "Início" vira só a seta, para caberem os 5 botões do topo */
+@media (max-width: 359px) {
+
+  .back-label {
+    display: none;
+  }
+
+  .back-button {
+    padding: 0 13px;
   }
 
 }
