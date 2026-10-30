@@ -2413,6 +2413,56 @@ body::after {
   color: var(--text);
 }
 
+/* Aviso de cookies (rodapé da tela, uma vez só) */
+.cookie-notice {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  z-index: 140;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 16px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  padding: 12px 14px 12px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(13, 19, 41, .96);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .45);
+  backdrop-filter: blur(10px);
+  translate: -50% 0;
+  animation: fade-up .3s ease both;
+}
+
+.cookie-notice p {
+  color: #d6dbf5;
+  font-size: .88rem;
+}
+
+.cookie-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.cookie-button {
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .06);
+  color: var(--text);
+  font: inherit;
+  font-size: .85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cookie-button.accept {
+  border-color: transparent;
+  background: var(--accent);
+}
+
 /* Links para as páginas de regras e estratégias (fora do React, para o Google achar) */
 .site-footer {
   position: relative;

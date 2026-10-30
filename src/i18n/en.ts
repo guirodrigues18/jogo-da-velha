@@ -305,6 +305,12 @@ const en: Messages = {
     roomHint: coins => `🎁 If it's their first game, you both get ${coins} 🪙.`
   },
 
+  cookies: {
+    text: 'This site uses cookies for statistics.',
+    accept: 'Accept',
+    decline: 'Decline'
+  },
+
   pages: {
     rules: '/en/rules/',
     strategy: '/en/strategy/'

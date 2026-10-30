@@ -4,6 +4,7 @@ import LocalGame from './components/LocalGame';
 import OnlineMessage from './components/OnlineMessage';
 import AchievementToaster from './components/AchievementToaster';
 import DailyDialog from './components/DailyDialog';
+import CookieNotice from './components/CookieNotice';
 import { t } from './i18n';
 import { getAccountInfo } from './online/accountInfo';
 import { acceptInviteFromUrl, REFERRAL_COINS, startReferralWatch } from './online/invite';
@@ -100,6 +101,7 @@ export default function App() {
       {screen}
       {greeting && <DailyDialog onClose={() => setGreeting(false)} />}
       <AchievementToaster />
+      <CookieNotice />
     </>
   );
 

@@ -305,6 +305,12 @@ const pt = {
     roomHint: (coins: number) => `🎁 Se for a primeira partida dele no jogo, vocês dois ganham ${coins} 🪙.`
   },
 
+  cookies: {
+    text: 'Este site usa cookies para estatísticas.',
+    accept: 'Aceitar',
+    decline: 'Recusar'
+  },
+
   pages: {
     rules: '/regras/',
     strategy: '/estrategias/'
