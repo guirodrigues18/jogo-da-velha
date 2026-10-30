@@ -404,14 +404,8 @@
   --frame: #fff;
   --frame-glow: rgba(255, 255, 255, .22);
 
-  /* Detalhes desenhados (estrelas e mascotes genéricos), discretos no fundo */
+  /* Estrelas desenhadas, discretas no fundo */
   --stars: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cpath fill='white' fill-opacity='.2' d='M20 8l3.5 7.6 8.3.9-6.2 5.6 1.8 8.2-7.4-4.3-7.4 4.3 1.8-8.2-6.2-5.6 8.3-.9z'/%3E%3Cpath fill='white' fill-opacity='.13' transform='translate(50 46) scale(.7)' d='M20 8l3.5 7.6 8.3.9-6.2 5.6 1.8 8.2-7.4-4.3-7.4 4.3 1.8-8.2-6.2-5.6 8.3-.9z'/%3E%3C/svg%3E");
-  --rooster: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%90%93%3C/text%3E%3C/svg%3E");
-  --whale: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%90%8B%3C/text%3E%3C/svg%3E");
-  --bull: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%90%82%3C/text%3E%3C/svg%3E");
-  --lion: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%A6%81%3C/text%3E%3C/svg%3E");
-  --pig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%90%B7%3C/text%3E%3C/svg%3E");
-  --fencer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='g'%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Ctext x='50' y='80' font-size='76' text-anchor='middle' opacity='.2' filter='url(%23g)'%3E%F0%9F%A4%BA%3C/text%3E%3C/svg%3E");
 }
 
 /* Times: as bordas dos tabuleiros são claras, então o da vez ganha um anel duplo
@@ -472,7 +466,6 @@
 [data-theme="team-verdao"] {
   --accent: linear-gradient(90deg, #0b6b3a, #16a05a);
   --page-bg:
-    var(--pig) left -30px bottom 10px / 300px 300px no-repeat,
     radial-gradient(circle at 50% -10%, rgba(255, 255, 255, .16), transparent 55%),
     repeating-linear-gradient(90deg, rgba(255, 255, 255, .04) 0 2px, transparent 2px 26px),
     linear-gradient(180deg, #0b5d34, #063d22);
@@ -566,7 +559,6 @@
 [data-theme="team-galo"] {
   --accent: linear-gradient(90deg, #2b2b2b, #555);
   --page-bg:
-    var(--rooster) left -30px bottom 10px / 300px 300px no-repeat,
     linear-gradient(rgba(0, 0, 0, .62), rgba(0, 0, 0, .62)),
     repeating-linear-gradient(90deg, #111 0 36px, #ededed 36px 72px);
   --board-bg: #141414;
@@ -588,7 +580,6 @@
 [data-theme="team-peixe"] {
   --accent: linear-gradient(90deg, #111, #444);
   --page-bg:
-    var(--whale) left -30px bottom 10px / 300px 300px no-repeat,
     repeating-radial-gradient(circle at 50% 130%, transparent 0 22px, rgba(255, 255, 255, .06) 22px 24px),
     linear-gradient(180deg, #1f1f1f, #050505);
   --board-bg: #f5f5f5;
@@ -609,7 +600,6 @@
 [data-theme="team-massa-bruta"] {
   --accent: linear-gradient(90deg, #d7182a, #ff4a5a);
   --page-bg:
-    var(--bull) left -30px bottom 10px / 300px 300px no-repeat,
     linear-gradient(115deg, transparent 0 58%, #d7182a 58% 65%, #f4f4f4 65% 67%, #d7182a 67% 71%, transparent 71%),
     radial-gradient(circle at 25% 15%, #22396f, transparent 60%),
     linear-gradient(160deg, #13234a, #070f24);
@@ -699,12 +689,16 @@
   --overlay-bg: rgba(17, 17, 17, .5);
 }
 
+/* Textos soltos sobre o fundo: sombra escura para continuarem legíveis em cima da faixa branca */
+[data-theme="team-vascao"] :is(.logo-name, .subtitle, .symbol-picker, .daily-info, .site-footer) {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .9), 0 0 14px rgba(0, 0, 0, .8);
+}
+
 /* Listras finas e escurecidas nas bordas (diferente das listras largas do Mengão),
    tabuleiro preto de borda vermelha e casas brancas */
 [data-theme="team-leao-da-barra"] {
   --accent: linear-gradient(90deg, #d0021b, #111);
   --page-bg:
-    var(--lion) left -30px bottom 10px / 300px 300px no-repeat,
     radial-gradient(ellipse at 50% 0%, transparent 35%, rgba(0, 0, 0, .7) 100%),
     repeating-linear-gradient(180deg, #b00018 0 9px, #0d0d0d 9px 18px);
   --board-bg: #0d0d0d;
@@ -734,11 +728,10 @@
   --o-overlay: rgba(17, 17, 17, .85);
 }
 
-/* Vermelho com estrelas, risca fina e luz no topo; tabuleiro vermelho de borda branca */
+/* Vermelho com risca fina e luz no topo; tabuleiro vermelho de borda branca */
 [data-theme="team-colorado"] {
   --accent: linear-gradient(90deg, #c8102e, #ff3a52);
   --page-bg:
-    var(--stars),
     radial-gradient(circle at 50% -5%, rgba(255, 255, 255, .2), transparent 50%),
     repeating-linear-gradient(90deg, rgba(255, 255, 255, .06) 0 2px, transparent 2px 22px),
     linear-gradient(160deg, #d0142f, #7a0818);
@@ -753,11 +746,10 @@
   --o-overlay: rgba(26, 26, 26, .88);
 }
 
-/* Mosqueteiro no fundo, riscas verticais e tabuleiro listrado preto e branco */
+/* Riscas verticais no fundo e tabuleiro listrado preto e branco */
 [data-theme="team-timao"] {
   --accent: linear-gradient(90deg, #111, #3a3a3a);
   --page-bg:
-    var(--fencer) left -30px bottom 10px / 300px 300px no-repeat,
     radial-gradient(circle at 50% -5%, rgba(255, 255, 255, .12), transparent 55%),
     repeating-linear-gradient(90deg, rgba(255, 255, 255, .09) 0 3px, transparent 3px 18px),
     linear-gradient(180deg, #161616, #050505);
@@ -778,7 +770,6 @@
 [data-theme="team-leao-azul"] {
   --accent: linear-gradient(90deg, #0b1f4b, #2a4f9e);
   --page-bg:
-    var(--lion) left -30px bottom 10px / 300px 300px no-repeat,
     repeating-radial-gradient(ellipse at 50% 120%, transparent 0 26px, rgba(255, 255, 255, .05) 26px 28px),
     linear-gradient(180deg, #0b1f4b 0 18%, #f2f2f2 18% 20%, #0b1f4b 20% 22%, #f2f2f2 22% 24%, #102a63 24%, #050e26 100%);
   --panel: rgba(6, 16, 42, .84);
