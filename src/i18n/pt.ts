@@ -51,14 +51,22 @@ const pt = {
   },
 
   modes: {
-    label: 'Modo de jogo',
-    pvp: '👥 2 jogadores',
-    ai: '🤖 IA',
-    online: '🌐 Online',
     levelLabel: 'Nível da IA',
-    daily: '📅 Diário',
     symbolLabel: 'Você joga com',
     startsHint: 'o ✕ sempre começa'
+  },
+
+  home: {
+    label: 'Modo de jogo',
+    back: 'Início',
+    pvp: { title: '2 jogadores', text: 'Revezando no mesmo aparelho' },
+    ai: { title: 'Contra a IA', text: 'Fácil, médio ou difícil' },
+    daily: { title: (n: number) => `Desafio diário #${n}`, text: 'A mesma posição para todo mundo' },
+    online: { title: 'Online', text: 'Desafie um amigo pelo link' },
+    wins: (n: number) => `🏆 ${n} ${n === 1 ? 'vitória' : 'vitórias'}`,
+    ready: 'Tudo pronto?',
+    readyHint: 'O cronômetro só começa quando você tocar em Começar.',
+    start: '▶ Começar'
   },
 
   daily: {

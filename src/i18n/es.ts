@@ -51,14 +51,22 @@ const es: Messages = {
   },
 
   modes: {
-    label: 'Modo de juego',
-    pvp: '👥 2 jugadores',
-    ai: '🤖 IA',
-    online: '🌐 En línea',
     levelLabel: 'Nivel de la IA',
-    daily: '📅 Diario',
     symbolLabel: 'Juegas con',
     startsHint: 'el ✕ siempre empieza'
+  },
+
+  home: {
+    label: 'Modo de juego',
+    back: 'Inicio',
+    pvp: { title: '2 jugadores', text: 'Por turnos en el mismo dispositivo' },
+    ai: { title: 'Contra la IA', text: 'Fácil, medio o difícil' },
+    daily: { title: n => `Desafío diario #${n}`, text: 'La misma posición para todos' },
+    online: { title: 'En línea', text: 'Reta a un amigo con un enlace' },
+    wins: n => `🏆 ${n} ${n === 1 ? 'victoria' : 'victorias'}`,
+    ready: '¿Listo?',
+    readyHint: 'El cronómetro solo empieza cuando tocas Empezar.',
+    start: '▶ Empezar'
   },
 
   daily: {

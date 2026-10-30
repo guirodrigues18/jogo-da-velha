@@ -5,6 +5,7 @@ import InfoBar from './InfoBar';
 import MiniBoard, { type Glyphs } from './MiniBoard';
 import GameOverModal from './GameOverModal';
 import TopActions from './TopActions';
+import Logo from './Logo';
 import Scoreboard, { type ScoreInfo } from './Scoreboard';
 import { t } from '../i18n';
 
@@ -31,6 +32,10 @@ interface Props {
   /** Elementos flutuantes por cima do jogo (reações) */
   overlay?: ReactNode;
   onCellClick: (boardIndex: number, cellIndex: number) => void;
+  /** Botão "← Início" (partidas locais; o online tem o próprio "Sair") */
+  onHome?: () => void;
+  /** Presente enquanto a partida espera o "Começar": cobre o tabuleiro */
+  onStart?: () => void;
   modal: {
     /** Força o modal aberto mesmo sem vencedor (ex.: adversário saiu da sala) */
     open?: boolean;
@@ -74,12 +79,14 @@ export default function GameView({
   panel,
   overlay,
   onCellClick,
+  onHome,
+  onStart,
   modal
 }: Props) {
 
   const boardRef = useRef<HTMLDivElement>(null);
 
-  const waiting = Boolean(you && you !== game.currentPlayer && !game.winner);
+  const waiting = Boolean(!onStart && you && you !== game.currentPlayer && !game.winner);
 
   // Tremida ao conquistar um mini-tabuleiro
   useEffect(() => {
@@ -95,10 +102,16 @@ export default function GameView({
       <div className="container">
 
         <div className="top">
-          <div className="top-row">
-            <h1 className="title">{t.title}<span> 2.0</span></h1>
+          <div className="top-bar">
+            {onHome && (
+              <button className="back-button" onClick={onHome}>
+                <span aria-hidden="true">←</span> {t.home.back}
+              </button>
+            )}
             <TopActions />
           </div>
+
+          <Logo />
 
           <p className="subtitle">{t.subtitle}</p>
 
@@ -133,6 +146,18 @@ export default function GameView({
               onCellClick={cell => onCellClick(i, cell)}
             />
           ))}
+
+          {onStart && (
+            <div className="start-overlay">
+              <div className="start-card">
+                <strong>{t.home.ready}</strong>
+                <button className="btn start-button" onClick={onStart}>
+                  {t.home.start}
+                </button>
+                <small>{t.home.readyHint}</small>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="legend">

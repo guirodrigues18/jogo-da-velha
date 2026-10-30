@@ -8,17 +8,16 @@ import { trackMission } from '../stats/missions';
 import { track } from '../online/consent';
 import { t } from '../i18n';
 import GameView from './GameView';
-import ModeSwitch from './ModeSwitch';
+import AiOptions from './AiOptions';
 
 interface Props {
-  /** Ausente quando o modo online não está configurado */
-  onPlayOnline?: () => void;
+  onHome: () => void;
 }
 
 type Local = ReturnType<typeof useLocalGame>;
 type ModalProps = ComponentProps<typeof GameView>['modal'];
 
-export default function LocalGame({ onPlayOnline }: Props) {
+export default function LocalGame({ onHome }: Props) {
 
   const local = useLocalGame();
   const profile = useProfile();
@@ -33,7 +32,8 @@ export default function LocalGame({ onPlayOnline }: Props) {
 
   let turnLabel: string | undefined;
 
-  if (vsAI) turnLabel = local.aiTurn ? t.local.thinking : t.local.yourTurn;
+  if (vsAI && !local.aiTurn) turnLabel = t.local.yourTurn;
+  else if (vsAI) turnLabel = local.started ? t.local.thinking : t.local.aiTurn;
 
   // Seu símbolo da loja aparece nas suas peças (no modo 2 jogadores, os dois usam o clássico)
   const glyphs = vsAI ? { [human]: symbolGlyph(profile.equipped.symbol) } : undefined;
@@ -77,18 +77,18 @@ export default function LocalGame({ onPlayOnline }: Props) {
       you={vsAI ? human : undefined}
       glyphs={glyphs}
       onCellClick={local.play}
+      onHome={onHome}
+      onStart={local.started ? undefined : local.start}
       controls={(
         <>
-          <ModeSwitch
-            mode={mode}
-            difficulty={local.difficulty}
-            symbol={local.symbol}
-            dailyPending={!local.dailyProgress.won}
-            onModeChange={local.setMode}
-            onDifficultyChange={local.setDifficulty}
-            onSymbolChange={local.setSymbol}
-            onPlayOnline={onPlayOnline}
-          />
+          {mode === 'ai' && (
+            <AiOptions
+              difficulty={local.difficulty}
+              symbol={local.symbol}
+              onDifficultyChange={local.setDifficulty}
+              onSymbolChange={local.setSymbol}
+            />
+          )}
           {mode === 'daily' && <DailyInfo local={local} />}
         </>
       )}

@@ -51,14 +51,22 @@ const en: Messages = {
   },
 
   modes: {
-    label: 'Game mode',
-    pvp: '👥 2 players',
-    ai: '🤖 AI',
-    online: '🌐 Online',
     levelLabel: 'AI level',
-    daily: '📅 Daily',
     symbolLabel: 'You play as',
     startsHint: '✕ always goes first'
+  },
+
+  home: {
+    label: 'Game mode',
+    back: 'Home',
+    pvp: { title: '2 players', text: 'Take turns on the same device' },
+    ai: { title: 'Versus AI', text: 'Easy, medium or hard' },
+    daily: { title: n => `Daily challenge #${n}`, text: 'The same position for everyone' },
+    online: { title: 'Online', text: 'Challenge a friend with a link' },
+    wins: n => `🏆 ${n} ${n === 1 ? 'win' : 'wins'}`,
+    ready: 'Ready?',
+    readyHint: 'The timer only starts when you tap Start.',
+    start: '▶ Start'
   },
 
   daily: {

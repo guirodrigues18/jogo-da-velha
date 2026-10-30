@@ -787,30 +787,76 @@ body::after {
   margin-bottom: 20px;
 }
 
-.title {
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 800;
-  line-height: 1;
-  margin-bottom: 12px;
-}
-
-.title span {
-  background: linear-gradient(90deg, var(--cyan), #4dc3ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.top-row {
+/* "← Início" à esquerda, botões de ação à direita */
+.top-bar {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .top-actions {
   display: flex;
   flex-shrink: 0;
   gap: 8px;
+  margin-left: auto;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.back-button:hover {
+  border-color: rgba(255, 255, 255, .2);
+}
+
+.back-button:active {
+  transform: scale(.95);
+}
+
+/* Logo: o nome nunca quebra de linha e o "2.0" é um selo ao lado.
+   O tamanho acompanha a largura da tela para caber até em celulares estreitos */
+.logo {
+  display: flex;
+  align-items: flex-start;
+  gap: .2em;
+  margin-bottom: 12px;
+  font-size: clamp(1.7rem, 7.5vw, 3rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+}
+
+.logo-version {
+  padding: .16em .34em;
+  border-radius: .35em;
+  background: var(--accent);
+  box-shadow: 0 0 18px var(--frame-glow);
+  font-size: .36em;
+  letter-spacing: 0;
+  transform: rotate(-6deg) translateY(-.1em);
+}
+
+.logo.hero {
+  justify-content: center;
+  margin-bottom: 14px;
+  font-size: clamp(2.1rem, 10vw, 4.4rem);
 }
 
 .icon-button {
@@ -1454,6 +1500,211 @@ body::after {
 
 .online-message .modal-card {
   transform: none;
+}
+
+/* ===========================
+   Início
+   =========================== */
+
+.container.home {
+  max-width: 680px;
+}
+
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 4px 0 28px;
+  text-align: center;
+}
+
+.home-hero .subtitle {
+  max-width: 520px;
+}
+
+/* Mini tabuleiro decorativo, nas cores do tema */
+.hero-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  width: 96px;
+  margin-bottom: 20px;
+  padding: 6px;
+  border-radius: 18px;
+  background: var(--board-bg);
+  border: 2px solid var(--frame);
+  box-shadow: 0 0 34px var(--frame-glow);
+  transform: rotate(-6deg);
+}
+
+.hero-board span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 7px;
+  background: var(--cell-bg);
+  font-size: .9rem;
+  font-weight: 800;
+}
+
+.hero-board .x {
+  color: var(--x-mark);
+  text-shadow: 0 0 8px var(--x-glow);
+}
+
+.hero-board .o {
+  color: var(--o-mark);
+  text-shadow: 0 0 8px var(--o-glow);
+}
+
+.home-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.home-stat {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  font-size: .85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.mode-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 20px;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.mode-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--frame);
+  box-shadow: 0 10px 30px var(--frame-glow);
+}
+
+.mode-card:active {
+  transform: scale(.97);
+}
+
+.mode-card:focus-visible {
+  outline: 2px solid var(--frame);
+  outline-offset: 2px;
+}
+
+/* Desafio de hoje ainda não vencido */
+.mode-card.pending {
+  border-color: rgba(255, 184, 77, .4);
+}
+
+.mode-card .badge-dot {
+  top: 16px;
+  right: 16px;
+}
+
+/* Sem o online, o terceiro card ocupa a linha toda */
+.mode-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.mode-icon {
+  margin-bottom: 6px;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.mode-card strong {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.mode-card small {
+  color: var(--muted);
+  font-size: .85rem;
+  line-height: 1.4;
+}
+
+/* ===========================
+   Antes de começar
+   =========================== */
+
+.main-board {
+  position: relative;
+}
+
+.start-overlay {
+  position: absolute;
+  inset: -6px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(4, 6, 18, .45);
+  backdrop-filter: blur(3px);
+  animation: fade-in .25s ease both;
+}
+
+.start-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: min(100%, 320px);
+  padding: 24px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #111936, #0a1024);
+  border: 1px solid rgba(255, 255, 255, .1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+  text-align: center;
+  animation: dialog-in .35s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+
+.start-card strong {
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.start-card small {
+  color: var(--muted);
+  font-size: .82rem;
+  line-height: 1.4;
+}
+
+.start-button {
+  font-size: 1.15rem;
+  animation: start-glow 2s ease-in-out infinite;
+}
+
+@keyframes start-glow {
+  50% {
+    box-shadow: 0 0 28px var(--frame-glow);
+    transform: scale(1.02);
+  }
 }
 
 /* ===========================
@@ -2767,16 +3018,63 @@ body::after {
     display: none;
   }
 
-  .title {
+  /* No início sobra espaço: a explicação aparece */
+  .home .subtitle {
+    display: block;
+    font-size: .9rem;
+  }
+
+  .top-bar {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .back-button {
+    height: 38px;
+    padding: 0 14px;
+    font-size: .82rem;
+  }
+
+  .logo {
+    margin-bottom: 4px;
+  }
+
+  .home-hero {
+    margin-bottom: 22px;
+  }
+
+  .hero-board {
+    width: 80px;
+    margin-bottom: 16px;
+  }
+
+  .hero-board span {
+    font-size: .75rem;
+  }
+
+  .mode-grid {
+    gap: 10px;
+  }
+
+  .mode-card {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .mode-icon {
     font-size: 1.6rem;
   }
 
-  .title span {
-    display: block;
+  .mode-card strong {
+    font-size: .98rem;
   }
 
-  .top-row {
-    gap: 8px;
+  .mode-card small {
+    font-size: .78rem;
+  }
+
+  .start-card {
+    padding: 18px;
   }
 
   .icon-button {
@@ -2881,23 +3179,23 @@ body::after {
     margin-bottom: 0;
   }
 
-  /* "Jogo da Velha" ocupa a largura toda; "2.0" embaixo, com os botões ao lado */
-  .top-row {
-    position: relative;
+  /* O logo inteiro (com o selo "2.0") ocupa a largura da coluna */
+  .logo {
+    font-size: calc(var(--side-width) / 9);
   }
 
-  .title {
-    font-size: calc(var(--side-width) / 8);
+  /* O início não tem as duas colunas: fica centralizado na tela */
+  .container.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0;
+    max-width: 680px;
   }
 
-  .title span {
-    display: block;
-  }
-
-  .top-actions {
-    position: absolute;
-    right: 0;
-    bottom: 14px;
+  .home .logo {
+    font-size: 4.4rem;
   }
 
   .info-bar {
@@ -2942,6 +3240,10 @@ body::after {
 
   .subtitle {
     display: none;
+  }
+
+  .home .subtitle {
+    display: block;
   }
 
 }

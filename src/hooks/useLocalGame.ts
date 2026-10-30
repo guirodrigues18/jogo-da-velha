@@ -46,6 +46,9 @@ export function useLocalGame() {
   const [score, setScore] = useState<Score>({ x: 0, o: 0 });
   const [autoRestart, setAutoRestart] = useState(mode !== 'daily');
 
+  /** Nada anda (cronômetro, IA) até o jogador tocar em "Começar" */
+  const [started, setStarted] = useState(false);
+
   /** Esta tentativa começou com o desafio de hoje já vencido (é só por diversão) */
   const [dailyReplay, setDailyReplay] = useState(dailyProgress.won);
 
@@ -54,8 +57,8 @@ export function useLocalGame() {
   const ai: Player = human === 'x' ? 'o' : 'x';
   const aiTurn = vsAI && game.currentPlayer === ai && !game.winner;
 
-  // O cronômetro só começa depois da primeira jogada (e não corre para a IA)
-  const timerActive = game.turn > 0 && !game.winner && !aiTurn;
+  // O cronômetro não corre para a IA
+  const timerActive = started && !game.winner && !aiTurn;
 
   const secondsLeft = useTurnTimer(game.turn, timerActive, () => setGame(passTurn));
 
@@ -86,7 +89,7 @@ export function useLocalGame() {
   // Vez da IA (no desafio diário, a mesma jogada sua recebe sempre a mesma resposta)
   useEffect(() => {
 
-    if (!aiTurn) return;
+    if (!aiTurn || !started) return;
 
     const timer = setTimeout(() => {
       const move = mode === 'daily'
@@ -97,7 +100,7 @@ export function useLocalGame() {
 
     return () => clearTimeout(timer);
 
-  }, [game, aiTurn, difficulty, mode, challenge]);
+  }, [game, aiTurn, started, difficulty, mode, challenge]);
 
   // Reinício automático; o cleanup cancela o timer se o jogo for reiniciado antes
   useEffect(() => {
@@ -112,7 +115,7 @@ export function useLocalGame() {
 
   const play = (boardIndex: number, cellIndex: number) => {
 
-    if (aiTurn) return;
+    if (aiTurn || !started) return;
 
     const next = applyMove(game, boardIndex, cellIndex);
 
@@ -131,11 +134,12 @@ export function useLocalGame() {
     setDailyReplay(loadDailyProgress(challenge.number).won);
   };
 
-  /** Trocar de modo, nível ou símbolo começa uma série nova */
+  /** Trocar de nível ou símbolo começa uma série nova (e espera o "Começar" de novo) */
   const changePreferences = (changes: Partial<Preferences>) => {
     const next = savePreferences(changes);
     setPreferences(next);
     setScore({ x: 0, o: 0 });
+    setStarted(false);
     restart(next.mode);
   };
 
@@ -155,15 +159,16 @@ export function useLocalGame() {
     dailyProgress,
     dailyReplay,
     autoRestart,
+    started,
     secondsLeft,
     timerActive,
     nudge,
     notice,
     shake,
     play,
+    start: () => setStarted(true),
     restart: () => restart(),
     cancelAutoRestart,
-    setMode: (value: LocalMode) => changePreferences({ mode: value }),
     setDifficulty: (value: Difficulty) => changePreferences({ difficulty: value, mode: 'ai' }),
     setSymbol: (value: Player) => changePreferences({ symbol: value })
   };
