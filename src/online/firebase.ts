@@ -1,9 +1,6 @@
-import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
-import { firebaseConfig } from './config';
-
-const app = initializeApp(firebaseConfig);
+import { app } from './app';
 
 export const auth = getAuth(app);
 export const db = getDatabase(app);

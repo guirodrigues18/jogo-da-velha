@@ -93,6 +93,10 @@ Sem configuração, o jogo funciona só no modo local. Para ativar o online (pla
 6. Configurações do projeto → Seus apps → **Web** → copie os valores para um arquivo `.env`
    (modelo em [`.env.example`](.env.example)).
 
+**Google Analytics (opcional):** com `VITE_FIREBASE_MEASUREMENT_ID` no `.env` (Firebase → Analytics),
+o jogo envia as visitas para o Google Analytics. Ele é carregado depois que a página abre, num pedaço separado,
+sem atrasar o jogo. O Vercel Analytics continua funcionando em paralelo.
+
 Salas com mais de 7 dias são apagadas aos poucos pelo próprio jogo (até 20 por vez, quando alguém
 cria uma sala nova); as regras do banco só permitem apagar salas antigas. Sem Cloud Functions,
 tudo continua no plano gratuito.

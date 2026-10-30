@@ -1,7 +1,7 @@
 // Fica separado de firebase.ts para que o app saiba se o modo online existe
 // sem precisar baixar o SDK do Firebase
 
-export const firebaseConfig = {
+const requiredConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
@@ -9,8 +9,13 @@ export const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+/** Id do Google Analytics (opcional) */
+export const measurementId = import.meta.env.VITE_FIREBASE_MEASUREMENT_ID;
+
+export const firebaseConfig = { ...requiredConfig, measurementId };
+
 /** O modo online só aparece quando o Firebase está configurado no .env */
-export const isOnlineConfigured = Object.values(firebaseConfig).every(Boolean);
+export const isOnlineConfigured = Object.values(requiredConfig).every(Boolean);
 
 /** Parâmetro da URL com o código da sala: /?sala=abc123 */
 export const ROOM_PARAM = 'sala';
