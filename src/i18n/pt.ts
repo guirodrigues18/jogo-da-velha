@@ -290,6 +290,14 @@ const pt = {
     saved: '✓ Salvo'
   },
 
+  xp: {
+    label: 'Sua experiência',
+    total: (xp: number) => `${xp.toLocaleString('pt-BR')} XP`,
+    hint: (online: number, hard: number, medium: number, easy: number) =>
+      `Ganhe XP vencendo: online +${online} · IA no Difícil +${hard} · Médio +${medium} · Fácil +${easy}`,
+    earnedWithCoins: (xp: number) => `Moedas ganhas · ⭐ +${xp} XP`
+  },
+
   coins: {
     earned: 'Moedas ganhas',
     retroactive: 'Pelas suas partidas anteriores'

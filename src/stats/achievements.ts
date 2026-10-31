@@ -1,7 +1,8 @@
 import type { Difficulty } from '../game/ai';
 import type { GameState, Player } from '../game/logic';
 import { addCoins } from '../shop/wallet';
-import { COINS, coinsForGame } from '../shop/rewards';
+import { COINS, coinsForGame, xpForGame } from '../shop/rewards';
+import { t } from '../i18n';
 import { trackMission } from './missions';
 import { rewardInvitedPlayer } from '../online/invite';
 import { track } from '../online/consent';
@@ -18,6 +19,8 @@ export interface Stats {
   draws: number;
   streak: number;
   bestStreak: number;
+  /** XP total, ganho com vitórias (online e contra a IA) */
+  xp: number;
   /** Conquistas desbloqueadas: id → data (ms) */
   unlocked: Partial<Record<AchievementId, number>>;
 }
@@ -87,7 +90,7 @@ export const ACHIEVEMENTS: Achievement[] = DEFINITIONS.map(({ check: _check, ...
 
 export function emptyStats(): Stats {
 
-  return { played: 0, wins: 0, losses: 0, draws: 0, streak: 0, bestStreak: 0, unlocked: {} };
+  return { played: 0, wins: 0, losses: 0, draws: 0, streak: 0, bestStreak: 0, xp: 0, unlocked: {} };
 
 }
 
@@ -104,6 +107,7 @@ export function applyRecord(stats: Stats, record: GameRecord, now = Date.now()):
     draws: stats.draws + (record.result === 'draw' ? 1 : 0),
     streak,
     bestStreak: Math.max(stats.bestStreak, streak),
+    xp: stats.xp + xpForGame(record),
     unlocked: { ...stats.unlocked }
   };
 
@@ -186,7 +190,10 @@ export function recordGame(record: GameRecord) {
 
   save(stats);
   notify(unlocked);
-  addCoins(coinsForGame(record) + unlocked.length * COINS.achievement);
+
+  // O XP ganho aparece junto no aviso de moedas
+  const xp = xpForGame(record);
+  addCoins(coinsForGame(record) + unlocked.length * COINS.achievement, xp ? { label: t.xp.earnedWithCoins(xp) } : {});
   trackMission({ kind: 'game', record });
   rewardInvitedPlayer();
 

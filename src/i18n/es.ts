@@ -290,6 +290,14 @@ const es: Messages = {
     saved: '✓ Guardado'
   },
 
+  xp: {
+    label: 'Tu experiencia',
+    total: xp => `${xp.toLocaleString('es-ES')} XP`,
+    hint: (online, hard, medium, easy) =>
+      `Gana XP ganando partidas: en línea +${online} · IA en Difícil +${hard} · Medio +${medium} · Fácil +${easy}`,
+    earnedWithCoins: xp => `Monedas ganadas · ⭐ +${xp} XP`
+  },
+
   coins: {
     earned: 'Monedas ganadas',
     retroactive: 'Por tus partidas anteriores'

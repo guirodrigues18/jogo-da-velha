@@ -21,3 +21,20 @@ export function coinsForGame(record: GameRecord): number {
   return COINS.win[record.difficulty ?? 'easy'];
 
 }
+
+/** XP: só vitórias, online ou contra a IA (fica no perfil e vai para a nuvem) */
+export const XP = {
+  win: { easy: 1, medium: 3, hard: 6 },
+  onlineWin: 10
+};
+
+export function xpForGame(record: GameRecord): number {
+
+  if (record.result !== 'win') return 0;
+
+  if (record.mode === 'online') return XP.onlineWin;
+  if (record.mode === 'ai') return XP.win[record.difficulty ?? 'easy'];
+
+  return 0;
+
+}

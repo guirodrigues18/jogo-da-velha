@@ -20,6 +20,22 @@ describe('applyRecord', () => {
 
   });
 
+  it('soma XP só nas vitórias online e contra a IA', () => {
+
+    let stats = emptyStats();
+
+    stats = applyRecord(stats, { ...WIN, mode: 'online', difficulty: undefined }).stats;
+    stats = applyRecord(stats, { ...WIN, difficulty: 'hard' }).stats;
+    stats = applyRecord(stats, { ...WIN, difficulty: 'medium' }).stats;
+    stats = applyRecord(stats, WIN).stats;
+    stats = applyRecord(stats, { ...WIN, difficulty: 'hard', result: 'loss' }).stats;
+    stats = applyRecord(stats, { ...WIN, mode: 'online', difficulty: undefined, result: 'draw' }).stats;
+    stats = applyRecord(stats, { ...WIN, mode: 'daily', difficulty: undefined }).stats;
+
+    expect(stats.xp).toBe(10 + 6 + 3 + 1);
+
+  });
+
   it('desbloqueia primeira vitória e a do nível do computador', () => {
 
     expect(ids(WIN)).toEqual(['first-win', 'beat-easy']);

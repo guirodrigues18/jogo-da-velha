@@ -2531,6 +2531,33 @@ body::after {
   margin: 0 0 0 8px;
 }
 
+/* XP na janela do perfil */
+.xp-section {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .04);
+  text-align: center;
+}
+
+.xp-label {
+  display: block;
+  color: var(--muted);
+  font-size: .85rem;
+}
+
+.xp-total {
+  display: block;
+  margin: 4px 0 6px;
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.xp-section .daily-hint {
+  margin: 0;
+}
+
 /* Apelido na janela do perfil */
 .nickname-section {
   margin-top: 18px;

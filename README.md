@@ -30,6 +30,10 @@ rendem 🪙, trocadas na loja (botão 🏅) por símbolos (o adversário online 
 e efeitos de vitória. Tudo fica no navegador; com **login com Google** (opcional), o progresso é salvo
 na nuvem (`users/{uid}`) e acompanha a pessoa em qualquer aparelho.
 
+**XP:** só vitórias rendem XP: online +10, contra a IA no Difícil +6, no Médio +3 e no Fácil +1 (desafio diário
+e modo 2 jogadores não contam). O total aparece no perfil (👤) e vai para a nuvem junto com as estatísticas
+(`users/{uid}/stats/xp`).
+
 **Temas:** além dos neon (Neon, Retrô, Oceano, Pôr do sol e Dourado), há temas sem neon que mudam a tela
 inteira, peças incluídas: Caderno, Gelo, Blocos, Madeira, Militar, Pitaya e Donuts. A seção **⚽ Times** tem os
 20 times da Série A, pelo apelido e só com cores, listras e detalhes genéricos (sem escudos nem marcas).

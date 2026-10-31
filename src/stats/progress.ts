@@ -47,6 +47,7 @@ export function mergeProgress(local: Progress, cloud: Partial<Progress> | null):
       draws: max('draws'),
       streak: max('streak'),
       bestStreak: max('bestStreak'),
+      xp: max('xp'),
       unlocked
     },
     profile: {
