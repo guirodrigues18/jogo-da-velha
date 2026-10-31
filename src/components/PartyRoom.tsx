@@ -1,6 +1,5 @@
 import { useEffect, useState, type ComponentProps, type RefObject } from 'react';
 import {
-  GROUP_TURN_SECONDS,
   groupTimeoutsLeft,
   MARK_SYMBOLS,
   MARKS,
@@ -22,8 +21,8 @@ interface Props {
   /** null = criar um grupo novo */
   partyId: string | null;
   nickname: string;
-  /** Modo e tamanho de quem cria o grupo */
-  create: { mode: GroupMode; max: number };
+  /** Modo, tamanho e segundos por jogada de quem cria o grupo */
+  create: { mode: GroupMode; max: number; seconds: number };
   /** Onde registrar a função de desistência (usada pelo botão voltar) */
   leaveRoomRef: RefObject<(() => void) | null>;
   onPartyCreated: (partyId: string) => void;
@@ -85,7 +84,7 @@ export default function PartyRoom({ partyId, nickname, create, leaveRoomRef, onP
       game={view}
       secondsLeft={party.secondsLeft}
       timerActive={party.timerActive}
-      turnSeconds={GROUP_TURN_SECONDS}
+      turnSeconds={party.seconds}
       timeoutsLeft={party.inProgress ? groupTimeoutsLeft(game, game.seat) : undefined}
       endNote={wonByElimination(game) ? t.party.endedByElimination : undefined}
       nudge={party.nudge}
@@ -156,7 +155,7 @@ function PartyLobby({ party, partyId, onLeave }: { party: Party; partyId: string
   return (
     <div className="online-panel party-lobby">
       <div className="online-title">{mode === 'duo' ? t.party.modes.duo : t.party.lobbyTitle(t.party.modes[mode], max)}</div>
-      <p className="online-text">{mode === 'duo' ? t.party.rulesDuo : t.party.rulesChamps}</p>
+      <p className="online-text">{mode === 'duo' ? t.party.rulesDuo : t.party.rulesChamps} {t.party.secondsInfo(party.seconds)}.</p>
 
       <div className="party-seats">
         {rows.map((row, i) => (

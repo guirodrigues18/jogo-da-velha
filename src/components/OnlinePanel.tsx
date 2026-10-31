@@ -17,6 +17,8 @@ interface Props {
   /** Segundos até a vitória por abandono (adversário desconectado); null se ele está online */
   abandonSecondsLeft: number | null;
   spectatorNames: string[];
+  /** Segundos por jogada desta sala */
+  seconds: number;
   onLeave: () => void;
 }
 
@@ -35,6 +37,7 @@ export default function OnlinePanel({
   opponentLeft,
   abandonSecondsLeft,
   spectatorNames,
+  seconds,
   onLeave
 }: Props) {
 
@@ -82,7 +85,7 @@ export default function OnlinePanel({
         <button className="btn btn-ghost" onClick={copy}>
           {copied ? t.online.copied : t.online.copyLink}
         </button>
-        <p className="invite-bonus">{t.invite.roomHint(REFERRAL_COINS)}</p>
+        <p className="invite-bonus">{t.party.secondsInfo(seconds)} · {t.invite.roomHint(REFERRAL_COINS)}</p>
         <button className="link-button" onClick={onLeave}>{t.online.leaveRoom}</button>
       </div>
     );

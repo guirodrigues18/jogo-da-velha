@@ -38,6 +38,9 @@
         "createdAt": {
           ".validate": "newData.isNumber()"
         },
+        "seconds": {
+          ".validate": "newData.isNumber() && (newData.val() === 20 || newData.val() === 15 || newData.val() === 10 || newData.val() === 5)"
+        },
 
         "seats": {
           "$seat": {
@@ -71,7 +74,7 @@
         },
 
         "state": {
-          ".write": "auth != null && ((!data.exists() && !data.parent().child('started').exists() && newData.parent().child('started').val() === true && data.parent().child('host').val() === auth.uid) || (data.exists() && data.child('winner').val() === '-' && newData.child('turn').val() === data.child('turn').val() + 1 && (data.parent().child('seats').child(data.child('seat').val()).val() === auth.uid || (newData.child('cells').val() === data.child('cells').val() && (data.parent().child('seats/0').val() === auth.uid || data.parent().child('seats/1').val() === auth.uid || data.parent().child('seats/2').val() === auth.uid || data.parent().child('seats/3').val() === auth.uid) && (now > data.child('turnStartedAt').val() + 15000 || data.parent().child('left').child(data.child('seat').val()).exists())))) || (data.exists() && data.child('winner').val() !== '-' && newData.child('turn').val() === 0 && (data.parent().child('seats/0').val() === auth.uid || data.parent().child('seats/1').val() === auth.uid || data.parent().child('seats/2').val() === auth.uid || data.parent().child('seats/3').val() === auth.uid) && data.parent().child('rematch/0').val() === true && data.parent().child('rematch/1').val() === true && data.parent().child('rematch/2').val() === true && (data.parent().child('size').val() === 3 || data.parent().child('rematch/3').val() === true)))",
+          ".write": "auth != null && ((!data.exists() && !data.parent().child('started').exists() && newData.parent().child('started').val() === true && data.parent().child('host').val() === auth.uid) || (data.exists() && data.child('winner').val() === '-' && newData.child('turn').val() === data.child('turn').val() + 1 && (data.parent().child('seats').child(data.child('seat').val()).val() === auth.uid || (newData.child('cells').val() === data.child('cells').val() && (data.parent().child('seats/0').val() === auth.uid || data.parent().child('seats/1').val() === auth.uid || data.parent().child('seats/2').val() === auth.uid || data.parent().child('seats/3').val() === auth.uid) && (((!data.parent().child('seconds').exists() && now > data.child('turnStartedAt').val() + 15000) || (data.parent().child('seconds').exists() && now > data.child('turnStartedAt').val() + data.parent().child('seconds').val() * 1000)) || data.parent().child('left').child(data.child('seat').val()).exists())))) || (data.exists() && data.child('winner').val() !== '-' && newData.child('turn').val() === 0 && (data.parent().child('seats/0').val() === auth.uid || data.parent().child('seats/1').val() === auth.uid || data.parent().child('seats/2').val() === auth.uid || data.parent().child('seats/3').val() === auth.uid) && data.parent().child('rematch/0').val() === true && data.parent().child('rematch/1').val() === true && data.parent().child('rematch/2').val() === true && (data.parent().child('size').val() === 3 || data.parent().child('rematch/3').val() === true)))",
           ".validate": "newData.hasChildren(['cells', 'results', 'seat', 'activeBoard', 'winner', 'turn', 'turnStartedAt', 'timeouts', 'out'])",
           "cells": {
             ".validate": "newData.isString() && newData.val().matches(/^[xots-]{81}$/)"
@@ -170,6 +173,9 @@
         "createdAt": {
           ".validate": "newData.isNumber()"
         },
+        "seconds": {
+          ".validate": "newData.isNumber() && (newData.val() === 20 || newData.val() === 15 || newData.val() === 10 || newData.val() === 5)"
+        },
 
         "players": {
           "x": {
@@ -186,7 +192,7 @@
         },
 
         "state": {
-          ".write": "auth != null && data.exists() && ((data.child('winner').val() === '-' && newData.child('turn').val() === data.child('turn').val() + 1 && data.parent().child('players/x').exists() && data.parent().child('players/o').exists() && (auth.uid === data.parent().child('players').child(data.child('currentPlayer').val()).val() || (newData.child('cells').val() === data.child('cells').val() && now > data.child('turnStartedAt').val() + 20000 && ((data.child('currentPlayer').val() === 'x' && auth.uid === data.parent().child('players/o').val()) || (data.child('currentPlayer').val() === 'o' && auth.uid === data.parent().child('players/x').val()))))) || (data.child('winner').val() !== '-' && newData.child('turn').val() === 0 && data.parent().child('rematch/x').val() === true && data.parent().child('rematch/o').val() === true && (auth.uid === data.parent().child('players/x').val() || auth.uid === data.parent().child('players/o').val())))",
+          ".write": "auth != null && data.exists() && ((data.child('winner').val() === '-' && newData.child('turn').val() === data.child('turn').val() + 1 && data.parent().child('players/x').exists() && data.parent().child('players/o').exists() && (auth.uid === data.parent().child('players').child(data.child('currentPlayer').val()).val() || (newData.child('cells').val() === data.child('cells').val() && ((!data.parent().child('seconds').exists() && now > data.child('turnStartedAt').val() + 20000) || (data.parent().child('seconds').exists() && now > data.child('turnStartedAt').val() + data.parent().child('seconds').val() * 1000)) && ((data.child('currentPlayer').val() === 'x' && auth.uid === data.parent().child('players/o').val()) || (data.child('currentPlayer').val() === 'o' && auth.uid === data.parent().child('players/x').val()))))) || (data.child('winner').val() !== '-' && newData.child('turn').val() === 0 && data.parent().child('rematch/x').val() === true && data.parent().child('rematch/o').val() === true && (auth.uid === data.parent().child('players/x').val() || auth.uid === data.parent().child('players/o').val())))",
           ".validate": "newData.hasChildren(['cells', 'results', 'currentPlayer', 'activeBoard', 'winner', 'turn', 'turnStartedAt'])",
           "cells": {
             ".validate": "newData.isString() && newData.val().matches(/^[xo-]{81}$/)"

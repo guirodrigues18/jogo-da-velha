@@ -15,6 +15,8 @@ Modos de jogo:
   com resultado para compartilhar e sequência de dias);
 - **online**, convidando um amigo por link:
   - quem cria a sala escolhe ✕ ou ◯; o convidado fica com o outro;
+  - quem cria escolhe o tempo por jogada: 20, 15, 10 ou 5 segundos (salvo em `rooms/{id}/seconds` e `parties/{id}/seconds`,
+    conferido pelas regras do banco); o padrão é 20s no 1x1 e 15s nos grupos;
   - cada jogador escolhe um apelido provisório;
   - revanche só começa quando os dois aceitam, e o placar da série fica salvo na sala;
   - sair da sala conta como desistência (o adversário vence);
@@ -26,7 +28,7 @@ Modos de jogo:
   - **2x2 Duplas:** 4 jogadores, ✕ contra ◯, com as regras do 1x1; a vez gira ✕ → ◯ → ✕ → ◯;
   - **Champs:** 3 ou 4 jogadores (quem cria escolhe o máximo), cada um com ✕ ◯ △ □. Vence quem conquistar
     3 mini-tabuleiros; mini-tabuleiro cheio sem 3 em linha fica com quem tem mais casas nele;
-  - os primeiros a entrar jogam, quem cria começa a partida e quem chega depois assiste; 15s por jogada;
+  - os primeiros a entrar jogam, quem cria começa a partida e quem chega depois assiste;
   - quem sai ou deixa o tempo acabar pela 4ª vez fica de fora e a partida continua (no 2x2, o parceiro
     joga também na vez dele); se sobrar um só (ou uma dupla), ele vence;
   - vitória vale mais: 2x2 dá 30 🪙 e 15 XP; Champs, 40 🪙 e 20 XP (1x1 online: 20 🪙 e 10 XP).

@@ -17,6 +17,8 @@ interface Props {
   nickname: string;
   /** Com quem joga quem cria a sala */
   hostRole: Player;
+  /** Segundos por jogada escolhidos por quem cria a sala */
+  hostSeconds: number;
   /** Onde registrar a função de desistência (usada pelo botão voltar) */
   leaveRoomRef: RefObject<(() => void) | null>;
   onRoomCreated: (roomId: string) => void;
@@ -42,9 +44,9 @@ function playerGlyphs(x: string | null, o: string | null, role: Player | null): 
 
 }
 
-export default function OnlineRoom({ roomId, nickname, hostRole, leaveRoomRef, onRoomCreated, onLeave }: Props) {
+export default function OnlineRoom({ roomId, nickname, hostRole, hostSeconds, leaveRoomRef, onRoomCreated, onLeave }: Props) {
 
-  const online = useOnlineGame(roomId, nickname, hostRole, onRoomCreated);
+  const online = useOnlineGame(roomId, nickname, hostRole, onRoomCreated, hostSeconds);
   const { game, role, nameOf } = online;
 
   useEffect(() => {
@@ -92,6 +94,7 @@ export default function OnlineRoom({ roomId, nickname, hostRole, leaveRoomRef, o
         game={game}
         {...classicTimeouts(game)}
         secondsLeft={online.secondsLeft}
+        turnSeconds={online.seconds}
         timerActive={online.timerActive}
         nudge={null}
         notice={online.notice}
@@ -123,6 +126,7 @@ export default function OnlineRoom({ roomId, nickname, hostRole, leaveRoomRef, o
       game={game}
       {...classicTimeouts(game)}
       secondsLeft={online.secondsLeft}
+      turnSeconds={online.seconds}
       timerActive={online.timerActive}
       nudge={online.nudge}
       notice={online.notice}
@@ -144,6 +148,7 @@ export default function OnlineRoom({ roomId, nickname, hostRole, leaveRoomRef, o
             opponentLeft={online.opponentLeft}
             abandonSecondsLeft={online.abandonSecondsLeft}
             spectatorNames={online.spectatorNames}
+            seconds={online.seconds}
             onLeave={leave}
           />
           {reactionBar}

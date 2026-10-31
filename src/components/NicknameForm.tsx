@@ -7,15 +7,21 @@ import { loadNickname, normalizeNickname, NICKNAME_MAX_LENGTH } from '../online/
 import { firstName, getAccountInfo } from '../online/accountInfo';
 import { loadPreferences, savePreferences } from '../game/preferences';
 import { useChallenge } from '../stats/rivals';
+import { GROUP_TURN_SECONDS } from '../game/group';
+import { TURN_OPTIONS, TURN_SECONDS } from '../hooks/useTurnTimer';
 import { t } from '../i18n';
 import HelpDialog from './HelpDialog';
 import SymbolPicker from './SymbolPicker';
 
-/** O que quem cria escolhe: 1x1 (com o símbolo), 2x2 Duplas ou Champs (com o máximo de jogadores) */
-export type OnlineChoice =
+/**
+ * O que quem cria escolhe: 1x1 (com o símbolo), 2x2 Duplas ou Champs (com o máximo de jogadores),
+ * sempre com os segundos por jogada
+ */
+export type OnlineChoice = { seconds: number } & (
   | { kind: 'solo'; symbol: Player }
   | { kind: 'duo' }
-  | { kind: 'champs'; max: 3 | 4 };
+  | { kind: 'champs'; max: 3 | 4 }
+);
 
 type ModeKind = OnlineChoice['kind'];
 
@@ -41,6 +47,8 @@ export default function NicknameForm({ roomId, partyId = null, onSubmit, onCance
   const [symbol, setSymbol] = useState(() => loadPreferences().symbol);
   const [kind, setKind] = useState<ModeKind>('solo');
   const [champsMax, setChampsMax] = useState<3 | 4>(4);
+  /** null = o padrão do modo (20s no 1x1, 15s nos grupos) */
+  const [chosenSeconds, setChosenSeconds] = useState<number | null>(null);
   const [preview, setPreview] = useState<RoomPreview | null>(null);
   const [partyPreview, setPartyPreview] = useState<PartyPreview | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -91,10 +99,16 @@ export default function NicknameForm({ roomId, partyId = null, onSubmit, onCance
   // Revanche pedida no ranking de rivais é sempre 1x1
   const choosing = creating && !rival;
 
-  let choice: OnlineChoice = { kind: 'solo', symbol };
+  const group = choosing && kind !== 'solo';
+  const seconds = chosenSeconds ?? (group ? GROUP_TURN_SECONDS : TURN_SECONDS);
 
-  if (choosing && kind === 'duo') choice = { kind: 'duo' };
-  else if (choosing && kind === 'champs') choice = { kind: 'champs', max: champsMax };
+  let choice: OnlineChoice = { kind: 'solo', symbol, seconds };
+
+  if (choosing && kind === 'duo') choice = { kind: 'duo', seconds };
+  else if (choosing && kind === 'champs') choice = { kind: 'champs', max: champsMax, seconds };
+
+  // Convidado: o tempo da sala ou do grupo, para saber antes de entrar
+  const joinSeconds = partyId ? partyPreview?.seconds : roomId ? preview?.seconds : undefined;
 
   const nickname = normalizeNickname(value);
 
@@ -190,6 +204,25 @@ export default function NicknameForm({ roomId, partyId = null, onSubmit, onCance
           </div>
         )}
         {creating && choice.kind === 'solo' && <SymbolPicker value={symbol} onChange={setSymbol} />}
+        {creating && (
+          <div className="online-seconds" role="group" aria-label={t.party.secondsLabel}>
+            <span className="online-seconds-label">{t.party.secondsLabel}</span>
+            <div className="segmented small">
+              {TURN_OPTIONS.map(option => (
+                <button
+                  key={option}
+                  type="button"
+                  className={option === seconds ? 'active' : ''}
+                  onClick={() => setChosenSeconds(option)}
+                  aria-pressed={option === seconds}
+                >
+                  {t.party.secondsOption(option)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {joinSeconds && <p className="online-mode-hint join-seconds">{t.party.secondsInfo(joinSeconds)}</p>}
         <button className="btn" type="submit" disabled={!nickname}>
           {action}
         </button>

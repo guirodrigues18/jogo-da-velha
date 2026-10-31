@@ -15,6 +15,7 @@ import {
 } from 'firebase/database';
 import { createGame, type GameState, type Player } from '../game/logic';
 import { db } from './firebase';
+import { TURN_SECONDS } from '../hooks/useTurnTimer';
 import { decodeState, encodeState, type StoredState } from './serialization';
 
 /* ===========================
@@ -47,6 +48,8 @@ interface StoredRoom {
   skins?: PerPlayer<string>;
   /** Quem entrou com Google (conferido pelas regras do banco); o placar de rivais só conta entre eles */
   google?: PerPlayer<boolean>;
+  /** Segundos por jogada, escolhidos por quem criou (ausente em salas antigas: 20) */
+  seconds?: number;
 }
 
 export interface Reaction {
@@ -72,6 +75,7 @@ export interface Room {
   reactions: Record<string, Reaction>;
   skins: PerPlayer<string>;
   google: PerPlayer<boolean>;
+  seconds: number;
 }
 
 /** Precisa ser igual à lista nas regras do banco (database.rules.json) */
@@ -94,6 +98,7 @@ export interface RoomPreview {
   hostRole: Player | null;
   /** Já tem dois jogadores: quem entrar agora vai assistir */
   full: boolean;
+  seconds: number;
 }
 
 /* ===========================
@@ -125,13 +130,14 @@ function toStored(state: GameState) {
 }
 
 /** Cria uma sala nova; quem cria joga com o símbolo escolhido (X sempre começa) */
-export async function createRoom(uid: string, role: Player): Promise<string> {
+export async function createRoom(uid: string, role: Player, seconds: number = TURN_SECONDS): Promise<string> {
 
   const roomId = generateRoomId();
 
   await set(roomRef(roomId), {
     players: { [role]: uid },
     state: toStored(createGame()),
+    seconds,
     createdAt: serverTimestamp()
   });
 
@@ -194,7 +200,8 @@ export function subscribeRoom(roomId: string, onChange: (room: Room | null) => v
       score: data.score ?? {},
       reactions: data.reactions ?? {},
       skins: data.skins ?? {},
-      google: data.google ?? {}
+      google: data.google ?? {},
+      seconds: data.seconds ?? TURN_SECONDS
     });
 
   });
@@ -208,14 +215,14 @@ export async function getRoomPreview(roomId: string): Promise<RoomPreview | null
 
   if (!snapshot.exists()) return null;
 
-  const { players, names = {} } = snapshot.val() as StoredRoom;
+  const { players, names = {}, seconds = TURN_SECONDS } = snapshot.val() as StoredRoom;
 
   const full = Boolean(players.x && players.o);
   let hostRole: Player | null = null;
 
   if (!full) hostRole = players.x ? 'x' : 'o';
 
-  return { names, hostRole, full };
+  return { names, hostRole, full, seconds };
 
 }
 

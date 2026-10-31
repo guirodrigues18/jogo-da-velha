@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 export const TURN_SECONDS = 20;
 export const WARNING_SECONDS = 5;
 
+/** Segundos por jogada que quem cria a partida online pode escolher (precisa bater com as regras do banco) */
+export const TURN_OPTIONS = [20, 15, 10, 5] as const;
+
 /**
  * Contagem regressiva do turno. Reinicia sempre que `turn` muda
  * e chama `onTimeout` quando o tempo acaba. Com `paused`, congela onde está

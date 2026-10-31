@@ -64,14 +64,15 @@ export type OnlineError = JoinError | 'unavailable';
 const INITIAL_GAME = createGame();
 
 /**
- * Partida online. Com `roomId` null, cria uma sala nova (você joga com `hostRole`)
- * e avisa por `onRoomCreated`.
+ * Partida online. Com `roomId` null, cria uma sala nova (você joga com `hostRole`,
+ * com `hostSeconds` por jogada) e avisa por `onRoomCreated`.
  */
 export function useOnlineGame(
   roomId: string | null,
   nickname: string,
   hostRole: Player,
-  onRoomCreated: (roomId: string) => void
+  onRoomCreated: (roomId: string) => void,
+  hostSeconds: number = TURN_SECONDS
 ) {
 
   const [uid, setUid] = useState<string | null>(null);
@@ -105,9 +106,9 @@ export function useOnlineGame(
         if (cancelled) return;
 
         if (!roomId) {
-          const createdId = await withTimeout(createRoom(uid, hostRole));
+          const createdId = await withTimeout(createRoom(uid, hostRole, hostSeconds));
           markInviteSent();
-          track('room_created', { symbol: hostRole });
+          track('room_created', { symbol: hostRole, seconds: hostSeconds });
           if (!cancelled) onRoomCreatedRef.current(createdId);
           return;
         }
@@ -194,8 +195,9 @@ export function useOnlineGame(
 
   const nameOf = (player: Player) => room?.names[player] ?? t.player(player.toUpperCase());
 
-  // O cronômetro só começa depois da primeira jogada
+  // O cronômetro só começa depois da primeira jogada, com o tempo escolhido por quem criou a sala
   const timerActive = inProgress && game.turn > 0;
+  const seconds = room?.seconds ?? TURN_SECONDS;
 
   // As regras do banco recusam jogadas inválidas; nesse caso o estado do servidor prevalece
   const save = (next: GameState) => {
@@ -210,7 +212,7 @@ export function useOnlineGame(
 
   const secondsLeft = useTurnTimer(game.turn, timerActive, () => {
     if (myTurn) save(passTurn(latestGame.current));
-  });
+  }, seconds);
 
   // Jogador da vez desconectado: o adversário reivindica a vez após o tempo + tolerância
   useEffect(() => {
@@ -219,13 +221,13 @@ export function useOnlineGame(
 
     const timer = setTimeout(
       () => save(passTurn(latestGame.current)),
-      TURN_SECONDS * 1000 + OPPONENT_GRACE_MS
+      seconds * 1000 + OPPONENT_GRACE_MS
     );
 
     return () => clearTimeout(timer);
 
     // Depende só do turno (não do objeto `game`), para mudanças de presença não reiniciarem a espera
-  }, [game.turn, timerActive, myTurn, role]);
+  }, [game.turn, timerActive, myTurn, role, seconds]);
 
   // Todas as jogadas tocam som; tique, vibração e confete são só seus (espectador: nenhum)
   const isMe = (player: Player) => player === role;
@@ -447,6 +449,7 @@ export function useOnlineGame(
     myTurn,
     score,
     secondsLeft,
+    seconds,
     timerActive,
     notice,
     nudge,

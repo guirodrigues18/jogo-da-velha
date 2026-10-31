@@ -2706,6 +2706,22 @@ body::after {
   margin-bottom: 16px;
 }
 
+.online-seconds {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.online-seconds-label {
+  color: var(--muted);
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.join-seconds {
+  margin-bottom: 12px;
+}
+
 .online-mode-hint {
   color: var(--muted);
   font-size: .82rem;

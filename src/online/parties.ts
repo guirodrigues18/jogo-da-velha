@@ -16,6 +16,7 @@ import {
 import {
   createGroupGame,
   DUO_SIZE,
+  GROUP_TURN_SECONDS,
   type GroupMode,
   type GroupState,
   type Mark,
@@ -66,6 +67,8 @@ interface StoredParty {
   score?: Partial<Record<Mark, number>>;
   spectators?: Record<string, string>;
   reactions?: Record<string, Reaction>;
+  /** Segundos por jogada, escolhidos por quem criou */
+  seconds?: number;
 }
 
 export interface Party {
@@ -84,6 +87,7 @@ export interface Party {
   score: Partial<Record<Mark, number>>;
   spectators: Record<string, string>;
   reactions: Record<string, Reaction>;
+  seconds: number;
 }
 
 export type PartySeat = number | 'spectator';
@@ -94,6 +98,7 @@ export interface PartyPreview {
   hostName: string | null;
   /** Já começou ou está cheio: quem entrar vai assistir */
   watching: boolean;
+  seconds: number;
 }
 
 const MAX_SEATS = 4;
@@ -169,7 +174,7 @@ const perSeat = <T>(values: PerSeat<T> | undefined, fallback: T): T[] =>
 
 /* ---------- Grupo ---------- */
 
-export async function createParty(uid: string, mode: GroupMode, max: number): Promise<string> {
+export async function createParty(uid: string, mode: GroupMode, max: number, seconds: number = GROUP_TURN_SECONDS): Promise<string> {
 
   const partyId = generatePartyId();
 
@@ -178,6 +183,7 @@ export async function createParty(uid: string, mode: GroupMode, max: number): Pr
     mode,
     max: mode === 'duo' ? DUO_SIZE : max,
     seats: { 0: uid },
+    seconds,
     createdAt: serverTimestamp()
   });
 
@@ -255,7 +261,8 @@ export function subscribeParty(partyId: string, onChange: (party: Party | null) 
       state: data.state && size ? decodeGroupState(data.state, data.mode, size) : null,
       score: data.score ?? {},
       spectators: data.spectators ?? {},
-      reactions: data.reactions ?? {}
+      reactions: data.reactions ?? {},
+      seconds: data.seconds ?? GROUP_TURN_SECONDS
     });
 
   });
@@ -276,7 +283,8 @@ export async function getPartyPreview(partyId: string): Promise<PartyPreview | n
     mode: party.mode,
     max: party.max,
     hostName: party.names?.[0] ?? null,
-    watching: Boolean(party.started) || seats.slice(0, party.max).every(Boolean)
+    watching: Boolean(party.started) || seats.slice(0, party.max).every(Boolean),
+    seconds: party.seconds ?? GROUP_TURN_SECONDS
   };
 
 }

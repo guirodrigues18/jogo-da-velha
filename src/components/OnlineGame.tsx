@@ -1,8 +1,9 @@
 import { useState, type RefObject } from 'react';
 import type { Player } from '../game/logic';
-import type { GroupMode } from '../game/group';
+import { GROUP_TURN_SECONDS, type GroupMode } from '../game/group';
 import { hasJoined, loadNickname, saveNickname } from '../online/nickname';
 import { loadPreferences } from '../game/preferences';
+import { TURN_SECONDS } from '../hooks/useTurnTimer';
 import NicknameForm from './NicknameForm';
 import OnlineRoom from './OnlineRoom';
 import PartyRoom from './PartyRoom';
@@ -28,8 +29,10 @@ export default function OnlineGame({ roomId, partyId, leaveRoomRef, onRoomCreate
     return id && hasJoined(id) ? loadNickname() || null : null;
   });
   const [hostRole, setHostRole] = useState<Player>(() => loadPreferences().symbol);
-  /** Quem cria um grupo: o modo e o máximo de jogadores (null = 1x1) */
-  const [group, setGroup] = useState<{ mode: GroupMode; max: number } | null>(null);
+  /** Quem cria um grupo: o modo, o máximo de jogadores e os segundos (null = 1x1) */
+  const [group, setGroup] = useState<{ mode: GroupMode; max: number; seconds: number } | null>(null);
+  /** Segundos por jogada de quem cria a sala 1x1 */
+  const [hostSeconds, setHostSeconds] = useState(TURN_SECONDS);
 
   if (!nickname) {
     return (
@@ -39,8 +42,12 @@ export default function OnlineGame({ roomId, partyId, leaveRoomRef, onRoomCreate
         onCancel={onLeave}
         onSubmit={(name, choice) => {
           saveNickname(name);
-          if (choice.kind === 'solo') setHostRole(choice.symbol);
-          else setGroup({ mode: choice.kind, max: choice.kind === 'champs' ? choice.max : 4 });
+          if (choice.kind === 'solo') {
+            setHostRole(choice.symbol);
+            setHostSeconds(choice.seconds);
+          } else {
+            setGroup({ mode: choice.kind, max: choice.kind === 'champs' ? choice.max : 4, seconds: choice.seconds });
+          }
           setNickname(name);
         }}
       />
@@ -52,7 +59,7 @@ export default function OnlineGame({ roomId, partyId, leaveRoomRef, onRoomCreate
       <PartyRoom
         partyId={partyId}
         nickname={nickname}
-        create={group ?? { mode: 'duo', max: 4 }}
+        create={group ?? { mode: 'duo', max: 4, seconds: GROUP_TURN_SECONDS }}
         leaveRoomRef={leaveRoomRef}
         onPartyCreated={onPartyCreated}
         onLeave={onLeave}
@@ -65,6 +72,7 @@ export default function OnlineGame({ roomId, partyId, leaveRoomRef, onRoomCreate
       roomId={roomId}
       nickname={nickname}
       hostRole={hostRole}
+      hostSeconds={hostSeconds}
       leaveRoomRef={leaveRoomRef}
       onRoomCreated={onRoomCreated}
       onLeave={onLeave}

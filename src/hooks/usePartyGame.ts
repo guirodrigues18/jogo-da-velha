@@ -4,7 +4,6 @@ import {
   CHAMPS_MIN,
   createGroupGame,
   DUO_SIZE,
-  GROUP_TURN_SECONDS,
   MARK_SYMBOLS,
   markOf,
   passGroupTurn,
@@ -96,7 +95,7 @@ export function minPlayers(mode: GroupMode, max: number): number {
 export function usePartyGame(
   partyId: string | null,
   nickname: string,
-  create: { mode: GroupMode; max: number },
+  create: { mode: GroupMode; max: number; seconds: number },
   onPartyCreated: (partyId: string) => void
 ) {
 
@@ -131,8 +130,8 @@ export function usePartyGame(
         if (cancelled) return;
 
         if (!partyId) {
-          const createdId = await withTimeout(createParty(uid, create.mode, create.max));
-          track('party_created', { mode: create.mode, max: create.max });
+          const createdId = await withTimeout(createParty(uid, create.mode, create.max, create.seconds));
+          track('party_created', { mode: create.mode, max: create.max, seconds: create.seconds });
           if (!cancelled) onCreatedRef.current(createdId);
           return;
         }
@@ -193,6 +192,8 @@ export function usePartyGame(
   const joinedCount = party ? party.seats.slice(0, max).filter(Boolean).length : 1;
   const game = party?.state ?? createGroupGame(mode, Math.max(joinedCount, mode === 'duo' ? DUO_SIZE : CHAMPS_MIN));
   const size = party?.started ? party.size : max;
+  /** Segundos por jogada, escolhidos por quem criou o grupo */
+  const seconds = party?.seconds ?? create.seconds;
 
   const nameOf = (s: number) => party?.names[s] ?? t.party.seatName(s + 1);
 
@@ -219,7 +220,7 @@ export function usePartyGame(
 
   const secondsLeft = useTurnTimer(game.turn, timerActive, () => {
     if (myTurn) save(passGroupTurn(latestGame.current));
-  }, GROUP_TURN_SECONDS);
+  }, seconds);
 
   // Jogador da vez desconectado: os outros passam a vez dele após o tempo + tolerância
   const currentLeft = Boolean(left[game.seat]);
@@ -234,12 +235,12 @@ export function usePartyGame(
       return () => clearTimeout(timer);
     }
 
-    const timer = setTimeout(() => save(passGroupTurn(latestGame.current)), GROUP_TURN_SECONDS * 1000 + OPPONENT_GRACE_MS);
+    const timer = setTimeout(() => save(passGroupTurn(latestGame.current)), seconds * 1000 + OPPONENT_GRACE_MS);
 
     return () => clearTimeout(timer);
 
     // Depende só do turno, para mudanças de presença não reiniciarem a espera
-  }, [game.turn, inProgress, myTurn, mySeat, currentLeft]);
+  }, [game.turn, inProgress, myTurn, mySeat, currentLeft, seconds]);
 
   const { notice, nudge, shake, reject, announce } = useGroupFeedback(started ? game : null, secondsLeft, timerActive, {
     mySeat,
@@ -401,6 +402,7 @@ export function usePartyGame(
     mode,
     max,
     size,
+    seconds,
     mySeat,
     myMark: mySeat !== null ? markOf(mode, mySeat) : null,
     spectator,
