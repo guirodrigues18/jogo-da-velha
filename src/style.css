@@ -80,8 +80,8 @@
 /* ===========================
    Temas da loja
    Clássicos: Cyberpunk (padrão), Blocos, Caderno, Madeira e Xadrez
-   Estilizados: Pitaya, Donuts, Galáxia, Vulcânico e Oriental
-   Especiais: Militar, Medieval, Fliperama, Raios, Cassino e Jeans
+   Estilizados: Pitaya, Donuts, Galáxia, Vulcânico, Oriental, Grafite e Origami
+   Especiais: Militar, Medieval, Fliperama, Raios, Cassino, Jeans e HQ
    Todos mudam só a aparência: tabuleiro, casas, peças, painéis e fundo
    =========================== */
 
@@ -648,6 +648,144 @@
   border-radius: 47% 53% 50% 50%;
 }
 
+/* Grafite: muro de tijolo e concreto com tags de spray, tinta escorrendo no alto da tela,
+   cada tabuleiro contornado por uma cor de spray e peças com névoa de tinta */
+[data-theme="graffiti"] {
+  --accent: linear-gradient(90deg, #ff2e88, #ffb800);
+  --on-accent: #111;
+  --accent-glow: rgba(255, 46, 136, .45);
+  --page-bg:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='300' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cdefs%3E%3Cfilter id='o' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='3'/%3E%3C/filter%3E%3Cg id='t'%3E%3Cpath d='M20 80c10-40 30-40 30 0s20 30 30-10 20-30 30 0 16 24 26-6' stroke='%23ff2e88' stroke-width='8'/%3E%3Cpath d='M44 86v18M74 84v26M104 82v14' stroke='%23ff2e88' stroke-width='3'/%3E%3Cpath d='M220 70l10-26 12 18 10-24 10 24 12-18 10 26z' stroke='%2319e3ff' stroke-width='5'/%3E%3Cpath d='M40 230q60-44 120 0M146 214l16 16-22 6' stroke='%23b6ff2e' stroke-width='7'/%3E%3Cpath d='M262 170l8 18 20 2-15 13 5 20-18-11-18 11 5-20-15-13 20-2z' stroke='%23ffd400' stroke-width='5'/%3E%3Cpath d='M230 260c20-16 40 10 60-6s30 8 50-4' stroke='%23a45cff' stroke-width='6'/%3E%3C/g%3E%3C/defs%3E%3Cuse href='%23t' opacity='.35' filter='url(%23o)'/%3E%3Cuse href='%23t' opacity='.55'/%3E%3Cg fill='%23ff2e88' opacity='.5'%3E%3Ccircle cx='150' cy='60' r='2'/%3E%3Ccircle cx='158' cy='70' r='1.4'/%3E%3Ccircle cx='142' cy='72' r='1.2'/%3E%3C/g%3E%3Cg fill='%2319e3ff' opacity='.5'%3E%3Ccircle cx='300' cy='40' r='2'/%3E%3Ccircle cx='310' cy='52' r='1.3'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 360px 300px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 160px 160px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .45 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 160px 160px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%231b1a1c'/%3E%3Crect x='2' y='2' width='56' height='26' fill='%23353034'/%3E%3Crect x='62' y='2' width='56' height='26' fill='%232f2b2e'/%3E%3Crect x='-28' y='32' width='56' height='26' fill='%23312c30'/%3E%3Crect x='32' y='32' width='56' height='26' fill='%2338333a'/%3E%3Crect x='92' y='32' width='56' height='26' fill='%232d292c'/%3E%3C/svg%3E") 0 0 / 120px 60px,
+    #1b1a1c;
+  --page-deco: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='70' stroke-linecap='round'%3E%3Cpath d='M0 3h300' stroke='%23ff2e88' stroke-width='6'/%3E%3Cpath d='M24 3v30M70 3v52M118 3v20M170 3v40M226 3v24M272 3v46' stroke='%23ff2e88' stroke-width='4'/%3E%3Cg fill='%23ff2e88'%3E%3Ccircle cx='24' cy='35' r='3.4'/%3E%3Ccircle cx='70' cy='57' r='3.4'/%3E%3Ccircle cx='118' cy='25' r='3.4'/%3E%3Ccircle cx='170' cy='45' r='3.4'/%3E%3Ccircle cx='226' cy='26' r='3.4'/%3E%3Ccircle cx='272' cy='51' r='3.4'/%3E%3C/g%3E%3Cpath d='M46 3v18M196 3v28M250 3v12' stroke='%2319e3ff' stroke-width='3'/%3E%3Cg fill='%2319e3ff'%3E%3Ccircle cx='46' cy='23' r='2.6'/%3E%3Ccircle cx='196' cy='33' r='2.6'/%3E%3Ccircle cx='250' cy='17' r='2.6'/%3E%3C/g%3E%3C/svg%3E") left top / 300px 70px repeat-x;
+  --orb-opacity: 0;
+  --panel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 140px 140px, rgba(22, 22, 26, .9);
+  --border: rgba(255, 255, 255, .14);
+  --panel-shadow: 0 0 0 1px rgba(0, 0, 0, .6), 0 4px 10px rgba(0, 0, 0, .4);
+  --muted: #b9b9c4;
+  --title-fill: linear-gradient(90deg, #ff2e88, #ffb800 45%, #19e3ff);
+  --title-glow: drop-shadow(0 0 6px rgba(255, 46, 136, .55)) drop-shadow(3px 3px 0 #000);
+  --board-bg:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 120px 120px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 120px 120px,
+    linear-gradient(180deg, #3b3b41, #2a2a30);
+  --board-radius: 10px;
+  --cell-bg:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .45 0'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 80px 80px,
+    linear-gradient(180deg, #2c2c32, #1f1f24);
+  --cell-border: rgba(255, 255, 255, .08);
+  --cell-shadow: inset 0 2px 4px rgba(0, 0, 0, .5);
+  --cell-radius: 6px;
+  --cell-hover-border: #ffb800;
+  --cyan: #ff2e88;
+  --pink: #b6ff2e;
+  --x-mark: #ff2e88;
+  --o-mark: #b6ff2e;
+  --x-glow: rgba(255, 46, 136, .85);
+  --o-glow: rgba(182, 255, 46, .7);
+  --x-overlay: rgba(255, 46, 136, .92);
+  --o-overlay: rgba(182, 255, 46, .92);
+  --x-overlay-shadow: 0 0 24px rgba(255, 46, 136, .9), 4px 4px 0 #000;
+  --o-overlay-shadow: 0 0 24px rgba(182, 255, 46, .8), 4px 4px 0 #000;
+  --overlay-bg: rgba(15, 15, 18, .45);
+  --frame: #ffb800;
+  --frame-glow: rgba(255, 184, 0, .35);
+}
+
+/* Cada tabuleiro com uma cor de spray, com a névoa de tinta em volta */
+[data-theme="graffiti"] .mini-board {
+  --spray: #ff2e88;
+  --board-border: var(--spray);
+  --board-shadow: 0 0 10px color-mix(in srgb, var(--spray) 60%, transparent), 0 0 24px color-mix(in srgb, var(--spray) 25%, transparent), inset 0 0 10px color-mix(in srgb, var(--spray) 22%, transparent);
+}
+
+[data-theme="graffiti"] .mini-board:nth-child(4n + 2) { --spray: #b6ff2e; }
+[data-theme="graffiti"] .mini-board:nth-child(4n + 3) { --spray: #ffd400; }
+[data-theme="graffiti"] .mini-board:nth-child(4n) { --spray: #19e3ff; }
+
+/* Traço de spray: bordas levemente borradas */
+[data-theme="graffiti"] .cell.x::before,
+[data-theme="graffiti"] .cell.x::after,
+[data-theme="graffiti"] .cell.o::before {
+  filter: blur(.4px);
+}
+
+/* Origami: papel com facetas em tons pastel, tsuru e barquinho de papel, painéis e tabuleiros dobrados
+   (com vinco e canto virado) e peças de tiras de papel em duas faces */
+[data-theme="origami"] {
+  --text: #2d2a32;
+  --muted: #7a7480;
+  --accent: linear-gradient(135deg, #f07a5a 50%, #d8603f 50%);
+  --accent-glow: rgba(240, 122, 90, .3);
+  --page-bg:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cpolygon points='0,0 120,0 0,120' fill='%23f0a58f' opacity='.2'/%3E%3Cpolygon points='120,0 240,0 240,120' fill='%239fd8cb' opacity='.22'/%3E%3Cpolygon points='120,0 240,120 120,120' fill='%23c9b8ea' opacity='.16'/%3E%3Cpolygon points='0,120 120,120 0,240' fill='%23f6d98a' opacity='.2'/%3E%3Cpolygon points='120,120 240,240 120,240' fill='%23f0a58f' opacity='.16'/%3E%3Cpolygon points='120,120 240,120 240,240' fill='%239fd8cb' opacity='.12'/%3E%3Cpolygon points='0,120 120,0 120,120' fill='%23fff' opacity='.3'/%3E%3Cpath d='M0 120L120 0L240 120L120 240z' fill='none' stroke='%23fff' stroke-opacity='.5'/%3E%3C/svg%3E") 0 0 / 240px 240px,
+    linear-gradient(180deg, #f7f2ea, #ece4d8);
+  --page-deco:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='100'%3E%3Cpolygon points='20,70 60,60 50,18' fill='%23f39a7f'/%3E%3Cpolygon points='60,60 100,62 72,14' fill='%23d8603f'/%3E%3Cpolygon points='20,70 60,60 100,62 70,82' fill='%23e86a4b'/%3E%3Cpolygon points='100,62 120,28 110,64' fill='%23f07a5a'/%3E%3Cpolygon points='120,28 128,33 117,35' fill='%23c84b30'/%3E%3Cpolygon points='20,70 2,44 32,66' fill='%23c84b30'/%3E%3C/svg%3E") right -4px top 50px / 120px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='60'%3E%3Cpolygon points='6,40 74,40 62,54 18,54' fill='%231f8f86'/%3E%3Cpolygon points='40,4 40,40 64,40' fill='%232bb0a4'/%3E%3Cpolygon points='40,10 40,40 20,40' fill='%23157a72'/%3E%3C/svg%3E") left 6px bottom 52px / 70px no-repeat;
+  --orb-opacity: 0;
+  --panel: linear-gradient(135deg, #fff 0 50%, #f7f3ed 50%);
+  --border: rgba(45, 42, 50, .1);
+  --panel-shadow: 0 2px 0 rgba(45, 42, 50, .06), 0 6px 14px rgba(45, 42, 50, .08);
+  --track: rgba(45, 42, 50, .1);
+  --draw-mark: rgba(45, 42, 50, .15);
+  --idle-board: opacity(.6) saturate(.6);
+  --title-fill: linear-gradient(180deg, #3d3943 0 55%, #25222b 55%);
+  --title-glow: drop-shadow(0 2px 0 rgba(255, 255, 255, .8));
+  --paper: #ffd6c2;
+  --board-bg:
+    linear-gradient(225deg, #efe8dd 0 50%, transparent 50%) right top / 18px 18px no-repeat,
+    linear-gradient(225deg, transparent 0 50%, color-mix(in srgb, var(--paper) 55%, #fff) 50%) right top / 18px 18px no-repeat,
+    linear-gradient(135deg, var(--paper) 50%, color-mix(in srgb, var(--paper) 86%, #000) 50%);
+  --board-border: rgba(45, 42, 50, .06);
+  --board-shadow: 0 2px 0 rgba(45, 42, 50, .08), 0 8px 14px rgba(45, 42, 50, .12);
+  --board-radius: 3px;
+  --cell-bg: linear-gradient(135deg, rgba(255, 255, 255, .78) 50%, rgba(255, 255, 255, .58) 50%);
+  --cell-border: rgba(45, 42, 50, .08);
+  --cell-shadow: 0 1px 2px rgba(45, 42, 50, .12);
+  --cell-radius: 2px;
+  --cell-hover-border: #e2553a;
+  --x-cap: 1px;
+  --cyan: #e2553a;
+  --pink: #1f8f86;
+  --x-mark: #e2553a;
+  --o-mark: #1f8f86;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: rgba(226, 85, 58, .9);
+  --o-overlay: rgba(31, 143, 134, .9);
+  --x-overlay-shadow: 3px 3px 0 rgba(45, 42, 50, .15);
+  --o-overlay-shadow: 3px 3px 0 rgba(45, 42, 50, .15);
+  --overlay-bg: rgba(247, 242, 234, .55);
+  --frame: #e2553a;
+  --frame-glow: rgba(226, 85, 58, .2);
+}
+
+/* Papéis de cores diferentes: pêssego, menta, lilás e manteiga */
+[data-theme="origami"] .mini-board:nth-child(4n + 2) { --paper: #c9efe3; }
+[data-theme="origami"] .mini-board:nth-child(4n + 3) { --paper: #e1d6f5; }
+[data-theme="origami"] .mini-board:nth-child(4n) { --paper: #fbecb6; }
+
+[data-theme="origami"] .mini-board {
+  --board-bg:
+    linear-gradient(225deg, #efe8dd 0 50%, transparent 50%) right top / 18px 18px no-repeat,
+    linear-gradient(225deg, transparent 0 50%, color-mix(in srgb, var(--paper) 55%, #fff) 50%) right top / 18px 18px no-repeat,
+    linear-gradient(135deg, var(--paper) 50%, color-mix(in srgb, var(--paper) 86%, #000) 50%);
+}
+
+/* Tiras de papel dobradas: cada traço tem uma face clara e outra escura */
+[data-theme="origami"] .cell.x::before,
+[data-theme="origami"] .cell.x::after {
+  background: linear-gradient(180deg, #f07a5a 50%, #c84b30 50%);
+}
+
+[data-theme="origami"] .cell.o::before {
+  border-color: #2bb0a4 #157a72 #157a72 #2bb0a4;
+}
+
 /* ---------- Especiais ---------- */
 
 /* Militar: camuflado de manchas orgânicas, placas de metal escovado com rebites e peças de estêncil */
@@ -1028,6 +1166,69 @@
 
 [data-theme="jeans"] .cell.o::before {
   border-style: dashed;
+}
+
+/* HQ: página de gibi amarela com retícula, explosões de "POW!" e "BAM!", contornos pretos grossos,
+   sombra chapada e peças com traço de nanquim */
+[data-theme="comic"] {
+  --text: #111;
+  --muted: #4a3f2a;
+  --accent: #e8262b;
+  --accent-glow: transparent;
+  --page-bg:
+    radial-gradient(circle, rgba(232, 38, 43, .2) 2.2px, transparent 2.6px) 0 0 / 14px 14px,
+    radial-gradient(circle, rgba(232, 38, 43, .2) 2.2px, transparent 2.6px) 7px 7px / 14px 14px,
+    linear-gradient(180deg, #ffe14d, #ffd21f);
+  --page-deco:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='120'%3E%3Cpolygon points='128,66 106,73 117,94 94,89 94,113 76,98 64,118 57,96 36,107 41,84 17,84 32,66 12,54 34,47 23,26 46,31 46,7 64,22 76,2 83,24 104,13 99,36 123,36 108,54' fill='%23fff36b' stroke='%23111' stroke-width='3' stroke-linejoin='round'/%3E%3Cpolygon points='113,76 94,77 99,96 82,87 77,105 67,90 54,103 53,84 34,89 43,72 25,67 40,57 27,44 46,43 41,24 58,33 63,15 73,30 86,17 87,36 106,31 97,48 115,53 100,63' fill='%23e8262b'/%3E%3Ctext x='70' y='72' transform='rotate(-10 70 60)' text-anchor='middle' font-family='Impact, Arial Black, sans-serif' font-size='30' font-weight='900' fill='%23fff' stroke='%23111' stroke-width='1.6'%3EPOW!%3C/text%3E%3C/svg%3E") right -4px top 40px / 88px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='100'%3E%3Cpath d='M65 6c34 0 60 16 60 38s-26 38-60 38c-6 0-12 0-17-2L22 96l8-22C14 66 5 56 5 44 5 22 31 6 65 6z' fill='%23fff' stroke='%23111' stroke-width='3' stroke-linejoin='round'/%3E%3Ctext x='65' y='56' transform='rotate(-6 65 46)' text-anchor='middle' font-family='Impact, Arial Black, sans-serif' font-size='30' font-weight='900' fill='%231d6fe0' stroke='%23111' stroke-width='1.4'%3EBAM!%3C/text%3E%3C/svg%3E") left -4px bottom 50px / 104px no-repeat;
+  --orb-opacity: 0;
+  --panel: #fff;
+  --border: #111;
+  --panel-shadow: 3px 3px 0 #111;
+  --track: rgba(17, 17, 17, .12);
+  --draw-mark: rgba(17, 17, 17, .2);
+  --idle-board: brightness(.9) saturate(.55);
+  --mark-weight: 7px;
+  --title-fill: linear-gradient(180deg, #ff5a4a, #e8262b 60%, #b3121c);
+  --title-glow: drop-shadow(3px 3px 0 #111);
+  --board-bg:
+    radial-gradient(circle, rgba(29, 111, 224, .16) 1.6px, transparent 2px) 0 0 / 9px 9px,
+    #fff;
+  --board-border: #111;
+  --board-shadow: 4px 4px 0 #111;
+  --board-radius: 6px;
+  --cell-bg: #fff;
+  --cell-border: #111;
+  --cell-shadow: none;
+  --cell-radius: 4px;
+  --cell-hover-border: #e8262b;
+  --cyan: #e8262b;
+  --pink: #1d6fe0;
+  --x-mark: #e8262b;
+  --o-mark: #1d6fe0;
+  --x-glow: transparent;
+  --o-glow: transparent;
+  --x-overlay: #e8262b;
+  --o-overlay: #1d6fe0;
+  --x-overlay-shadow: 4px 4px 0 #111;
+  --o-overlay-shadow: 4px 4px 0 #111;
+  --overlay-bg: rgba(255, 225, 77, .55);
+  --frame: #111;
+  --frame-glow: rgba(17, 17, 17, .15);
+}
+
+/* Contorno preto grosso de quadrinho em tudo */
+[data-theme="comic"] :is(.info-card, .segmented, .scoreboard, .mode-card, .extra-card, .back-button, .icon-button, .symbol-option) {
+  border-width: 2.5px;
+}
+
+[data-theme="comic"] .mini-board {
+  border-width: 3px;
+}
+
+[data-theme="comic"] :is(.logo-name, .board-overlay) {
+  -webkit-text-stroke: 2px #111;
 }
 
 /* ---------- Times: só cores, listras e detalhes genéricos (sem escudos) ---------- */

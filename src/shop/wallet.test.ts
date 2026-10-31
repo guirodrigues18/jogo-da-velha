@@ -45,11 +45,11 @@ describe('loja', () => {
 
     const profile = withoutRemovedItems({
       coins: 50,
-      owned: [...emptyProfile().owned, 'theme-pizza', 'symbol-star'],
-      equipped: { symbol: 'symbol-star', theme: 'theme-pizza', effect: 'effect-classic' }
+      owned: [...emptyProfile().owned, 'theme-ice', 'symbol-star'],
+      equipped: { symbol: 'symbol-star', theme: 'theme-ice', effect: 'effect-classic' }
     });
 
-    expect(profile.owned).not.toContain('theme-pizza');
+    expect(profile.owned).not.toContain('theme-ice');
     expect(profile.equipped).toEqual({ symbol: 'symbol-star', theme: 'theme-neon', effect: 'effect-classic' });
 
   });

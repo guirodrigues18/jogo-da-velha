@@ -66,6 +66,8 @@ export const ITEMS: ShopItem[] = [
   theme('galaxy', 'styled', '#3b6dff'),
   theme('volcano', 'styled', '#ff6a1a'),
   theme('oriental', 'styled', '#b8282e'),
+  theme('graffiti', 'styled', '#ff2e88'),
+  theme('origami', 'styled', '#f07a5a'),
 
   // Especiais (o Fliperama usa o id do antigo Retrô)
   theme('military', 'special', '#6b7a3a'),
@@ -74,6 +76,7 @@ export const ITEMS: ShopItem[] = [
   theme('storm', 'special', '#6fb6ff'),
   theme('casino', 'special', '#d4af37'),
   theme('jeans', 'special', '#2f5d8f'),
+  theme('comic', 'special', '#ffd21f'),
 
   // Times (só cores e detalhes genéricos, sem escudos; o nome na loja é o apelido)
   team('mengao', 'repeating-linear-gradient(180deg, #c8102e 0 6px, #111 6px 12px)'),
