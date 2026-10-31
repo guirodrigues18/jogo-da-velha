@@ -70,7 +70,7 @@ const pt = {
       reward: '🎁 Recompensa do dia disponível!',
       dialogTitle: '🎯 Missões e recompensas'
     },
-    shop: { title: 'Loja', text: 'Símbolos, temas e efeitos' },
+    shop: { title: 'Loja', text: 'Avatares, temas e efeitos' },
     ready: 'Tudo pronto?',
     readyHint: 'O cronômetro só começa quando você tocar em Começar.',
     start: '▶ Começar'
@@ -98,10 +98,12 @@ const pt = {
 
   shop: {
     title: '🛒 Loja',
-    types: { symbol: 'Símbolos', theme: 'Temas', team: '⚽ Times', effect: 'Efeitos de vitória' },
+    types: { symbol: 'Avatares', classic: '🎲 Temas clássicos', styled: '🎨 Temas estilizados', special: '✨ Temas especiais', team: '⚽ Times', effect: 'Efeitos de vitória' },
     hints: {
       symbol: 'Aparecem no lugar do seu X/O. No online, o adversário também vê.',
-      theme: 'Cores do tabuleiro e do fundo.',
+      classic: 'Visuais atemporais para o tabuleiro, as peças e o fundo.',
+      styled: 'Temas com mais cor e personalidade.',
+      special: 'Cenários completos, cheios de detalhes.',
       team: 'Nas cores dos times brasileiros: tabuleiro, peças e fundo.',
       effect: 'Aparecem quando você vence.'
     },
@@ -122,18 +124,22 @@ const pt = {
       'symbol-zombie': 'Zumbi',
       'symbol-coffin': 'Caixão',
       'symbol-christmas': 'Árvore de Natal',
-      'theme-neon': 'Neon',
-      'theme-retro': 'Retrô',
-      'theme-ocean': 'Oceano',
-      'theme-sunset': 'Pôr do sol',
-      'theme-gold': 'Dourado',
+      'theme-neon': 'Cyberpunk',
       'theme-blocks': 'Blocos',
-      'theme-wood': 'Madeira',
       'theme-notebook': 'Caderno',
-      'theme-ice': 'Gelo',
+      'theme-wood': 'Madeira',
+      'theme-chess': 'Xadrez',
       'theme-pitaya': 'Pitaya',
       'theme-donut': 'Donuts',
+      'theme-galaxy': 'Galáxia',
+      'theme-volcano': 'Vulcânico',
+      'theme-oriental': 'Oriental',
       'theme-military': 'Militar',
+      'theme-medieval': 'Medieval',
+      'theme-retro': 'Fliperama',
+      'theme-storm': 'Raios',
+      'theme-casino': 'Cassino',
+      'theme-jeans': 'Jeans',
       'theme-team-mengao': 'Mengão',
       'theme-team-verdao': 'Verdão',
       'theme-team-raposa': 'Raposa',
@@ -367,7 +373,7 @@ const pt = {
       { icon: '🔓', strong: 'Tabuleiro fechado?', text: 'Se o tabuleiro de destino já estiver fechado, o adversário pode jogar em qualquer um aberto.' },
       { icon: '⏱', strong: '20 segundos', text: 'por jogada. Se o tempo acabar, a vez passa para o adversário.' },
       { icon: '🌐', strong: 'Online:', text: 'crie uma sala, escolha ✕ ou ◯ e envie o link. Quem abrir joga com o outro símbolo; se a sala já tiver dois jogadores, a pessoa assiste. Sair no meio da partida conta como desistência.' },
-      { icon: '🪙', strong: 'Moedas:', text: 'vença partidas, complete as missões do dia, pegue a recompensa diária e convide amigos para ganhar moedas e trocar por símbolos, temas e efeitos na loja (🛒, na tela de início).' }
+      { icon: '🪙', strong: 'Moedas:', text: 'vença partidas, complete as missões do dia, pegue a recompensa diária e convide amigos para ganhar moedas e trocar por avatares, temas e efeitos na loja (🛒, na tela de início).' }
     ],
     caption: 'Jogou no canto de cima à direita? O adversário joga no tabuleiro do canto de cima à direita.',
     ok: 'Entendi, bora jogar!',

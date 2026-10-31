@@ -70,7 +70,7 @@ const en: Messages = {
       reward: "🎁 Today's reward is ready!",
       dialogTitle: '🎯 Missions and rewards'
     },
-    shop: { title: 'Shop', text: 'Symbols, themes and effects' },
+    shop: { title: 'Shop', text: 'Avatars, themes and effects' },
     ready: 'Ready?',
     readyHint: 'The timer only starts when you tap Start.',
     start: '▶ Start'
@@ -98,10 +98,12 @@ const en: Messages = {
 
   shop: {
     title: '🛒 Shop',
-    types: { symbol: 'Symbols', theme: 'Themes', team: '⚽ Teams', effect: 'Victory effects' },
+    types: { symbol: 'Avatars', classic: '🎲 Classic themes', styled: '🎨 Stylized themes', special: '✨ Special themes', team: '⚽ Teams', effect: 'Victory effects' },
     hints: {
       symbol: 'Shown instead of your X/O. Online, your opponent sees it too.',
-      theme: 'Board and background colors.',
+      classic: 'Timeless looks for the board, pieces and background.',
+      styled: 'Themes with more color and personality.',
+      special: 'Complete scenes, full of details.',
       team: 'In the colors of Brazilian clubs: board, pieces and background.',
       effect: 'Shown when you win.'
     },
@@ -122,18 +124,22 @@ const en: Messages = {
       'symbol-zombie': 'Zombie',
       'symbol-coffin': 'Coffin',
       'symbol-christmas': 'Christmas tree',
-      'theme-neon': 'Neon',
-      'theme-retro': 'Retro',
-      'theme-ocean': 'Ocean',
-      'theme-sunset': 'Sunset',
-      'theme-gold': 'Gold',
+      'theme-neon': 'Cyberpunk',
       'theme-blocks': 'Blocks',
-      'theme-wood': 'Wood',
       'theme-notebook': 'Notebook',
-      'theme-ice': 'Ice',
+      'theme-wood': 'Wood',
+      'theme-chess': 'Chess',
       'theme-pitaya': 'Dragon fruit',
       'theme-donut': 'Donuts',
+      'theme-galaxy': 'Galaxy',
+      'theme-volcano': 'Volcanic',
+      'theme-oriental': 'Oriental',
       'theme-military': 'Military',
+      'theme-medieval': 'Medieval',
+      'theme-retro': 'Arcade',
+      'theme-storm': 'Lightning',
+      'theme-casino': 'Casino',
+      'theme-jeans': 'Denim',
       'theme-team-mengao': 'Mengão',
       'theme-team-verdao': 'Verdão',
       'theme-team-raposa': 'Raposa',
@@ -367,7 +373,7 @@ const en: Messages = {
       { icon: '🔓', strong: 'Board closed?', text: 'If the target board is already decided, your opponent can play in any open board.' },
       { icon: '⏱', strong: '20 seconds', text: "per move. If time runs out, it's your opponent's turn." },
       { icon: '🌐', strong: 'Online:', text: 'create a room, pick ✕ or ◯ and send the link. Whoever opens it plays the other symbol; if the room already has two players, they watch. Leaving mid-match counts as giving up.' },
-      { icon: '🪙', strong: 'Coins:', text: "win games, complete today's missions, claim the daily reward and invite friends to earn coins and trade them for symbols, themes and effects in the shop (🛒, on the home screen)." }
+      { icon: '🪙', strong: 'Coins:', text: "win games, complete today's missions, claim the daily reward and invite friends to earn coins and trade them for avatars, themes and effects in the shop (🛒, on the home screen)." }
     ],
     caption: 'Played in the top-right corner? Your opponent plays in the top-right board.',
     ok: "Got it, let's play!",

@@ -99,7 +99,7 @@ export default function GameView({
 
   return (
     <>
-      <div className="container">
+      <div className="container game">
 
         <div className="top">
           <div className="top-bar">
@@ -132,32 +132,35 @@ export default function GameView({
           {panel}
         </div>
 
-        {/* Na vez do outro, o tabuleiro fica levemente apagado */}
-        <div className={waiting ? 'main-board waiting' : 'main-board'} ref={boardRef}>
-          {game.boards.map((board, i) => (
-            <MiniBoard
-              key={i}
-              board={board}
-              playable={isBoardPlayable(game, i)}
-              free={game.activeBoard === null}
-              currentPlayer={game.currentPlayer}
-              glyphs={glyphs}
-              nudgeId={nudge?.board === i ? nudge.id : undefined}
-              onCellClick={cell => onCellClick(i, cell)}
-            />
-          ))}
+        {/* Ocupa o espaço que sobra na tela; o tabuleiro é o maior quadrado que cabe nele */}
+        <div className="board-area">
+          {/* Na vez do outro, o tabuleiro fica levemente apagado */}
+          <div className={waiting ? 'main-board waiting' : 'main-board'} ref={boardRef}>
+            {game.boards.map((board, i) => (
+              <MiniBoard
+                key={i}
+                board={board}
+                playable={isBoardPlayable(game, i)}
+                free={game.activeBoard === null}
+                currentPlayer={game.currentPlayer}
+                glyphs={glyphs}
+                nudgeId={nudge?.board === i ? nudge.id : undefined}
+                onCellClick={cell => onCellClick(i, cell)}
+              />
+            ))}
 
-          {onStart && (
-            <div className="start-overlay">
-              <div className="start-card">
-                <strong>{t.home.ready}</strong>
-                <button className="btn start-button" onClick={onStart}>
-                  {t.home.start}
-                </button>
-                <small>{t.home.readyHint}</small>
+            {onStart && (
+              <div className="start-overlay">
+                <div className="start-card">
+                  <strong>{t.home.ready}</strong>
+                  <button className="btn start-button" onClick={onStart}>
+                    {t.home.start}
+                  </button>
+                  <small>{t.home.readyHint}</small>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         <div className="legend">

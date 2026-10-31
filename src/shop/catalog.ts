@@ -10,20 +10,28 @@ export interface ShopItem {
   price: number;
   /** Emoji (símbolos e efeitos) ou cor de destaque (temas) mostrado na loja */
   preview: string;
-  /** Temas de time ficam numa seção própria da loja */
-  group?: 'team';
+  /** Seção da loja de cada tema: clássicos, estilizados, especiais ou times */
+  group?: ThemeGroup;
 }
 
-/** Seções da loja, na ordem em que aparecem */
-export type ShopSection = ItemType | 'team';
+export type ThemeGroup = 'classic' | 'styled' | 'special' | 'team';
 
-export const SHOP_SECTIONS: ShopSection[] = ['symbol', 'theme', 'team', 'effect'];
+/** Seções da loja, na ordem em que aparecem */
+export type ShopSection = Exclude<ItemType, 'theme'> | ThemeGroup;
+
+export const SHOP_SECTIONS: ShopSection[] = ['symbol', 'classic', 'styled', 'special', 'team', 'effect'];
 
 export function sectionOf(item: ShopItem): ShopSection {
 
-  return item.group ?? item.type;
+  return item.group ?? (item.type as Exclude<ItemType, 'theme'>);
 
 }
+
+const THEME_PRICES: Record<Exclude<ThemeGroup, 'team'>, number> = { classic: 100, styled: 200, special: 300 };
+
+/** Tema comum; o preview é a cor de destaque guardada no catálogo */
+const theme = (id: string, group: Exclude<ThemeGroup, 'team'>, preview: string): ShopItem =>
+  ({ id: `theme-${id}`, type: 'theme', price: id === 'neon' ? 0 : THEME_PRICES[group], preview, group });
 
 const TEAM_PRICE = 400;
 
@@ -45,19 +53,27 @@ export const ITEMS: ShopItem[] = [
   { id: 'symbol-coffin', type: 'symbol', price: 100, preview: '⚰️' },
   { id: 'symbol-christmas', type: 'symbol', price: 100, preview: '🎄' },
 
-  { id: 'theme-neon', type: 'theme', price: 0, preview: '#8b5cf6' },
-  { id: 'theme-retro', type: 'theme', price: 60, preview: '#39ff14' },
-  { id: 'theme-ocean', type: 'theme', price: 60, preview: '#2ec4b6' },
-  { id: 'theme-sunset', type: 'theme', price: 60, preview: '#ff8c42' },
-  { id: 'theme-gold', type: 'theme', price: 60, preview: '#ffd166' },
-  // Temas sem neon (mudam também as peças e as casas)
-  { id: 'theme-notebook', type: 'theme', price: 150, preview: 'repeating-linear-gradient(180deg, #fbf8ee 0 5px, #9db8e8 5px 6px)' },
-  { id: 'theme-ice', type: 'theme', price: 150, preview: 'linear-gradient(135deg, #ffffff 0 50%, #7fb3d4 50%)' },
-  { id: 'theme-blocks', type: 'theme', price: 200, preview: 'linear-gradient(135deg, #ff5a5f 0 50%, #34c964 50%)' },
-  { id: 'theme-wood', type: 'theme', price: 200, preview: 'linear-gradient(135deg, #f3dcb2 0 50%, #8c5a2e 50%)' },
-  { id: 'theme-military', type: 'theme', price: 200, preview: 'radial-gradient(circle at 30% 35%, #2a3320 0 22%, transparent 24%), radial-gradient(circle at 70% 70%, #6b5a3a 0 20%, transparent 22%), #5f6a34' },
-  { id: 'theme-pitaya', type: 'theme', price: 250, preview: 'radial-gradient(circle, #fff8fb 0 45%, #e0287a 47%)' },
-  { id: 'theme-donut', type: 'theme', price: 250, preview: 'radial-gradient(circle, transparent 0 22%, #ff6fa8 24% 60%, #e8a35f 62%)' },
+  // Clássicos (o Cyberpunk é o tema padrão; o id continua "neon")
+  theme('neon', 'classic', '#8b5cf6'),
+  theme('blocks', 'classic', '#3b6bff'),
+  theme('notebook', 'classic', '#fbf8ee'),
+  theme('wood', 'classic', '#8c5a2e'),
+  theme('chess', 'classic', '#c9a24a'),
+
+  // Estilizados
+  theme('pitaya', 'styled', '#ff2e9a'),
+  theme('donut', 'styled', '#ff8fbf'),
+  theme('galaxy', 'styled', '#3b6dff'),
+  theme('volcano', 'styled', '#ff6a1a'),
+  theme('oriental', 'styled', '#b8282e'),
+
+  // Especiais (o Fliperama usa o id do antigo Retrô)
+  theme('military', 'special', '#6b7a3a'),
+  theme('medieval', 'special', '#c9a24a'),
+  theme('retro', 'special', '#39ff14'),
+  theme('storm', 'special', '#6fb6ff'),
+  theme('casino', 'special', '#d4af37'),
+  theme('jeans', 'special', '#2f5d8f'),
 
   // Times (só cores e detalhes genéricos, sem escudos; o nome na loja é o apelido)
   team('mengao', 'repeating-linear-gradient(180deg, #c8102e 0 6px, #111 6px 12px)'),

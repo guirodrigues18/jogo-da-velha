@@ -38,7 +38,7 @@ export default function TopActions() {
         🏅
       </button>
       <button className="icon-button" onClick={() => setDialog('help')} aria-label={t.actions.help} title={t.actions.help}>
-        ❔
+        ?
       </button>
       <SoundToggle />
 

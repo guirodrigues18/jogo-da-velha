@@ -25,7 +25,7 @@ describe('loja', () => {
 
   it('não compra sem moedas, item repetido ou inexistente', () => {
 
-    expect(purchase(emptyProfile(), 'theme-gold')).toBeNull();
+    expect(purchase(emptyProfile(), 'symbol-crown')).toBeNull();
     expect(purchase({ ...emptyProfile(), coins: 500 }, 'symbol-classic')).toBeNull();
     expect(purchase({ ...emptyProfile(), coins: 500 }, 'nao-existe')).toBeNull();
 
@@ -35,7 +35,7 @@ describe('loja', () => {
 
     expect(equip(emptyProfile(), 'symbol-star')).toBeNull();
 
-    const bought = purchase({ ...emptyProfile(), coins: 200 }, 'theme-retro')!;
+    const bought = purchase({ ...emptyProfile(), coins: 300 }, 'theme-retro')!;
 
     expect(equip(bought, 'theme-retro')?.equipped).toMatchObject({ theme: 'theme-retro', symbol: 'symbol-classic' });
 

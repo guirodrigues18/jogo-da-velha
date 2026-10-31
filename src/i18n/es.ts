@@ -70,7 +70,7 @@ const es: Messages = {
       reward: '🎁 ¡Recompensa del día disponible!',
       dialogTitle: '🎯 Misiones y recompensas'
     },
-    shop: { title: 'Tienda', text: 'Símbolos, temas y efectos' },
+    shop: { title: 'Tienda', text: 'Avatares, temas y efectos' },
     ready: '¿Listo?',
     readyHint: 'El cronómetro solo empieza cuando tocas Empezar.',
     start: '▶ Empezar'
@@ -98,10 +98,12 @@ const es: Messages = {
 
   shop: {
     title: '🛒 Tienda',
-    types: { symbol: 'Símbolos', theme: 'Temas', team: '⚽ Equipos', effect: 'Efectos de victoria' },
+    types: { symbol: 'Avatares', classic: '🎲 Temas clásicos', styled: '🎨 Temas estilizados', special: '✨ Temas especiales', team: '⚽ Equipos', effect: 'Efectos de victoria' },
     hints: {
       symbol: 'Aparecen en lugar de tu X/O. En línea, tu rival también los ve.',
-      theme: 'Colores del tablero y del fondo.',
+      classic: 'Estilos atemporales para el tablero, las fichas y el fondo.',
+      styled: 'Temas con más color y personalidad.',
+      special: 'Escenarios completos, llenos de detalles.',
       team: 'Con los colores de los clubes brasileños: tablero, fichas y fondo.',
       effect: 'Aparecen cuando ganas.'
     },
@@ -122,18 +124,22 @@ const es: Messages = {
       'symbol-zombie': 'Zombi',
       'symbol-coffin': 'Ataúd',
       'symbol-christmas': 'Árbol de Navidad',
-      'theme-neon': 'Neón',
-      'theme-retro': 'Retro',
-      'theme-ocean': 'Océano',
-      'theme-sunset': 'Atardecer',
-      'theme-gold': 'Dorado',
+      'theme-neon': 'Cyberpunk',
       'theme-blocks': 'Bloques',
-      'theme-wood': 'Madera',
       'theme-notebook': 'Cuaderno',
-      'theme-ice': 'Hielo',
+      'theme-wood': 'Madera',
+      'theme-chess': 'Ajedrez',
       'theme-pitaya': 'Pitaya',
       'theme-donut': 'Donas',
+      'theme-galaxy': 'Galaxia',
+      'theme-volcano': 'Volcánico',
+      'theme-oriental': 'Oriental',
       'theme-military': 'Militar',
+      'theme-medieval': 'Medieval',
+      'theme-retro': 'Arcade',
+      'theme-storm': 'Rayos',
+      'theme-casino': 'Casino',
+      'theme-jeans': 'Jeans',
       'theme-team-mengao': 'Mengão',
       'theme-team-verdao': 'Verdão',
       'theme-team-raposa': 'Raposa',
@@ -367,7 +373,7 @@ const es: Messages = {
       { icon: '🔓', strong: '¿Tablero cerrado?', text: 'Si el tablero de destino ya está decidido, tu rival puede jugar en cualquiera abierto.' },
       { icon: '⏱', strong: '20 segundos', text: 'por jugada. Si se acaba el tiempo, el turno pasa a tu rival.' },
       { icon: '🌐', strong: 'En línea:', text: 'crea una sala, elige ✕ o ◯ y envía el enlace. Quien lo abra juega con el otro símbolo; si la sala ya tiene dos jugadores, mira la partida. Salir a mitad de partida cuenta como rendirse.' },
-      { icon: '🪙', strong: 'Monedas:', text: 'gana partidas, completa las misiones del día, recoge la recompensa diaria e invita a amigos para conseguir monedas y cambiarlas por símbolos, temas y efectos en la tienda (🛒, en la pantalla de inicio).' }
+      { icon: '🪙', strong: 'Monedas:', text: 'gana partidas, completa las misiones del día, recoge la recompensa diaria e invita a amigos para conseguir monedas y cambiarlas por avatares, temas y efectos en la tienda (🛒, en la pantalla de inicio).' }
     ],
     caption: '¿Jugaste en la esquina superior derecha? Tu rival juega en el tablero de la esquina superior derecha.',
     ok: '¡Entendido, a jugar!',

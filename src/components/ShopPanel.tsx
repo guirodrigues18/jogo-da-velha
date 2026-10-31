@@ -34,7 +34,8 @@ export default function ShopPanel() {
           <p className="shop-hint">{t.shop.hints[section]}</p>
 
           <div className="shop-grid">
-            {ITEMS.filter(item => sectionOf(item) === section).map(item => {
+            {/* Do mais barato ao mais caro (mesmo preço: ordem do catálogo) */}
+            {ITEMS.filter(item => sectionOf(item) === section).sort((a, b) => a.price - b.price).map(item => {
 
               const { type } = item;
               const owned = profile.owned.includes(item.id);
