@@ -52,6 +52,11 @@ export const ITEMS: ShopItem[] = [
   { id: 'symbol-zombie', type: 'symbol', price: 100, preview: '🧟' },
   { id: 'symbol-coffin', type: 'symbol', price: 100, preview: '⚰️' },
   { id: 'symbol-christmas', type: 'symbol', price: 100, preview: '🎄' },
+  { id: 'symbol-panda', type: 'symbol', price: 100, preview: '🐼' },
+  { id: 'symbol-rocket', type: 'symbol', price: 120, preview: '🚀' },
+  { id: 'symbol-dino', type: 'symbol', price: 120, preview: '🦖' },
+  { id: 'symbol-unicorn', type: 'symbol', price: 150, preview: '🦄' },
+  { id: 'symbol-ninja', type: 'symbol', price: 150, preview: '🥷' },
 
   // Clássicos (o Cyberpunk é o tema padrão; o id continua "neon")
   theme('neon', 'classic', '#8b5cf6'),
