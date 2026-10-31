@@ -3,7 +3,10 @@ import {
   applyMove,
   createGame,
   getWinningLine,
+  lostOnTime,
+  MAX_TIMEOUTS,
   passTurn,
+  timeoutsLeft,
   type Cell,
   type GameState,
   type MiniBoard
@@ -177,6 +180,34 @@ describe('passTurn', () => {
     const game = buildState({ winner: 'x' });
 
     expect(passTurn(game)).toBe(game);
+
+  });
+
+  it('conta os tempos esgotados de quem estava com a vez', () => {
+
+    const game = passTurn(buildState({ currentPlayer: 'o', timeouts: { x: 1, o: 0 } }));
+
+    expect(game.timeouts).toEqual({ x: 1, o: 1 });
+    expect(timeoutsLeft(game, 'o')).toBe(MAX_TIMEOUTS - 1);
+    expect(game.winner).toBeNull();
+
+  });
+
+  it('no 4º tempo esgotado, o adversário vence', () => {
+
+    const game = passTurn(buildState({ timeouts: { x: MAX_TIMEOUTS, o: 0 } }));
+
+    expect(game.winner).toBe('o');
+    expect(lostOnTime(game)).toBe('x');
+
+  });
+
+  it('jogadas mantêm a contagem de tempos esgotados', () => {
+
+    const game = applyMove(buildState({ timeouts: { x: 2, o: 1 } }), 0, 0);
+
+    expect(game.timeouts).toEqual({ x: 2, o: 1 });
+    expect(lostOnTime(game)).toBeNull();
 
   });
 

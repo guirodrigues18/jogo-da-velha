@@ -7,7 +7,19 @@ const pt = {
 
   player: (symbol: string) => `Jogador ${symbol}`,
   turnOfPlayer: (symbol: string) => `Vez do Jogador ${symbol}`,
-  timeout: (turnText: string) => `⏱ Tempo esgotado! ${turnText}`,
+  timeout: (turnText: string, left: number) =>
+    left > 0
+      ? `⏱ Tempo esgotado! ${turnText} · ${left === 1 ? 'resta 1 chance' : `restam ${left} chances`}`
+      : `⏱ Tempo esgotado! ${turnText} · na próxima, perde a partida`,
+
+  timeouts: {
+    lost: '⏱ O tempo acabou pela 4ª vez: fim de partida!',
+    endedNote: '⏱ Decidida por tempo: o tempo acabou 4 vezes.',
+    pips: (left: number) =>
+      left > 0
+        ? `Pode deixar o tempo acabar mais ${left === 1 ? '1 vez' : `${left} vezes`}; na 4ª, perde a partida`
+        : 'Se o tempo acabar de novo, perde a partida'
+  },
   boardDraw: 'EMPATE',
   scoreLabel: (x: string, xScore: number, o: string, oScore: number) => `Placar: ${x} ${xScore}, ${o} ${oScore}`,
 
@@ -379,7 +391,7 @@ const pt = {
       { icon: '✕', strong: 'Para conquistar um mini-tabuleiro,', text: 'faça 3 em linha dentro dele, como no jogo da velha comum.' },
       { icon: '➡️', strong: 'A regra de ouro:', text: 'a casa em que você joga decide em qual tabuleiro o adversário joga depois.', example: true },
       { icon: '🔓', strong: 'Tabuleiro fechado?', text: 'Se o tabuleiro de destino já estiver fechado, o adversário pode jogar em qualquer um aberto.' },
-      { icon: '⏱', strong: '20 segundos', text: 'por jogada. Se o tempo acabar, a vez passa para o adversário.' },
+      { icon: '⏱', strong: '20 segundos', text: 'por jogada. Se o tempo acabar, a vez passa para o adversário. Na 4ª vez que o tempo acabar, você perde a partida.' },
       { icon: '🌐', strong: 'Online:', text: 'crie uma sala, escolha ✕ ou ◯ e envie o link. Quem abrir joga com o outro símbolo; se a sala já tiver dois jogadores, a pessoa assiste. Sair no meio da partida conta como desistência.' },
       { icon: '🪙', strong: 'Moedas:', text: 'vença partidas, complete as missões do dia, pegue a recompensa diária e convide amigos para ganhar moedas e trocar por avatares, temas e efeitos na loja (🛒, na tela de início).' }
     ],

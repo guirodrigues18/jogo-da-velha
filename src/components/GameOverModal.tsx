@@ -10,6 +10,8 @@ interface Props {
   /** Substitui o título padrão (ex.: "Você venceu!" no modo online) */
   title?: string;
   subtitle?: string;
+  /** Como a partida terminou (ex.: decidida por tempo) */
+  note?: string;
   /** Nome exibido na imagem de compartilhamento (padrão: "Jogador X") */
   winnerName?: string;
   autoRestart: boolean;
@@ -36,6 +38,7 @@ export default function GameOverModal({
   open = winner !== null,
   title,
   subtitle,
+  note,
   winnerName,
   autoRestart,
   restartLabel = t.result.playAgain,
@@ -53,6 +56,7 @@ export default function GameOverModal({
     <div className={open ? 'modal show' : 'modal'}>
       <div className="modal-card">
         <div className="modal-title">{open && (title ?? defaultTitle)}</div>
+        {open && note && <div className="modal-subtitle">{note}</div>}
         {autoRestart ? (
           <div className="modal-subtitle">{t.result.autoRestart}</div>
         ) : subtitle && (

@@ -7,7 +7,19 @@ const en: Messages = {
 
   player: symbol => `Player ${symbol}`,
   turnOfPlayer: symbol => `Player ${symbol}'s turn`,
-  timeout: turnText => `⏱ Time's up! ${turnText}`,
+  timeout: (turnText, left) =>
+    left > 0
+      ? `⏱ Time's up! ${turnText} · ${left === 1 ? '1 chance left' : `${left} chances left`}`
+      : `⏱ Time's up! ${turnText} · next time, you lose the match`,
+
+  timeouts: {
+    lost: '⏱ Time ran out for the 4th time: match over!',
+    endedNote: '⏱ Decided on time: the clock ran out 4 times.',
+    pips: left =>
+      left > 0
+        ? `You can let the clock run out ${left === 1 ? '1 more time' : `${left} more times`}; the 4th time, you lose the match`
+        : 'If the clock runs out again, you lose the match'
+  },
   boardDraw: 'DRAW',
   scoreLabel: (x, xScore, o, oScore) => `Score: ${x} ${xScore}, ${o} ${oScore}`,
 
@@ -379,7 +391,7 @@ const en: Messages = {
       { icon: '✕', strong: 'To win a mini-board,', text: 'get 3 in a row inside it, just like regular tic-tac-toe.' },
       { icon: '➡️', strong: 'The golden rule:', text: 'the square you play in decides which board your opponent plays in next.', example: true },
       { icon: '🔓', strong: 'Board closed?', text: 'If the target board is already decided, your opponent can play in any open board.' },
-      { icon: '⏱', strong: '20 seconds', text: "per move. If time runs out, it's your opponent's turn." },
+      { icon: '⏱', strong: '20 seconds', text: "per move. If time runs out, it's your opponent's turn. The 4th time it runs out, you lose the match." },
       { icon: '🌐', strong: 'Online:', text: 'create a room, pick ✕ or ◯ and send the link. Whoever opens it plays the other symbol; if the room already has two players, they watch. Leaving mid-match counts as giving up.' },
       { icon: '🪙', strong: 'Coins:', text: "win games, complete today's missions, claim the daily reward and invite friends to earn coins and trade them for avatars, themes and effects in the shop (🛒, on the home screen)." }
     ],

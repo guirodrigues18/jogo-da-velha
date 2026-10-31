@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { isBoardPlayable, type GameState, type Player } from '../game/logic';
+import { isBoardPlayable, lostOnTime, timeoutsLeft, type GameState, type Player } from '../game/logic';
 import type { Notice, Nudge } from '../hooks/useGameFeedback';
 import InfoBar from './InfoBar';
 import MiniBoard, { type Glyphs } from './MiniBoard';
@@ -125,6 +125,7 @@ export default function GameView({
             turn={game.turn}
             secondsLeft={secondsLeft}
             timerActive={timerActive}
+            timeoutsLeft={game.winner ? undefined : timeoutsLeft(game, game.currentPlayer)}
           />
 
           {score && <Scoreboard {...score} />}
@@ -176,7 +177,12 @@ export default function GameView({
         </div>
       )}
 
-      <GameOverModal winner={game.winner} boards={game.boards} {...modal} />
+      <GameOverModal
+        winner={game.winner}
+        boards={game.boards}
+        note={lostOnTime(game) ? t.timeouts.endedNote : undefined}
+        {...modal}
+      />
 
       {overlay}
     </>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { GameState, Player } from '../game/logic';
+import { timeoutsLeft, type GameState, type Player } from '../game/logic';
 import { playSound, type SoundName } from '../audio/sounds';
 import { vibrate, VIBRATION } from '../audio/haptics';
 import { celebrate } from '../effects/confetti';
@@ -66,7 +66,19 @@ export function useGameFeedback(
     const boardIndex = findChangedBoard(prev, game);
 
     if (boardIndex === null) {
-      setNotice({ text: t.timeout(turnText(game.currentPlayer)), id: Date.now() });
+
+      // Tempo esgotado vezes demais: a partida acaba com a vitória do adversário
+      if (game.winner && game.winner !== 'draw') {
+        setNotice({ text: t.timeouts.lost, id: Date.now() });
+        playSound(isMe(game.winner) ? 'win' : 'lose');
+        if (isMe(game.winner)) celebrate();
+        onGameEnd?.(game);
+        return;
+      }
+
+      const left = timeoutsLeft(game, actor);
+
+      setNotice({ text: t.timeout(turnText(game.currentPlayer), left), id: Date.now() });
       playSound('timeout');
       return;
     }

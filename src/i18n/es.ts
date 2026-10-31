@@ -7,7 +7,19 @@ const es: Messages = {
 
   player: symbol => `Jugador ${symbol}`,
   turnOfPlayer: symbol => `Turno del Jugador ${symbol}`,
-  timeout: turnText => `⏱ ¡Se acabó el tiempo! ${turnText}`,
+  timeout: (turnText, left) =>
+    left > 0
+      ? `⏱ ¡Se acabó el tiempo! ${turnText} · ${left === 1 ? 'queda 1 oportunidad' : `quedan ${left} oportunidades`}`
+      : `⏱ ¡Se acabó el tiempo! ${turnText} · la próxima vez, pierdes la partida`,
+
+  timeouts: {
+    lost: '⏱ Se acabó el tiempo por 4ª vez: ¡fin de la partida!',
+    endedNote: '⏱ Decidida por tiempo: el tiempo se acabó 4 veces.',
+    pips: left =>
+      left > 0
+        ? `Puedes dejar que se acabe el tiempo ${left === 1 ? '1 vez más' : `${left} veces más`}; a la 4ª, pierdes la partida`
+        : 'Si se acaba el tiempo otra vez, pierdes la partida'
+  },
   boardDraw: 'EMPATE',
   scoreLabel: (x, xScore, o, oScore) => `Marcador: ${x} ${xScore}, ${o} ${oScore}`,
 
@@ -379,7 +391,7 @@ const es: Messages = {
       { icon: '✕', strong: 'Para ganar un mini-tablero,', text: 'haz 3 en línea dentro de él, como en el tres en raya de siempre.' },
       { icon: '➡️', strong: 'La regla de oro:', text: 'la casilla donde juegas decide en qué tablero juega tu rival después.', example: true },
       { icon: '🔓', strong: '¿Tablero cerrado?', text: 'Si el tablero de destino ya está decidido, tu rival puede jugar en cualquiera abierto.' },
-      { icon: '⏱', strong: '20 segundos', text: 'por jugada. Si se acaba el tiempo, el turno pasa a tu rival.' },
+      { icon: '⏱', strong: '20 segundos', text: 'por jugada. Si se acaba el tiempo, el turno pasa a tu rival. La 4ª vez que se acaba, pierdes la partida.' },
       { icon: '🌐', strong: 'En línea:', text: 'crea una sala, elige ✕ o ◯ y envía el enlace. Quien lo abra juega con el otro símbolo; si la sala ya tiene dos jugadores, mira la partida. Salir a mitad de partida cuenta como rendirse.' },
       { icon: '🪙', strong: 'Monedas:', text: 'gana partidas, completa las misiones del día, recoge la recompensa diaria e invita a amigos para conseguir monedas y cambiarlas por avatares, temas y efectos en la tienda (🛒, en la pantalla de inicio).' }
     ],

@@ -68,6 +68,9 @@
           "turnStartedAt": {
             ".validate": "newData.val() === now"
           },
+          "timeouts": {
+            ".validate": "newData.isString() && newData.val().matches(/^[0-4]{2}$/)"
+          },
           "$other": {
             ".validate": false
           }

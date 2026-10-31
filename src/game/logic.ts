@@ -19,7 +19,12 @@ export interface GameState {
   winner: Result;
   /** Quantidade de turnos já encerrados (jogadas + tempos esgotados) */
   turn: number;
+  /** Quantas vezes cada jogador deixou o tempo acabar nesta partida */
+  timeouts: Record<Player, number>;
 }
+
+/** Tempos esgotados tolerados por partida; no seguinte, o jogador perde */
+export const MAX_TIMEOUTS = 3;
 
 /* ===========================
    Estado inicial
@@ -49,7 +54,8 @@ export function createGame(): GameState {
     currentPlayer: 'x',
     activeBoard: null,
     winner: null,
-    turn: 0
+    turn: 0,
+    timeouts: { x: 0, o: 0 }
   };
 
 }
@@ -172,6 +178,7 @@ export function applyMove(state: GameState, boardIndex: number, cellIndex: numbe
   }
 
   return {
+    ...state,
     boards,
     winner: null,
     // A posição clicada define o próximo tabuleiro; se ele estiver fechado, fica livre
@@ -182,11 +189,40 @@ export function applyMove(state: GameState, boardIndex: number, cellIndex: numbe
 
 }
 
-/** Tempo esgotado: a vez passa ao adversário, que joga no mesmo tabuleiro obrigatório */
+/**
+ * Tempo esgotado: a vez passa ao adversário, que joga no mesmo tabuleiro obrigatório.
+ * Depois de MAX_TIMEOUTS vezes, o próximo tempo esgotado entrega a vitória ao adversário.
+ */
 export function passTurn(state: GameState): GameState {
 
   if (state.winner) return state;
 
-  return { ...state, currentPlayer: opponent(state.currentPlayer), turn: state.turn + 1 };
+  const player = state.currentPlayer;
+  const timeouts = { ...state.timeouts, [player]: state.timeouts[player] + 1 };
+  const turn = state.turn + 1;
+
+  if (timeouts[player] > MAX_TIMEOUTS) {
+    return { ...state, winner: opponent(player), activeBoard: null, turn, timeouts };
+  }
+
+  return { ...state, currentPlayer: opponent(player), turn, timeouts };
+
+}
+
+/** Quantos tempos esgotados o jogador ainda pode ter sem perder a partida */
+export function timeoutsLeft(state: GameState, player: Player): number {
+
+  return Math.max(0, MAX_TIMEOUTS - state.timeouts[player]);
+
+}
+
+/** Quem perdeu a partida por deixar o tempo acabar vezes demais, ou null */
+export function lostOnTime(state: GameState): Player | null {
+
+  if (state.winner !== 'x' && state.winner !== 'o') return null;
+
+  const loser = opponent(state.winner);
+
+  return state.timeouts[loser] > MAX_TIMEOUTS ? loser : null;
 
 }

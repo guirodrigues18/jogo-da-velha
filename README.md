@@ -3,6 +3,8 @@
 Ganhe mini-tabuleiros para dominar o tabuleiro principal. Cada jogada define onde o próximo jogador deverá jogar.
 
 Cada jogador tem 20 segundos por turno; se o tempo acabar, a vez passa para o adversário, que joga no mesmo tabuleiro obrigatório.
+Dá para deixar o tempo acabar até 3 vezes por partida; na 4ª, o jogador perde (as chances que sobram aparecem como
+pontinhos ao lado do relógio). No online, a contagem vai junto com o estado da sala (`state/timeouts`).
 
 Modos de jogo:
 

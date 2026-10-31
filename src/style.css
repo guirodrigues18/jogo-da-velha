@@ -2076,6 +2076,44 @@ body::after {
   animation: pulse 1s ease infinite;
 }
 
+.turn-extras {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Chances de deixar o tempo acabar: discretas até sobrar nenhuma */
+.timeout-pips {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: .8em;
+  opacity: .7;
+  cursor: help;
+}
+
+.timeout-pips .pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.timeout-pips .pip:first-of-type {
+  margin-left: 2px;
+}
+
+.timeout-pips .pip.used {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px currentColor;
+  opacity: .5;
+}
+
+.timeout-pips.last {
+  color: var(--red);
+  opacity: 1;
+}
+
 /* ===========================
    Tabuleiros
    =========================== */

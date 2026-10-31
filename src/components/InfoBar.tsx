@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { Player } from '../game/logic';
+import { MAX_TIMEOUTS, type Player } from '../game/logic';
 import { TURN_SECONDS, WARNING_SECONDS } from '../hooks/useTurnTimer';
 import { t } from '../i18n';
 
@@ -13,11 +13,13 @@ interface Props {
   turn: number;
   secondsLeft: number;
   timerActive: boolean;
+  /** Tempos esgotados que o jogador da vez ainda pode ter; ausente = não mostra */
+  timeoutsLeft?: number;
 }
 
 const SYMBOLS: Record<Player, string> = { x: '✕', o: '◯' };
 
-export default function InfoBar({ currentPlayer, turnLabel, you, activeBoard, turn, secondsLeft, timerActive }: Props) {
+export default function InfoBar({ currentPlayer, turnLabel, you, activeBoard, turn, secondsLeft, timerActive, timeoutsLeft }: Props) {
 
   const warning = timerActive && secondsLeft <= WARNING_SECONDS;
 
@@ -37,11 +39,26 @@ export default function InfoBar({ currentPlayer, turnLabel, you, activeBoard, tu
       <div className={cardClasses.join(' ')}>
         <div className="info-label">
           {t.info.turn}
-          {timerActive && (
-            <span className={warning ? 'timer-seconds warning' : 'timer-seconds'}>
-              {secondsLeft}s
-            </span>
-          )}
+          <span className="turn-extras">
+            {/* Um ponto por chance: apaga a cada tempo esgotado; sem nenhum, a próxima é derrota */}
+            {timeoutsLeft !== undefined && (
+              <span
+                className={timeoutsLeft === 0 ? 'timeout-pips last' : 'timeout-pips'}
+                title={t.timeouts.pips(timeoutsLeft)}
+                aria-label={t.timeouts.pips(timeoutsLeft)}
+                role="img"
+              >
+                ⏱{Array.from({ length: MAX_TIMEOUTS }, (_, i) => (
+                  <span key={i} className={i < timeoutsLeft ? 'pip' : 'pip used'} />
+                ))}
+              </span>
+            )}
+            {timerActive && (
+              <span className={warning ? 'timer-seconds warning' : 'timer-seconds'}>
+                {secondsLeft}s
+              </span>
+            )}
+          </span>
         </div>
         {/* A key reinicia a animação de entrada a cada turno */}
         <div className="info-value pop-in" key={turn}>

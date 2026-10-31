@@ -15,6 +15,8 @@ export interface StoredState {
   /** x, o, d (empate) ou - */
   winner: string;
   turn: number;
+  /** 2 dígitos: tempos esgotados do X e do O (ausente em salas antigas) */
+  timeouts?: string;
 }
 
 const EMPTY = '-';
@@ -37,7 +39,8 @@ export function encodeState(state: GameState): StoredState {
     currentPlayer: state.currentPlayer,
     activeBoard: state.activeBoard ?? -1,
     winner: resultToChar(state.winner),
-    turn: state.turn
+    turn: state.turn,
+    timeouts: `${state.timeouts.x}${state.timeouts.o}`
   };
 
 }
@@ -52,7 +55,8 @@ export function decodeState(stored: StoredState): GameState {
     currentPlayer: stored.currentPlayer,
     activeBoard: stored.activeBoard === -1 ? null : stored.activeBoard,
     winner: charToResult(stored.winner),
-    turn: stored.turn
+    turn: stored.turn,
+    timeouts: { x: Number(stored.timeouts?.[0] ?? 0), o: Number(stored.timeouts?.[1] ?? 0) }
   };
 
 }
