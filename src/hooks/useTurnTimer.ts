@@ -5,12 +5,15 @@ export const WARNING_SECONDS = 5;
 
 /**
  * Contagem regressiva do turno. Reinicia sempre que `turn` muda
- * e chama `onTimeout` quando o tempo acaba.
+ * e chama `onTimeout` quando o tempo acaba. Com `paused`, congela onde está
+ * e continua dali ao despausar (no mesmo turno).
  */
-export function useTurnTimer(turn: number, active: boolean, onTimeout: () => void): number {
+export function useTurnTimer(turn: number, active: boolean, onTimeout: () => void, seconds = TURN_SECONDS, paused = false): number {
 
-  const [secondsLeft, setSecondsLeft] = useState(TURN_SECONDS);
+  const [secondsLeft, setSecondsLeft] = useState(seconds);
   const onTimeoutRef = useRef(onTimeout);
+  const remainingMs = useRef(seconds * 1000);
+  const lastTurn = useRef(turn);
 
   useEffect(() => {
     onTimeoutRef.current = onTimeout;
@@ -18,16 +21,22 @@ export function useTurnTimer(turn: number, active: boolean, onTimeout: () => voi
 
   useEffect(() => {
 
-    setSecondsLeft(TURN_SECONDS);
+    // Turno novo (ou cronômetro parado): começa do tempo cheio; só a pausa guarda o que sobrou
+    if (turn !== lastTurn.current || !active) remainingMs.current = seconds * 1000;
 
-    if (!active) return;
+    lastTurn.current = turn;
+    setSecondsLeft(Math.ceil(remainingMs.current / 1000));
+
+    if (!active || paused) return;
 
     // Calcula pelo relógio em vez de contar ticks, para não acumular atraso
-    const deadline = Date.now() + TURN_SECONDS * 1000;
+    const deadline = Date.now() + remainingMs.current;
 
     const interval = setInterval(() => {
 
-      const left = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      remainingMs.current = Math.max(0, deadline - Date.now());
+
+      const left = Math.ceil(remainingMs.current / 1000);
 
       setSecondsLeft(left);
 
@@ -40,7 +49,7 @@ export function useTurnTimer(turn: number, active: boolean, onTimeout: () => voi
 
     return () => clearInterval(interval);
 
-  }, [turn, active]);
+  }, [turn, active, seconds, paused]);
 
   return secondsLeft;
 

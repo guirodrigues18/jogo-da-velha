@@ -12,7 +12,7 @@ import { loadPreferences, savePreferences, type LocalMode, type Preferences } fr
 import { recordFromGame, recordGame } from '../stats/achievements';
 import { track } from '../online/consent';
 import { t } from '../i18n';
-import { useTurnTimer } from './useTurnTimer';
+import { TURN_SECONDS, useTurnTimer } from './useTurnTimer';
 import { useGameFeedback } from './useGameFeedback';
 
 const RESTART_DELAY_MS = 4000;
@@ -60,7 +60,12 @@ export function useLocalGame() {
   // O cronômetro não corre para a IA
   const timerActive = started && !game.winner && !aiTurn;
 
-  const secondsLeft = useTurnTimer(game.turn, timerActive, () => setGame(passTurn));
+  /** Modo 2 jogadores: o tempo pode ser pausado (e continua de onde parou) */
+  const [paused, setPaused] = useState(false);
+  const canPause = mode === 'pvp' && timerActive;
+  const isPaused = paused && canPause;
+
+  const secondsLeft = useTurnTimer(game.turn, timerActive, () => setGame(passTurn), TURN_SECONDS, isPaused);
 
   const { notice, nudge, shake, reject } = useGameFeedback(game, secondsLeft, timerActive, {
     turnText: vsAI ? player => (player === human ? t.local.yourTurn : t.local.aiTurn) : undefined,
@@ -115,7 +120,7 @@ export function useLocalGame() {
 
   const play = (boardIndex: number, cellIndex: number) => {
 
-    if (aiTurn || !started) return;
+    if (aiTurn || !started || isPaused) return;
 
     const next = applyMove(game, boardIndex, cellIndex);
 
@@ -129,6 +134,7 @@ export function useLocalGame() {
   };
 
   const restart = (forMode = mode) => {
+    setPaused(false);
     setGame(startingGame(forMode));
     setAutoRestart(forMode !== 'daily');
     setDailyReplay(loadDailyProgress(challenge.number).won);
@@ -162,6 +168,9 @@ export function useLocalGame() {
     started,
     secondsLeft,
     timerActive,
+    paused: isPaused,
+    canPause,
+    togglePause: () => setPaused(value => !value),
     nudge,
     notice,
     shake,

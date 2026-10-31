@@ -208,7 +208,12 @@ const en: Messages = {
     ai: 'AI',
     thinking: '🤖 Thinking…',
     yourTurn: 'Your turn',
-    aiTurn: "AI's turn"
+    aiTurn: "AI's turn",
+    pause: 'Pause the clock',
+    resume: 'Resume',
+    resumeButton: '▶ Resume',
+    pausedTitle: '⏸ Match paused',
+    pausedHint: 'The clock is stopped. Tap Resume when you are both ready.'
   },
 
   online: {
@@ -290,11 +295,60 @@ const en: Messages = {
     saved: '✓ Saved'
   },
 
+  party: {
+    modeLabel: 'Game mode',
+    modes: { solo: '1v1', duo: '2v2 Duos', champs: 'Champs' },
+    modeHints: {
+      solo: 'You against a friend, as always.',
+      duo: '4 players in pairs: ✕ against ◯. Everyone plays on their own turn.',
+      champs: 'Free-for-all, each with their own symbol. First to win 3 mini-boards wins.'
+    },
+    sizeLabel: 'Max players',
+    sizeOption: n => `Up to ${n} players`,
+    create: 'Create group',
+    creating: 'Creating group…',
+    joining: 'Joining group…',
+    invitedBy: (name, mode) => `${name} invited you to ${mode}! 🎮`,
+    watchTitle: mode => `${mode} in progress 👀`,
+    watchInfo: 'The match has already started, but you can watch.',
+    lobbyTitle: (mode, max) => `${mode} · up to ${max} players`,
+    rulesDuo: "Turns rotate among the 4: ✕, ◯, ✕, ◯. Same rules as 1v1, but you don't control your partner. If someone leaves, their partner also plays their turn. Use reactions to team up!",
+    rulesChamps: 'Each player has a symbol: ✕ ◯ △ □. First to win 3 mini-boards wins. A full board with no 3 in a row goes to whoever has the most squares in it. 15s per move; the 4th time the clock runs out, that player is eliminated. Anyone who leaves is out too; if only one is left, they win.',
+    team: symbol => `Team ${symbol}`,
+    seatName: n => `Player ${n}`,
+    emptySeat: 'waiting…',
+    outTag: 'out',
+    start: '▶ Start match',
+    readyHint: n => `All set: the match starts with ${n} players.`,
+    needPlayers: (min, joined) => `Needs at least ${min} players (${joined} in the group).`,
+    waitingHost: name => `Waiting for ${name} to start the match…`,
+    waitingPlayers: (joined, max) => `Waiting for players (${joined}/${max})`,
+    waitingStart: 'Waiting to start…',
+    spectatorsHint: 'Anyone who joins when the group is full or after it starts gets to watch.',
+    leave: 'Leave group',
+    closedTitle: 'Group closed',
+    closedText: 'Whoever created the group left before it started.',
+    inviteMessage: (name, mode) => `${name} invited you to ${mode} on Tic-Tac-Toe 2.0 🎮 Jump in!`,
+    duoStart: (symbol, partner) => `You play ${symbol}, teamed up with ${partner}!`,
+    champsStart: symbol => `You play ${symbol}. Win 3 mini-boards!`,
+    partnerTurn: name => `Your partner's turn, ${name}`,
+    eliminated: name => `⏱ ${name} was eliminated`,
+    teamWon: '🏆 Your team won!',
+    teamLost: symbol => `😢 Team ${symbol} won`,
+    teamWonSpectator: symbol => `🏆 Team ${symbol} won!`,
+    champsWon: '🏆 You won Champs!',
+    leftOut: name => `🚪 ${name} left and is out of the match`,
+    endedByElimination: 'Everyone else left or was eliminated.',
+    cantRematch: 'Someone left the group: create a new one to play again.',
+    waitingRematch: (ready, total) => `Waiting for the others to accept (${ready}/${total})…`,
+    othersWantRematch: (ready, total) => `🔁 ${ready} of ${total} want to play again!`
+  },
+
   xp: {
     label: 'Your experience',
     total: xp => `${xp.toLocaleString('en-US')} XP`,
-    hint: (online, hard, medium, easy) =>
-      `Earn XP by winning: online +${online} · AI on Hard +${hard} · Medium +${medium} · Easy +${easy}`,
+    hint: (champs, duo, online, hard, medium, easy) =>
+      `Earn XP by winning: Champs +${champs} · 2v2 +${duo} · 1v1 online +${online} · AI on Hard +${hard} · Medium +${medium} · Easy +${easy}`,
     earnedWithCoins: xp => `Coins earned · ⭐ +${xp} XP`
   },
 
@@ -399,8 +453,9 @@ const en: Messages = {
       { icon: '✕', strong: 'To win a mini-board,', text: 'get 3 in a row inside it, just like regular tic-tac-toe.' },
       { icon: '➡️', strong: 'The golden rule:', text: 'the square you play in decides which board your opponent plays in next.', example: true },
       { icon: '🔓', strong: 'Board closed?', text: 'If the target board is already decided, your opponent can play in any open board.' },
-      { icon: '⏱', strong: '20 seconds', text: "per move. If time runs out, it's your opponent's turn. The 4th time it runs out, you lose the match." },
+      { icon: '⏱', strong: '20 seconds', text: "per move. If time runs out, it's your opponent's turn. The 4th time it runs out, you lose the match. In 2-player mode, you can pause with ⏸." },
       { icon: '🌐', strong: 'Online:', text: 'create a room, pick ✕ or ◯ and send the link. Whoever opens it plays the other symbol; if the room already has two players, they watch. Leaving mid-match counts as giving up.' },
+      { icon: '👥', strong: '2v2 Duos and Champs:', text: 'online, choose to play as a group. In 2v2, 4 players in pairs (✕ against ◯) take turns with the same rules. In Champs, 3 or 4 play free-for-all (✕ ◯ △ □): first to win 3 mini-boards wins, and a full board goes to whoever has the most squares. 15s per move; the first to join play, and anyone who arrives later watches. If someone leaves, the match goes on with those still in (in 2v2, their partner plays for them).' },
       { icon: '🪙', strong: 'Coins:', text: "win games, complete today's missions, claim the daily reward and invite friends to earn coins and trade them for avatars, themes and effects in the shop (🛒, on the home screen)." }
     ],
     caption: 'Played in the top-right corner? Your opponent plays in the top-right board.',

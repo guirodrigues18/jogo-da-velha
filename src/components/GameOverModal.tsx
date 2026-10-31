@@ -1,9 +1,10 @@
-import type { MiniBoard, Result } from '../game/logic';
+import type { MiniBoard } from '../game/logic';
+import type { MarkResult } from '../game/group';
 import ShareVictoryButton from './ShareVictoryButton';
 import { t } from '../i18n';
 
 interface Props {
-  winner: Result;
+  winner: MarkResult;
   boards: MiniBoard[];
   /** Força o modal aberto mesmo sem vencedor (ex.: adversário saiu da sala) */
   open?: boolean;
@@ -26,7 +27,8 @@ interface Props {
   onSecondary?: () => void;
 }
 
-const TITLES = {
+/** Títulos padrão do 1x1 (os modos em grupo sempre passam o próprio título) */
+const TITLES: Partial<Record<NonNullable<MarkResult>, string>> = {
   x: t.result.x,
   o: t.result.o,
   draw: t.result.draw
@@ -50,7 +52,7 @@ export default function GameOverModal({
   onSecondary
 }: Props) {
 
-  const defaultTitle = winner ? TITLES[winner] : '';
+  const defaultTitle = winner ? TITLES[winner] ?? '' : '';
 
   return (
     <div className={open ? 'modal show' : 'modal'}>

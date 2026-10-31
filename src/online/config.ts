@@ -25,3 +25,12 @@ export function roomIdFromUrl(): string | null {
   return new URLSearchParams(window.location.search).get(ROOM_PARAM);
 
 }
+
+/** Parâmetro da URL com o código do grupo (2x2 ou Champs): /?grupo=abc123 */
+export const PARTY_PARAM = 'grupo';
+
+export function partyIdFromUrl(): string | null {
+
+  return new URLSearchParams(window.location.search).get(PARTY_PARAM);
+
+}

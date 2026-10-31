@@ -1,25 +1,46 @@
 import type { CSSProperties } from 'react';
-import { MAX_TIMEOUTS, type Player } from '../game/logic';
+import { MAX_TIMEOUTS } from '../game/logic';
+import { MARK_SYMBOLS as SYMBOLS, type Mark } from '../game/group';
 import { TURN_SECONDS, WARNING_SECONDS } from '../hooks/useTurnTimer';
 import { t } from '../i18n';
 
 interface Props {
-  currentPlayer: Player;
+  currentPlayer: Mark;
   /** Substitui "Jogador X/O" (ex.: "Sua vez" no modo online) */
   turnLabel?: string;
   /** Símbolo de quem usa este aparelho; ausente no modo 2 jogadores e para espectadores */
-  you?: Player;
+  you?: Mark;
+  /** Se é a sua vez, quando o símbolo não basta (no 2x2, o parceiro tem o mesmo) */
+  myTurn?: boolean;
+  /** Segundos por jogada (barra do cronômetro) */
+  turnSeconds?: number;
   activeBoard: number | null;
   turn: number;
   secondsLeft: number;
   timerActive: boolean;
   /** Tempos esgotados que o jogador da vez ainda pode ter; ausente = não mostra */
   timeoutsLeft?: number;
+  /** Modo 2 jogadores: tempo pausado e o botão de pausar/continuar */
+  paused?: boolean;
+  onTogglePause?: () => void;
 }
 
-const SYMBOLS: Record<Player, string> = { x: '✕', o: '◯' };
+export default function InfoBar({
+  currentPlayer,
+  turnLabel,
+  you,
+  myTurn,
+  turnSeconds = TURN_SECONDS,
+  activeBoard,
+  turn,
+  secondsLeft,
+  timerActive,
+  timeoutsLeft,
+  paused = false,
+  onTogglePause
+}: Props) {
 
-export default function InfoBar({ currentPlayer, turnLabel, you, activeBoard, turn, secondsLeft, timerActive, timeoutsLeft }: Props) {
+  const mine = myTurn ?? (you ? you === currentPlayer : undefined);
 
   const warning = timerActive && secondsLeft <= WARNING_SECONDS;
 
@@ -27,11 +48,12 @@ export default function InfoBar({ currentPlayer, turnLabel, you, activeBoard, tu
 
   if (timerActive) fillClasses.push('running');
   if (warning) fillClasses.push('warning');
+  if (paused) fillClasses.push('paused');
 
   // Na sua vez, o card brilha na sua cor; na vez do outro, fica discreto
   const cardClasses = ['info-card', 'turn-card', currentPlayer];
 
-  if (you) cardClasses.push(you === currentPlayer ? 'my-turn' : 'their-turn');
+  if (mine !== undefined) cardClasses.push(mine ? 'my-turn' : 'their-turn');
 
   return (
     <div className="info-bar">
@@ -58,6 +80,17 @@ export default function InfoBar({ currentPlayer, turnLabel, you, activeBoard, tu
                 {secondsLeft}s
               </span>
             )}
+            {onTogglePause && (
+              <button
+                type="button"
+                className="pause-button"
+                onClick={onTogglePause}
+                aria-label={paused ? t.local.resume : t.local.pause}
+                title={paused ? t.local.resume : t.local.pause}
+              >
+                {paused ? '▶' : '⏸'}
+              </button>
+            )}
           </span>
         </div>
         {/* A key reinicia a animação de entrada a cada turno */}
@@ -69,7 +102,7 @@ export default function InfoBar({ currentPlayer, turnLabel, you, activeBoard, tu
           <div
             key={turn}
             className={fillClasses.join(' ')}
-            style={{ '--turn-seconds': `${TURN_SECONDS}s` } as CSSProperties}
+            style={{ '--turn-seconds': `${turnSeconds}s` } as CSSProperties}
           />
         </div>
       </div>

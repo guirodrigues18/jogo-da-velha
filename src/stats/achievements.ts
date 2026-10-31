@@ -1,5 +1,6 @@
 import type { Difficulty } from '../game/ai';
 import type { GameState, Player } from '../game/logic';
+import type { GroupMode } from '../game/group';
 import { addCoins } from '../shop/wallet';
 import { COINS, coinsForGame, xpForGame } from '../shop/rewards';
 import { t } from '../i18n';
@@ -37,6 +38,8 @@ export interface GameRecord {
   moves: number;
   /** Com qual símbolo você jogou */
   symbol?: Player;
+  /** Online em grupo (2x2 ou Champs); ausente no 1x1 */
+  group?: GroupMode;
 }
 
 export type AchievementId =
@@ -199,6 +202,7 @@ export function recordGame(record: GameRecord) {
 
   track('game_end', {
     mode: record.mode,
+    group: record.group,
     difficulty: record.difficulty,
     result: record.result,
     boards_won: record.boardsWon,

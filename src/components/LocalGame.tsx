@@ -7,7 +7,7 @@ import { shareLink } from '../share/shareLink';
 import { trackMission } from '../stats/missions';
 import { track } from '../online/consent';
 import { t } from '../i18n';
-import GameView from './GameView';
+import GameView, { classicTimeouts } from './GameView';
 import AiOptions from './AiOptions';
 
 interface Props {
@@ -68,8 +68,11 @@ export default function LocalGame({ onHome }: Props) {
   return (
     <GameView
       game={game}
+      {...classicTimeouts(game)}
       secondsLeft={local.secondsLeft}
       timerActive={local.timerActive}
+      paused={local.paused}
+      onTogglePause={local.canPause ? local.togglePause : undefined}
       nudge={local.nudge}
       notice={copied ? { text: t.online.copied, id: 1 } : local.notice}
       shake={local.shake}

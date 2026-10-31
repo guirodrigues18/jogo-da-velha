@@ -45,7 +45,7 @@ export default function AccountDialog({ onClose }: Props) {
       <div className="xp-section">
         <span className="xp-label">{t.xp.label}</span>
         <strong className="xp-total">⭐ {t.xp.total(xp)}</strong>
-        <p className="daily-hint">{t.xp.hint(XP.onlineWin, XP.win.hard, XP.win.medium, XP.win.easy)}</p>
+        <p className="daily-hint">{t.xp.hint(XP.groupWin.champs, XP.groupWin.duo, XP.onlineWin, XP.win.hard, XP.win.medium, XP.win.easy)}</p>
       </div>
 
       <form className="nickname-section" onSubmit={submit}>

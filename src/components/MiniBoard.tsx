@@ -1,24 +1,30 @@
 import { useEffect, useRef } from 'react';
-import type { MiniBoard as MiniBoardState, Player } from '../game/logic';
+import type { Mark, MarkResult } from '../game/group';
 import { t } from '../i18n';
 
 /** Emoji da loja usado no lugar do X/O de cada jogador (ausente = símbolo clássico) */
-export type Glyphs = Partial<Record<Player, string | null>>;
+export type Glyphs = Partial<Record<Mark, string | null>>;
+
+/** Mini-tabuleiro de qualquer modo: ✕ e ◯ no 1x1 e no 2x2; também △ e □ no Champs */
+export interface BoardCells {
+  cells: (Mark | null)[];
+  winner: MarkResult;
+}
 
 interface Props {
-  board: MiniBoardState;
+  board: BoardCells;
   /** O jogador atual pode jogar neste tabuleiro */
   playable: boolean;
   /** Nenhum tabuleiro obrigatório: destaca todos os abertos */
   free: boolean;
-  currentPlayer: Player;
+  currentPlayer: Mark;
   glyphs?: Glyphs;
   /** Muda de valor quando o tabuleiro deve tremer (jogada inválida em outro lugar) */
   nudgeId?: number;
   onCellClick: (cellIndex: number) => void;
 }
 
-const OVERLAY_TEXT = { x: 'X', o: 'O', draw: t.boardDraw };
+const OVERLAY_TEXT = { x: 'X', o: 'O', t: '△', s: '□', draw: t.boardDraw };
 
 const SHAKE: Keyframe[] = [
   { transform: 'translateX(0)' },

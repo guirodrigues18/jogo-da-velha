@@ -38,6 +38,9 @@
      --cyan e --pink são as cores do X e do O na interface; --x-mark e --o-mark, nas casas */
   --x-mark: var(--cyan);
   --o-mark: var(--pink);
+  /* △ e □ do Champs: iguais em todos os temas */
+  --t-mark: #f59e0b;
+  --s-mark: #22c55e;
   --x-glow: rgba(0, 229, 255, .9);
   --o-glow: rgba(255, 79, 216, .65);
   --x-overlay: rgba(0, 229, 255, .72);
@@ -2065,6 +2068,31 @@ body::after {
   background: var(--red);
 }
 
+/* Modo 2 jogadores: a barra para onde está e continua dali */
+.timer-fill.running.paused {
+  animation-play-state: paused;
+}
+
+.pause-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  font-size: .7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pause-button:hover {
+  border-color: var(--cell-hover-border);
+}
+
 .timer-seconds {
   font-weight: 700;
   color: var(--text);
@@ -2078,8 +2106,14 @@ body::after {
 
 .turn-extras {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+}
+
+.turn-card .info-label {
+  gap: 6px;
+  white-space: nowrap;
 }
 
 /* Chances de deixar o tempo acabar: discretas até sobrar nenhuma */
@@ -2261,6 +2295,55 @@ body::after {
   border-radius: var(--o-radius);
   border: var(--mark-weight) solid var(--o-mark);
   box-shadow: 0 0 18px var(--o-glow);
+}
+
+/* Champs: △ e □, com cores fixas que funcionam nos temas claros e escuros */
+.cell.t::before {
+  content: '';
+  width: 62%;
+  height: 54%;
+  background: var(--t-mark);
+  clip-path: polygon(evenodd, 50% 0, 100% 100%, 0 100%, 50% 0, 50% 30%, 19% 86%, 81% 86%, 50% 30%);
+  filter: drop-shadow(0 0 8px var(--t-mark));
+}
+
+.cell.s::before {
+  content: '';
+  width: 50%;
+  height: 50%;
+  border-radius: 4px;
+  border: var(--mark-weight) solid var(--s-mark);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--s-mark) 70%, transparent);
+}
+
+.mini-board.active.t-turn {
+  border-color: var(--t-mark);
+  box-shadow: 0 0 25px color-mix(in srgb, var(--t-mark) 28%, transparent);
+  transform: translateY(-2px);
+}
+
+.mini-board.active.s-turn {
+  border-color: var(--s-mark);
+  box-shadow: 0 0 25px color-mix(in srgb, var(--s-mark) 28%, transparent);
+  transform: translateY(-2px);
+}
+
+.turn-symbol.t {
+  color: var(--t-mark);
+}
+
+.turn-symbol.s {
+  color: var(--s-mark);
+}
+
+.board-overlay.t {
+  color: color-mix(in srgb, var(--t-mark) 80%, transparent);
+  text-shadow: 0 0 40px var(--t-mark);
+}
+
+.board-overlay.s {
+  color: color-mix(in srgb, var(--s-mark) 80%, transparent);
+  text-shadow: 0 0 40px var(--s-mark);
 }
 
 /* ===========================
@@ -2601,6 +2684,89 @@ body::after {
 .role-chip.o {
   color: var(--pink);
   background: rgba(255, 79, 216, .12);
+}
+
+.role-chip.t {
+  color: var(--t-mark);
+  background: color-mix(in srgb, var(--t-mark) 14%, transparent);
+}
+
+.role-chip.s {
+  color: var(--s-mark);
+  background: color-mix(in srgb, var(--s-mark) 14%, transparent);
+}
+
+/* ===========================
+   Grupos online: 2x2 Duplas e Champs
+   =========================== */
+
+.online-mode-picker {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.online-mode-hint {
+  color: var(--muted);
+  font-size: .82rem;
+  line-height: 1.45;
+}
+
+.party-lobby .btn + .btn {
+  margin-top: 8px;
+}
+
+.party-lobby .party-start {
+  margin-top: 16px;
+}
+
+.party-lobby .invite-bonus {
+  margin-top: 8px;
+}
+
+.party-seats {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.party-status .party-seats {
+  margin-bottom: 0;
+}
+
+.party-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 8px;
+}
+
+.party-team {
+  width: 100%;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.role-chip.empty {
+  opacity: .45;
+  font-weight: 600;
+}
+
+.role-chip.current {
+  box-shadow: 0 0 0 2px currentColor;
+}
+
+.role-chip.out .player-name {
+  text-decoration: line-through;
+}
+
+.role-chip.out {
+  opacity: .5;
 }
 
 .opponent-status {

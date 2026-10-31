@@ -17,6 +17,147 @@
       }
     },
 
+    "parties": {
+      ".read": "auth != null && query.orderByChild == 'createdAt' && query.limitToFirst <= 20",
+      ".indexOn": ["createdAt"],
+
+      "$partyId": {
+        ".read": "auth != null",
+        ".write": "auth != null && ((!data.exists() && newData.child('host').val() === auth.uid && newData.child('seats/0').val() === auth.uid) || (data.exists() && !newData.exists() && data.child('createdAt').val() < now - 604800000))",
+        ".validate": "newData.hasChildren(['host', 'mode', 'max', 'seats', 'createdAt'])",
+
+        "host": {
+          ".validate": "newData.isString()"
+        },
+        "mode": {
+          ".validate": "newData.val() === 'duo' || newData.val() === 'champs'"
+        },
+        "max": {
+          ".validate": "(newData.parent().child('mode').val() === 'duo' && newData.val() === 4) || (newData.parent().child('mode').val() === 'champs' && (newData.val() === 3 || newData.val() === 4))"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+
+        "seats": {
+          "$seat": {
+            ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid && !data.parent().parent().child('started').exists() && (($seat === '1' && data.parent().child('0').exists()) || ($seat === '2' && data.parent().child('1').exists()) || ($seat === '3' && data.parent().child('2').exists() && data.parent().parent().child('max').val() === 4)) && data.parent().child('0').val() !== auth.uid && data.parent().child('1').val() !== auth.uid && data.parent().child('2').val() !== auth.uid && data.parent().child('3').val() !== auth.uid) || (data.val() === auth.uid && !newData.exists() && $seat !== '0' && !data.parent().parent().child('started').exists()))",
+            ".validate": "newData.isString()"
+          }
+        },
+
+        "names": {
+          "$seat": {
+            ".write": "auth != null && data.parent().parent().child('seats').child($seat).val() === auth.uid",
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16"
+          }
+        },
+
+        "online": {
+          "$seat": {
+            ".write": "auth != null && data.parent().parent().child('seats').child($seat).val() === auth.uid",
+            ".validate": "newData.isBoolean()"
+          }
+        },
+
+        "started": {
+          ".write": "auth != null && !data.exists() && data.parent().child('host').val() === auth.uid",
+          ".validate": "newData.val() === true"
+        },
+
+        "size": {
+          ".write": "auth != null && !data.exists() && data.parent().child('host').val() === auth.uid",
+          ".validate": "(newData.val() === 4 && data.parent().child('seats/1').exists() && data.parent().child('seats/2').exists() && data.parent().child('seats/3').exists()) || (newData.val() === 3 && data.parent().child('mode').val() === 'champs' && data.parent().child('seats/1').exists() && data.parent().child('seats/2').exists() && !data.parent().child('seats/3').exists())"
+        },
+
+        "state": {
+          ".write": "auth != null && ((!data.exists() && !data.parent().child('started').exists() && newData.parent().child('started').val() === true && data.parent().child('host').val() === auth.uid) || (data.exists() && data.child('winner').val() === '-' && newData.child('turn').val() === data.child('turn').val() + 1 && (data.parent().child('seats').child(data.child('seat').val()).val() === auth.uid || (newData.child('cells').val() === data.child('cells').val() && (data.parent().child('seats/0').val() === auth.uid || data.parent().child('seats/1').val() === auth.uid || data.parent().child('seats/2').val() === auth.uid || data.parent().child('seats/3').val() === auth.uid) && (now > data.child('turnStartedAt').val() + 15000 || data.parent().child('left').child(data.child('seat').val()).exists())))) || (data.exists() && data.child('winner').val() !== '-' && newData.child('turn').val() === 0 && (data.parent().child('seats/0').val() === auth.uid || data.parent().child('seats/1').val() === auth.uid || data.parent().child('seats/2').val() === auth.uid || data.parent().child('seats/3').val() === auth.uid) && data.parent().child('rematch/0').val() === true && data.parent().child('rematch/1').val() === true && data.parent().child('rematch/2').val() === true && (data.parent().child('size').val() === 3 || data.parent().child('rematch/3').val() === true)))",
+          ".validate": "newData.hasChildren(['cells', 'results', 'seat', 'activeBoard', 'winner', 'turn', 'turnStartedAt', 'timeouts', 'out'])",
+          "cells": {
+            ".validate": "newData.isString() && newData.val().matches(/^[xots-]{81}$/)"
+          },
+          "results": {
+            ".validate": "newData.isString() && newData.val().matches(/^[xotsd-]{9}$/)"
+          },
+          "seat": {
+            ".validate": "newData.isString() && newData.val().matches(/^[0-3]$/)"
+          },
+          "activeBoard": {
+            ".validate": "newData.isNumber() && newData.val() >= -1 && newData.val() <= 8"
+          },
+          "winner": {
+            ".validate": "newData.isString() && newData.val().matches(/^[xotsd-]$/)"
+          },
+          "turn": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "turnStartedAt": {
+            ".validate": "newData.val() === now"
+          },
+          "timeouts": {
+            ".validate": "newData.isString() && newData.val().matches(/^[0-4]{3,4}$/)"
+          },
+          "out": {
+            ".validate": "newData.isString() && newData.val().matches(/^[01]{3,4}$/)"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+
+        "left": {
+          "$seat": {
+            ".write": "auth != null && data.parent().parent().child('seats').child($seat).val() === auth.uid",
+            ".validate": "newData.val() === true"
+          }
+        },
+
+        "rematch": {
+          "$seat": {
+            ".write": "auth != null && data.parent().parent().child('seats').child($seat).val() === auth.uid",
+            ".validate": "newData.val() === true"
+          }
+        },
+
+        "score": {
+          "$mark": {
+            ".write": "auth != null && (data.parent().parent().child('seats/0').val() === auth.uid || data.parent().parent().child('seats/1').val() === auth.uid || data.parent().parent().child('seats/2').val() === auth.uid || data.parent().parent().child('seats/3').val() === auth.uid) && data.parent().parent().child('state/winner').val() === $mark && newData.parent().parent().child('state/turn').val() === 0",
+            ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === 1) || newData.val() === data.val() + 1)"
+          }
+        },
+
+        "spectators": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && data.parent().parent().child('seats/0').val() !== auth.uid && data.parent().parent().child('seats/1').val() !== auth.uid && data.parent().parent().child('seats/2').val() !== auth.uid && data.parent().parent().child('seats/3').val() !== auth.uid",
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16"
+          }
+        },
+
+        "reactions": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && (data.parent().parent().child('seats/0').val() === auth.uid || data.parent().parent().child('seats/1').val() === auth.uid || data.parent().parent().child('seats/2').val() === auth.uid || data.parent().parent().child('seats/3').val() === auth.uid || data.parent().parent().child('spectators').child(auth.uid).exists()) && (!data.exists() || now > data.child('t').val() + 500)",
+            ".validate": "newData.hasChildren(['e', 'n', 't'])",
+            "e": {
+              ".validate": "newData.val() === '😂' || newData.val() === '🔥' || newData.val() === '😱' || newData.val() === '👏' || newData.val() === '😎' || newData.val() === '😭'"
+            },
+            "n": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16"
+            },
+            "t": {
+              ".validate": "newData.val() === now"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+
     "rooms": {
       ".read": "auth != null && query.orderByChild == 'createdAt' && query.limitToFirst <= 20",
       ".indexOn": ["createdAt"],

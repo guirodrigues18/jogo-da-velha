@@ -3,7 +3,7 @@ import type { Player, Result } from '../game/logic';
 import { useOnlineGame } from '../hooks/useOnlineGame';
 import { t } from '../i18n';
 import { symbolGlyph } from '../shop/catalog';
-import GameView from './GameView';
+import GameView, { classicTimeouts } from './GameView';
 import type { Glyphs } from './MiniBoard';
 import OnlinePanel from './OnlinePanel';
 import OnlineMessage from './OnlineMessage';
@@ -90,6 +90,7 @@ export default function OnlineRoom({ roomId, nickname, hostRole, leaveRoomRef, o
     return (
       <GameView
         game={game}
+        {...classicTimeouts(game)}
         secondsLeft={online.secondsLeft}
         timerActive={online.timerActive}
         nudge={null}
@@ -120,6 +121,7 @@ export default function OnlineRoom({ roomId, nickname, hostRole, leaveRoomRef, o
   return (
     <GameView
       game={game}
+      {...classicTimeouts(game)}
       secondsLeft={online.secondsLeft}
       timerActive={online.timerActive}
       nudge={online.nudge}

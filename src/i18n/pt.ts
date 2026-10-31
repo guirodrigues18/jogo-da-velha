@@ -208,7 +208,12 @@ const pt = {
     ai: 'IA',
     thinking: '🤖 Pensando…',
     yourTurn: 'Sua vez',
-    aiTurn: 'Vez da IA'
+    aiTurn: 'Vez da IA',
+    pause: 'Pausar o tempo',
+    resume: 'Continuar',
+    resumeButton: '▶ Continuar',
+    pausedTitle: '⏸ Partida pausada',
+    pausedHint: 'O tempo parou. Toque em Continuar quando os dois estiverem prontos.'
   },
 
   online: {
@@ -282,6 +287,55 @@ const pt = {
     back: 'Voltar'
   },
 
+  party: {
+    modeLabel: 'Modo de jogo',
+    modes: { solo: '1x1', duo: '2x2 Duplas', champs: 'Champs' },
+    modeHints: {
+      solo: 'Você contra um amigo, como sempre.',
+      duo: '4 jogadores em duplas: ✕ contra ◯. Cada um joga na sua vez.',
+      champs: 'Todos contra todos, cada um com seu símbolo. Vence quem conquistar 3 mini-tabuleiros.'
+    },
+    sizeLabel: 'Máximo de jogadores',
+    sizeOption: (n: number) => `Até ${n} jogadores`,
+    create: 'Criar grupo',
+    creating: 'Criando grupo…',
+    joining: 'Entrando no grupo…',
+    invitedBy: (name: string, mode: string) => `${name} te chamou para o ${mode}! 🎮`,
+    watchTitle: (mode: string) => `${mode} em andamento 👀`,
+    watchInfo: 'A partida já começou, mas você pode assistir.',
+    lobbyTitle: (mode: string, max: number) => `${mode} · até ${max} jogadores`,
+    rulesDuo: 'A vez gira entre os 4: ✕, ◯, ✕, ◯. As regras são as do 1x1, mas você não controla o seu parceiro. Se alguém sair, o parceiro joga também na vez dele. Vale combinar pelas reações!',
+    rulesChamps: 'Cada um com seu símbolo: ✕ ◯ △ □. Vence quem conquistar 3 mini-tabuleiros primeiro. Tabuleiro cheio sem 3 em linha fica com quem tem mais casas nele. 15s por jogada; na 4ª vez que o tempo acabar, o jogador é eliminado. Quem sai também fica de fora; se sobrar um só, ele vence.',
+    team: (symbol: string) => `Dupla ${symbol}`,
+    seatName: (n: number) => `Jogador ${n}`,
+    emptySeat: 'esperando…',
+    outTag: 'fora',
+    start: '▶ Começar partida',
+    readyHint: (n: number) => `Tudo pronto: a partida começa com ${n} jogadores.`,
+    needPlayers: (min: number, joined: number) => `Precisa de pelo menos ${min} jogadores (${joined} no grupo).`,
+    waitingHost: (name: string) => `Esperando ${name} começar a partida…`,
+    waitingPlayers: (joined: number, max: number) => `Esperando jogadores (${joined}/${max})`,
+    waitingStart: 'Esperando começar…',
+    spectatorsHint: 'Quem entrar com o grupo cheio ou depois de começar fica assistindo.',
+    leave: 'Sair do grupo',
+    closedTitle: 'Grupo encerrado',
+    closedText: 'Quem criou o grupo saiu antes de começar.',
+    inviteMessage: (name: string, mode: string) => `${name} te chamou para o ${mode} no Jogo da Velha 2.0 🎮 Entra aí!`,
+    duoStart: (symbol: string, partner: string) => `Você joga com ${symbol} em dupla com ${partner}!`,
+    champsStart: (symbol: string) => `Você joga com ${symbol}. Conquiste 3 mini-tabuleiros!`,
+    partnerTurn: (name: string) => `Vez do seu parceiro, ${name}`,
+    eliminated: (name: string) => `⏱ ${name} foi eliminado`,
+    teamWon: '🏆 Sua dupla venceu!',
+    teamLost: (symbol: string) => `😢 A dupla ${symbol} venceu`,
+    teamWonSpectator: (symbol: string) => `🏆 A dupla ${symbol} venceu!`,
+    champsWon: '🏆 Você venceu o Champs!',
+    leftOut: (name: string) => `🚪 ${name} saiu e está fora da partida`,
+    endedByElimination: 'Os outros saíram ou foram eliminados.',
+    cantRematch: 'Alguém saiu do grupo: crie um novo para jogar de novo.',
+    waitingRematch: (ready: number, total: number) => `Esperando os outros aceitarem (${ready}/${total})…`,
+    othersWantRematch: (ready: number, total: number) => `🔁 ${ready} de ${total} querem jogar de novo!`
+  },
+
   profile: {
     title: 'Seu perfil',
     nicknameLabel: 'Apelido no online',
@@ -293,8 +347,8 @@ const pt = {
   xp: {
     label: 'Sua experiência',
     total: (xp: number) => `${xp.toLocaleString('pt-BR')} XP`,
-    hint: (online: number, hard: number, medium: number, easy: number) =>
-      `Ganhe XP vencendo: online +${online} · IA no Difícil +${hard} · Médio +${medium} · Fácil +${easy}`,
+    hint: (champs: number, duo: number, online: number, hard: number, medium: number, easy: number) =>
+      `Ganhe XP vencendo: Champs +${champs} · 2x2 +${duo} · 1x1 online +${online} · IA no Difícil +${hard} · Médio +${medium} · Fácil +${easy}`,
     earnedWithCoins: (xp: number) => `Moedas ganhas · ⭐ +${xp} XP`
   },
 
@@ -399,8 +453,9 @@ const pt = {
       { icon: '✕', strong: 'Para conquistar um mini-tabuleiro,', text: 'faça 3 em linha dentro dele, como no jogo da velha comum.' },
       { icon: '➡️', strong: 'A regra de ouro:', text: 'a casa em que você joga decide em qual tabuleiro o adversário joga depois.', example: true },
       { icon: '🔓', strong: 'Tabuleiro fechado?', text: 'Se o tabuleiro de destino já estiver fechado, o adversário pode jogar em qualquer um aberto.' },
-      { icon: '⏱', strong: '20 segundos', text: 'por jogada. Se o tempo acabar, a vez passa para o adversário. Na 4ª vez que o tempo acabar, você perde a partida.' },
+      { icon: '⏱', strong: '20 segundos', text: 'por jogada. Se o tempo acabar, a vez passa para o adversário. Na 4ª vez que o tempo acabar, você perde a partida. No modo 2 jogadores, dá para pausar no ⏸.' },
       { icon: '🌐', strong: 'Online:', text: 'crie uma sala, escolha ✕ ou ◯ e envie o link. Quem abrir joga com o outro símbolo; se a sala já tiver dois jogadores, a pessoa assiste. Sair no meio da partida conta como desistência.' },
+      { icon: '👥', strong: '2x2 Duplas e Champs:', text: 'no online, escolha jogar em grupo. No 2x2, 4 jogadores em duplas (✕ contra ◯) revezam a vez com as mesmas regras. No Champs, 3 ou 4 jogam todos contra todos (✕ ◯ △ □): vence quem conquistar 3 mini-tabuleiros, e tabuleiro cheio fica com quem tem mais casas. 15s por jogada; os primeiros a entrar jogam, e quem chega depois assiste. Se alguém sair, a partida continua com quem ficou (no 2x2, o parceiro joga por ele).' },
       { icon: '🪙', strong: 'Moedas:', text: 'vença partidas, complete as missões do dia, pegue a recompensa diária e convide amigos para ganhar moedas e trocar por avatares, temas e efeitos na loja (🛒, na tela de início).' }
     ],
     caption: 'Jogou no canto de cima à direita? O adversário joga no tabuleiro do canto de cima à direita.',

@@ -1,18 +1,55 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { isBoardPlayable, lostOnTime, timeoutsLeft, type GameState, type Player } from '../game/logic';
+import { lostOnTime, timeoutsLeft, type GameState, type MiniBoard as ClassicBoard } from '../game/logic';
+import type { Mark, MarkResult } from '../game/group';
 import type { Notice, Nudge } from '../hooks/useGameFeedback';
 import InfoBar from './InfoBar';
-import MiniBoard, { type Glyphs } from './MiniBoard';
+import MiniBoard, { type BoardCells, type Glyphs } from './MiniBoard';
 import GameOverModal from './GameOverModal';
 import TopActions from './TopActions';
 import Logo from './Logo';
 import Scoreboard, { type ScoreInfo } from './Scoreboard';
 import { t } from '../i18n';
 
+/** O que a tela precisa de uma partida (1x1, 2x2 ou Champs) */
+export interface BoardView {
+  boards: BoardCells[];
+  currentPlayer: Mark;
+  activeBoard: number | null;
+  winner: MarkResult;
+  turn: number;
+}
+
+/** Chances de tempo esgotado e aviso de fim por tempo no 1x1 (local e online) */
+export function classicTimeouts(game: GameState) {
+
+  return {
+    timeoutsLeft: game.winner ? undefined : timeoutsLeft(game, game.currentPlayer),
+    endNote: lostOnTime(game) ? t.timeouts.endedNote : undefined
+  };
+
+}
+
+function isPlayable(game: BoardView, boardIndex: number): boolean {
+
+  if (game.winner || game.boards[boardIndex].winner) return false;
+
+  return game.activeBoard === null || game.activeBoard === boardIndex;
+
+}
+
 interface Props {
-  game: GameState;
+  game: BoardView;
   secondsLeft: number;
   timerActive: boolean;
+  /** Segundos por jogada (padrão: os do 1x1) */
+  turnSeconds?: number;
+  /** Tempos esgotados que o jogador da vez ainda pode ter; ausente = não mostra */
+  timeoutsLeft?: number;
+  /** Como a partida terminou, no modal (ex.: decidida por tempo) */
+  endNote?: string;
+  /** Modo 2 jogadores: tempo pausado (cobre o tabuleiro) e o botão de pausar/continuar */
+  paused?: boolean;
+  onTogglePause?: () => void;
   nudge: Nudge | null;
   notice: Notice | null;
   /** Muda a cada mini-tabuleiro conquistado: o tabuleiro principal treme */
@@ -20,7 +57,9 @@ interface Props {
   /** Substitui "Jogador X/O" no card de turno (ex.: "Sua vez") */
   turnLabel?: string;
   /** Símbolo de quem usa este aparelho (contra a IA e online): destaca a sua vez */
-  you?: Player;
+  you?: Mark;
+  /** Se é a sua vez, quando o símbolo não basta (no 2x2, o parceiro tem o mesmo) */
+  myTurn?: boolean;
   /** Símbolos da loja no lugar do X/O */
   glyphs?: Glyphs;
   /** Acima das informações (ex.: escolha do modo de jogo) */
@@ -68,11 +107,17 @@ export default function GameView({
   game,
   secondsLeft,
   timerActive,
+  turnSeconds,
+  timeoutsLeft: chancesLeft,
+  endNote,
+  paused = false,
+  onTogglePause,
   nudge,
   notice,
   shake = 0,
   turnLabel,
   you,
+  myTurn,
   glyphs,
   controls,
   score,
@@ -86,7 +131,8 @@ export default function GameView({
 
   const boardRef = useRef<HTMLDivElement>(null);
 
-  const waiting = Boolean(!onStart && you && you !== game.currentPlayer && !game.winner);
+  const notMine = myTurn !== undefined ? !myTurn : Boolean(you && you !== game.currentPlayer);
+  const waiting = !onStart && notMine && !game.winner;
 
   // Tremida ao conquistar um mini-tabuleiro
   useEffect(() => {
@@ -121,11 +167,15 @@ export default function GameView({
             currentPlayer={game.currentPlayer}
             turnLabel={turnLabel}
             you={you}
+            myTurn={myTurn}
+            turnSeconds={turnSeconds}
             activeBoard={game.activeBoard}
             turn={game.turn}
             secondsLeft={secondsLeft}
             timerActive={timerActive}
-            timeoutsLeft={game.winner ? undefined : timeoutsLeft(game, game.currentPlayer)}
+            timeoutsLeft={chancesLeft}
+            paused={paused}
+            onTogglePause={onTogglePause}
           />
 
           {score && <Scoreboard {...score} />}
@@ -141,7 +191,7 @@ export default function GameView({
               <MiniBoard
                 key={i}
                 board={board}
-                playable={isBoardPlayable(game, i)}
+                playable={isPlayable(game, i)}
                 free={game.activeBoard === null}
                 currentPlayer={game.currentPlayer}
                 glyphs={glyphs}
@@ -149,6 +199,18 @@ export default function GameView({
                 onCellClick={cell => onCellClick(i, cell)}
               />
             ))}
+
+            {paused && onTogglePause && (
+              <div className="start-overlay">
+                <div className="start-card">
+                  <strong>{t.local.pausedTitle}</strong>
+                  <button className="btn start-button" onClick={onTogglePause}>
+                    {t.local.resumeButton}
+                  </button>
+                  <small>{t.local.pausedHint}</small>
+                </div>
+              </div>
+            )}
 
             {onStart && (
               <div className="start-overlay">
@@ -177,10 +239,11 @@ export default function GameView({
         </div>
       )}
 
+      {/* A imagem de compartilhar só existe no 1x1 (✕ e ◯): os outros modos não mostram o botão */}
       <GameOverModal
         winner={game.winner}
-        boards={game.boards}
-        note={lostOnTime(game) ? t.timeouts.endedNote : undefined}
+        boards={game.boards as ClassicBoard[]}
+        note={endNote}
         {...modal}
       />
 

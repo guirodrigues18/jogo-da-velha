@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { isOnlineConfigured, ROOM_PARAM, roomIdFromUrl } from './online/config';
+import { isOnlineConfigured, PARTY_PARAM, partyIdFromUrl, ROOM_PARAM, roomIdFromUrl } from './online/config';
 import LocalGame from './components/LocalGame';
 import HomeScreen from './components/HomeScreen';
 import { savePreferences, type LocalMode } from './game/preferences';
@@ -21,7 +21,7 @@ const OnlineGame = lazy(() => import('./components/OnlineGame'));
 type Mode =
   | { kind: 'home' }
   | { kind: 'local' }
-  | { kind: 'online'; roomId: string | null };
+  | { kind: 'online'; roomId: string | null; partyId?: string | null };
 
 /** Marca no histórico: a partida local tem uma entrada própria, para o botão voltar levar ao início */
 const LOCAL_STATE = 'local';
@@ -29,7 +29,9 @@ const LOCAL_STATE = 'local';
 function modeFromUrl(): Mode {
 
   const roomId = roomIdFromUrl();
+  const partyId = partyIdFromUrl();
 
+  if (partyId && isOnlineConfigured) return { kind: 'online', roomId: null, partyId };
   if (roomId && isOnlineConfigured) return { kind: 'online', roomId };
 
   return window.history.state === LOCAL_STATE ? { kind: 'local' } : { kind: 'home' };
@@ -92,6 +94,11 @@ export default function App() {
     setMode({ kind: 'online', roomId });
   };
 
+  const handlePartyCreated = (partyId: string) => {
+    window.history.pushState(null, '', `?${PARTY_PARAM}=${partyId}`);
+    setMode({ kind: 'online', roomId: null, partyId });
+  };
+
   const leaveOnline = () => {
     window.history.pushState(null, '', window.location.pathname);
     clearChallenge();
@@ -117,8 +124,10 @@ export default function App() {
       <Suspense fallback={<OnlineMessage title={t.online.connecting} />}>
         <OnlineGame
           roomId={mode.roomId}
+          partyId={mode.partyId ?? null}
           leaveRoomRef={leaveRoomRef}
           onRoomCreated={handleRoomCreated}
+          onPartyCreated={handlePartyCreated}
           onLeave={leaveOnline}
         />
       </Suspense>

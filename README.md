@@ -22,6 +22,15 @@ Modos de jogo:
   - quem abrir o link de uma sala cheia entra como espectador (até 10 por sala);
   - reações rápidas com emoji aparecem para todos da sala.
 
+- **online em grupo** (`?grupo=id`, em `parties/{id}` no banco, separado das salas 1x1):
+  - **2x2 Duplas:** 4 jogadores, ✕ contra ◯, com as regras do 1x1; a vez gira ✕ → ◯ → ✕ → ◯;
+  - **Champs:** 3 ou 4 jogadores (quem cria escolhe o máximo), cada um com ✕ ◯ △ □. Vence quem conquistar
+    3 mini-tabuleiros; mini-tabuleiro cheio sem 3 em linha fica com quem tem mais casas nele;
+  - os primeiros a entrar jogam, quem cria começa a partida e quem chega depois assiste; 15s por jogada;
+  - quem sai ou deixa o tempo acabar pela 4ª vez fica de fora e a partida continua (no 2x2, o parceiro
+    joga também na vez dele); se sobrar um só (ou uma dupla), ele vence;
+  - vitória vale mais: 2x2 dá 30 🪙 e 15 XP; Champs, 40 🪙 e 20 XP (1x1 online: 20 🪙 e 10 XP).
+
 Também tem placar da série, estatísticas e 14 conquistas, confete na vitória, vibração no Android
 e uma explicação das regras no botão "Como jogar".
 
@@ -30,7 +39,7 @@ rendem 🪙, trocadas na loja (botão 🏅) por símbolos (o adversário online 
 e efeitos de vitória. Tudo fica no navegador; com **login com Google** (opcional), o progresso é salvo
 na nuvem (`users/{uid}`) e acompanha a pessoa em qualquer aparelho.
 
-**XP:** só vitórias rendem XP: online +10, contra a IA no Difícil +6, no Médio +3 e no Fácil +1 (desafio diário
+**XP:** só vitórias rendem XP: Champs +20, 2x2 +15, 1x1 online +10, contra a IA no Difícil +6, no Médio +3 e no Fácil +1 (desafio diário
 e modo 2 jogadores não contam). O total aparece no perfil (👤) e vai para a nuvem junto com as estatísticas
 (`users/{uid}/stats/xp`).
 

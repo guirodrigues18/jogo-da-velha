@@ -208,7 +208,12 @@ const es: Messages = {
     ai: 'IA',
     thinking: '🤖 Pensando…',
     yourTurn: 'Tu turno',
-    aiTurn: 'Turno de la IA'
+    aiTurn: 'Turno de la IA',
+    pause: 'Pausar el tiempo',
+    resume: 'Continuar',
+    resumeButton: '▶ Continuar',
+    pausedTitle: '⏸ Partida en pausa',
+    pausedHint: 'El tiempo está detenido. Toca Continuar cuando los dos estén listos.'
   },
 
   online: {
@@ -290,11 +295,60 @@ const es: Messages = {
     saved: '✓ Guardado'
   },
 
+  party: {
+    modeLabel: 'Modo de juego',
+    modes: { solo: '1x1', duo: '2x2 Parejas', champs: 'Champs' },
+    modeHints: {
+      solo: 'Tú contra un amigo, como siempre.',
+      duo: '4 jugadores en parejas: ✕ contra ◯. Cada uno juega en su turno.',
+      champs: 'Todos contra todos, cada uno con su símbolo. Gana quien conquiste 3 mini-tableros.'
+    },
+    sizeLabel: 'Máximo de jugadores',
+    sizeOption: n => `Hasta ${n} jugadores`,
+    create: 'Crear grupo',
+    creating: 'Creando grupo…',
+    joining: 'Entrando al grupo…',
+    invitedBy: (name, mode) => `¡${name} te invitó a ${mode}! 🎮`,
+    watchTitle: mode => `${mode} en curso 👀`,
+    watchInfo: 'La partida ya empezó, pero puedes mirarla.',
+    lobbyTitle: (mode, max) => `${mode} · hasta ${max} jugadores`,
+    rulesDuo: 'El turno rota entre los 4: ✕, ◯, ✕, ◯. Las reglas son las del 1x1, pero no controlas a tu pareja. Si alguien sale, su pareja juega también su turno. ¡Pónganse de acuerdo con las reacciones!',
+    rulesChamps: 'Cada uno con su símbolo: ✕ ◯ △ □. Gana quien conquiste 3 mini-tableros primero. Un tablero lleno sin 3 en línea es para quien tenga más casillas en él. 15 s por jugada; la 4ª vez que se acaba el tiempo, el jugador queda eliminado. Quien sale también queda fuera; si queda uno solo, gana.',
+    team: symbol => `Pareja ${symbol}`,
+    seatName: n => `Jugador ${n}`,
+    emptySeat: 'esperando…',
+    outTag: 'fuera',
+    start: '▶ Empezar partida',
+    readyHint: n => `Todo listo: la partida empieza con ${n} jugadores.`,
+    needPlayers: (min, joined) => `Se necesitan al menos ${min} jugadores (${joined} en el grupo).`,
+    waitingHost: name => `Esperando a que ${name} empiece la partida…`,
+    waitingPlayers: (joined, max) => `Esperando jugadores (${joined}/${max})`,
+    waitingStart: 'Esperando a empezar…',
+    spectatorsHint: 'Quien entre con el grupo lleno o después de empezar se queda mirando.',
+    leave: 'Salir del grupo',
+    closedTitle: 'Grupo cerrado',
+    closedText: 'Quien creó el grupo salió antes de empezar.',
+    inviteMessage: (name, mode) => `${name} te invitó a ${mode} en Tres en Raya 2.0 🎮 ¡Entra!`,
+    duoStart: (symbol, partner) => `¡Juegas con ${symbol} en pareja con ${partner}!`,
+    champsStart: symbol => `Juegas con ${symbol}. ¡Conquista 3 mini-tableros!`,
+    partnerTurn: name => `Turno de tu pareja, ${name}`,
+    eliminated: name => `⏱ ${name} quedó eliminado`,
+    teamWon: '🏆 ¡Tu pareja ganó!',
+    teamLost: symbol => `😢 Ganó la pareja ${symbol}`,
+    teamWonSpectator: symbol => `🏆 ¡Ganó la pareja ${symbol}!`,
+    champsWon: '🏆 ¡Ganaste el Champs!',
+    leftOut: name => `🚪 ${name} salió y quedó fuera de la partida`,
+    endedByElimination: 'Los demás salieron o fueron eliminados.',
+    cantRematch: 'Alguien salió del grupo: crea uno nuevo para jugar otra vez.',
+    waitingRematch: (ready, total) => `Esperando a que los demás acepten (${ready}/${total})…`,
+    othersWantRematch: (ready, total) => `🔁 ¡${ready} de ${total} quieren jugar otra vez!`
+  },
+
   xp: {
     label: 'Tu experiencia',
     total: xp => `${xp.toLocaleString('es-ES')} XP`,
-    hint: (online, hard, medium, easy) =>
-      `Gana XP ganando partidas: en línea +${online} · IA en Difícil +${hard} · Medio +${medium} · Fácil +${easy}`,
+    hint: (champs, duo, online, hard, medium, easy) =>
+      `Gana XP ganando partidas: Champs +${champs} · 2x2 +${duo} · 1x1 en línea +${online} · IA en Difícil +${hard} · Medio +${medium} · Fácil +${easy}`,
     earnedWithCoins: xp => `Monedas ganadas · ⭐ +${xp} XP`
   },
 
@@ -399,8 +453,9 @@ const es: Messages = {
       { icon: '✕', strong: 'Para ganar un mini-tablero,', text: 'haz 3 en línea dentro de él, como en el tres en raya de siempre.' },
       { icon: '➡️', strong: 'La regla de oro:', text: 'la casilla donde juegas decide en qué tablero juega tu rival después.', example: true },
       { icon: '🔓', strong: '¿Tablero cerrado?', text: 'Si el tablero de destino ya está decidido, tu rival puede jugar en cualquiera abierto.' },
-      { icon: '⏱', strong: '20 segundos', text: 'por jugada. Si se acaba el tiempo, el turno pasa a tu rival. La 4ª vez que se acaba, pierdes la partida.' },
+      { icon: '⏱', strong: '20 segundos', text: 'por jugada. Si se acaba el tiempo, el turno pasa a tu rival. La 4ª vez que se acaba, pierdes la partida. En el modo 2 jugadores, puedes pausar con ⏸.' },
       { icon: '🌐', strong: 'En línea:', text: 'crea una sala, elige ✕ o ◯ y envía el enlace. Quien lo abra juega con el otro símbolo; si la sala ya tiene dos jugadores, mira la partida. Salir a mitad de partida cuenta como rendirse.' },
+      { icon: '👥', strong: '2x2 Parejas y Champs:', text: 'en línea, elige jugar en grupo. En el 2x2, 4 jugadores en parejas (✕ contra ◯) se turnan con las mismas reglas. En el Champs, 3 o 4 juegan todos contra todos (✕ ◯ △ □): gana quien conquiste 3 mini-tableros, y un tablero lleno es para quien tenga más casillas. 15 s por jugada; juegan los primeros en entrar y los que lleguen después miran. Si alguien sale, la partida sigue con los que quedan (en el 2x2, su pareja juega por él).' },
       { icon: '🪙', strong: 'Monedas:', text: 'gana partidas, completa las misiones del día, recoge la recompensa diaria e invita a amigos para conseguir monedas y cambiarlas por avatares, temas y efectos en la tienda (🛒, en la pantalla de inicio).' }
     ],
     caption: '¿Jugaste en la esquina superior derecha? Tu rival juega en el tablero de la esquina superior derecha.',
